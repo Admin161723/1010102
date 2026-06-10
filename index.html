@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>بازی مافیا | ورود و ثبت‌نام</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+            background: #0a0f1e;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 450px;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #loadingPage {
+            background-image: url('IMG_20260607_143828_898.jpg');
+            background-size: cover;
+            justify-content: center;
+        }
+
+        .loading-circle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 28px;
+            height: 28px;
+            border: 2.5px solid rgba(255,255,255,0.4);
+            border-top: 2.5px solid rgba(255,255,255,0.9);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .version {
+            position: fixed;
+            bottom: 22px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.65);
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        #authPage {
+            background-image: url('64f994ba-91b1-419b-bba3-b8646f7b222d.png');
+            background-size: cover;
+            justify-content: flex-start;
+            padding-top: 80px;
+        }
+
+        .logo {
+            width: 120px;
+            margin: 20px auto 30px;
+            display: block;
+        }
+
+        .card {
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 24px 20px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 60px;
+            border: none;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        .btn {
+            background: #2ecc71;
+            border: none;
+            padding: 12px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .btn:hover {
+            background: #27ae60;
+            transform: scale(0.98);
+        }
+        .link-btn {
+            background: transparent;
+            color: #2ecc71;
+            box-shadow: none;
+            margin-top: 5px;
+        }
+        .error-msg {
+            color: #ff8a8a;
+            font-size: 12px;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        #profilePage {
+            background-image: url('64f994ba-91b1-419b-bba3-b8646f7b222d.png');
+            background-size: cover;
+            justify-content: center;
+        }
+        .avatar-circle {
+            width: 140px;
+            height: 140px;
+            background: #2c3e50;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 4px solid #2ecc71;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-menu {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 40px 40px 0 0;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: 0.3s;
+        }
+        .avatar-menu.open {
+            transform: translateY(0);
+        }
+        .avatar-option {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #2ecc71;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .avatar-option.selected {
+            border: 4px solid #f1c40f;
+            box-shadow: 0 0 10px #2ecc71;
+        }
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .info-input {
+            margin-bottom: 15px;
+        }
+        .green-btn {
+            background: #2ecc71;
+            color: white;
+        }
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        .backdrop.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loadingPage" class="page">
+    <div class="loading-circle"></div>
+    <div class="version">2.0.0</div>
+</div>
+
+<div id="authPage" class="page hidden">
+    <img class="logo" src="InShot_20260527_210904646.png" alt="logo" onerror="this.style.display='none'">
+    <div class="card" id="authCard">
+        <div id="stepPhone">
+            <div class="input-group">
+                <input type="tel" id="phoneInput" placeholder="شماره موبایل" maxlength="11">
+            </div>
+            <button class="btn" id="checkPhoneBtn">ادامه</button>
+            <div id="phoneError" class="error-msg"></div>
+        </div>
+
+        <div id="stepPassword" style="display:none;">
+            <div class="input-group">
+                <input type="password" id="passwordInput" placeholder="رمز عبور">
+            </div>
+            <button class="btn" id="loginBtn">ورود</button>
+            <button class="btn link-btn" id="forgotPassBtn">فراموشی رمزعبور؟</button>
+            <div id="passError" class="error-msg"></div>
+        </div>
+
+        <div id="stepOtp" style="display:none;">
+            <div class="input-group">
+                <input type="text" id="otpInput" placeholder="کد تایید ۶ رقمی">
+            </div>
+            <button class="btn" id="verifyOtpBtn">تایید کد</button>
+            <button class="btn link-btn" id="resendOtpBtn">درخواست کد دیگه</button>
+            <div id="otpError" class="error-msg"></div>
+        </div>
+    </div>
+</div>
+
+<div id="profilePage" class="page hidden">
+    <div class="avatar-circle" id="avatarCircle">
+        <img id="selectedAvatarImg" src="InShot_20260225_191621541.png" alt="avatar">
+    </div>
+    <div class="card" style="width:100%;">
+        <div class="info-input">
+            <input type="text" id="gameName" placeholder="اسم داخل بازی" maxlength="20">
+        </div>
+        <div class="info-input">
+            <input type="number" id="age" placeholder="سن" min="5" max="99">
+        </div>
+        <div class="info-input">
+            <input type="password" id="newPassword" placeholder="رمز عبور جدید">
+        </div>
+        <button class="btn green-btn" id="submitProfileBtn">تایید و ادامه</button>
+    </div>
+</div>
+
+<div id="backdrop" class="backdrop"></div>
+
+<script>
+    // ======================== داده‌های اولیه ========================
+    let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
+
+    // افزودن اکانت‌های ویژه (سازنده و پشتیبانی) اگر وجود نداشتند
+    function initSpecialAccounts() {
+        // سازنده
+        if (!usersDB['09904844031']) {
+            usersDB['09904844031'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'سازنده بازی',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'سازنده',
+                fullProfile: true
+            };
+        }
+        // پشتیبانی شماره اول
+        if (!usersDB['09904845012']) {
+            usersDB['09904845012'] = {
+                password: 'Support@16172',
+                name: 'پشتیبانی ۱',
+                age: 25,
+                avatar: 'InShot_20260224_194133998.png',
+                rank: 'پشتیبانی',
+                fullProfile: true
+            };
+        }
+        // پشتیبانی شماره دوم
+        if (!usersDB['09190882182']) {
+            usersDB['09190882182'] = {
+                password: 'Support@16172',
+                name: 'پشتیبانی ۲',
+                age: 28,
+                avatar: 'InShot_20260224_194133998.png',
+                rank: 'پشتیبانی',
+                fullProfile: true
+            };
+        }
+        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+    }
+    initSpecialAccounts();
+
+    let tempPhone = null;
+    let generatedOtp = null;
+    let selectedAvatarSrc = "InShot_20260225_191621541.png";
+
+    const avatarList = [
+        "InShot_20260225_191621541.png",
+        "InShot_20260224_194133998.png",
+        "InShot_20260208_214035107.png",
+        "InShot_20260208_214116629.png"
+    ];
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+        document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    // هدایت به صفحه اصلی بازی پس از ورود موفق
+    function redirectToMainPage(userPhone) {
+        const user = usersDB[userPhone];
+        if (user) {
+            // ذخیره اطلاعات کاربر جاری در sessionStorage برای استفاده در صفحه اصلی
+            sessionStorage.setItem('currentUserPhone', userPhone);
+            sessionStorage.setItem('currentUserRank', user.rank || 'کاربر');
+            sessionStorage.setItem('currentUserName', user.name);
+            sessionStorage.setItem('currentUserAvatar', user.avatar);
+            
+            // ذخیره وضعیت ورود در localStorage (برای بازدیدهای بعدی)
+            localStorage.setItem('currentLoggedInUser', JSON.stringify({
+                phone: userPhone,
+                timestamp: Date.now(),
+                name: user.name
+            }));
+        }
+        window.location.href = 'Safe Asli Bazi.html';
+    }
+
+    // بررسی آیا کاربر قبلاً وارد شده است
+    function checkAlreadyLoggedIn() {
+        const loggedInUser = localStorage.getItem('currentLoggedInUser');
+        if (loggedInUser) {
+            try {
+                const userInfo = JSON.parse(loggedInUser);
+                if (userInfo && userInfo.phone && usersDB[userInfo.phone] && usersDB[userInfo.phone].fullProfile) {
+                    // کاربر قبلاً وارد شده → مستقیم به بازی برو (بعد از لودینگ کوتاه)
+                    setTimeout(() => {
+                        redirectToMainPage(userInfo.phone);
+                    }, 1500);
+                    return true;
+                }
+            } catch(e) {}
+        }
+        return false;
+    }
+
+    // ---------- رویدادهای صفحه احراز هویت ----------
+    document.getElementById("checkPhoneBtn")?.addEventListener("click", () => {
+        const phone = document.getElementById("phoneInput").value.trim();
+        const phoneError = document.getElementById("phoneError");
+        if (!phone || phone.length < 10) {
+            phoneError.innerText = "شماره موبایل معتبر وارد کنید";
+            return;
+        }
+        phoneError.innerText = "";
+        tempPhone = phone;
+        const user = usersDB[phone];
+        if (user && user.fullProfile === true) {
+            // مرحله رمز عبور
+            document.getElementById("stepPhone").style.display = "none";
+            document.getElementById("stepOtp").style.display = "none";
+            document.getElementById("stepPassword").style.display = "block";
+            document.getElementById("passError").innerText = "";
+        } else {
+            // کاربر جدید -> کد یکبار مصرف
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            alert(`کد تایید شما: ${generatedOtp} (در نسخه واقعی پیامک می‌شود)`);
+            document.getElementById("stepPhone").style.display = "none";
+            document.getElementById("stepPassword").style.display = "none";
+            document.getElementById("stepOtp").style.display = "block";
+            document.getElementById("otpError").innerText = "";
+        }
+    });
+
+    document.getElementById("verifyOtpBtn")?.addEventListener("click", () => {
+        const enteredOtp = document.getElementById("otpInput").value.trim();
+        if (enteredOtp === generatedOtp) {
+            showPage("profilePage");
+            document.getElementById("stepPhone").style.display = "block";
+            document.getElementById("stepOtp").style.display = "none";
+            document.getElementById("phoneInput").value = "";
+            document.getElementById("otpInput").value = "";
+        } else {
+            document.getElementById("otpError").innerText = "کد وارد شده اشتباه است";
+        }
+    });
+
+    document.getElementById("resendOtpBtn")?.addEventListener("click", () => {
+        generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        alert(`کد جدید: ${generatedOtp}`);
+    });
+
+    document.getElementById("loginBtn")?.addEventListener("click", () => {
+        const pass = document.getElementById("passwordInput").value;
+        const user = usersDB[tempPhone];
+        if (user && user.password === pass) {
+            redirectToMainPage(tempPhone);
+        } else {
+            document.getElementById("passError").innerText = "رمز عبور نادرست است";
+        }
+    });
+
+    document.getElementById("forgotPassBtn")?.addEventListener("click", () => {
+        alert("از طریق پشتیبانی پیگیری کنید");
+    });
+
+    // ---------- منوی انتخاب آواتار ----------
+    const avatarCircle = document.getElementById("avatarCircle");
+    const avatarMenu = document.createElement("div");
+    avatarMenu.className = "avatar-menu";
+    avatarMenu.id = "avatarMenu";
+    document.body.appendChild(avatarMenu);
+    const backdrop = document.getElementById("backdrop");
+
+    avatarList.forEach(src => {
+        const option = document.createElement("div");
+        option.className = "avatar-option";
+        const img = document.createElement("img");
+        img.src = src;
+        img.onerror = () => { img.style.backgroundColor = "#555"; };
+        option.appendChild(img);
+        option.addEventListener("click", () => {
+            document.querySelectorAll(".avatar-option").forEach(opt => opt.classList.remove("selected"));
+            option.classList.add("selected");
+            selectedAvatarSrc = src;
+            document.getElementById("selectedAvatarImg").src = src;
+            avatarCircle.style.borderColor = "#2ecc71";
+            closeAvatarMenu();
+        });
+        avatarMenu.appendChild(option);
+    });
+
+    function openAvatarMenu() {
+        avatarMenu.classList.add("open");
+        backdrop.classList.add("show");
+    }
+    function closeAvatarMenu() {
+        avatarMenu.classList.remove("open");
+        backdrop.classList.remove("show");
+    }
+    avatarCircle?.addEventListener("click", openAvatarMenu);
+    backdrop?.addEventListener("click", closeAvatarMenu);
+
+    // ثبت‌نام کاربر جدید
+    document.getElementById("submitProfileBtn")?.addEventListener("click", () => {
+        const gameName = document.getElementById("gameName").value.trim();
+        const age = document.getElementById("age").value.trim();
+        const newPass = document.getElementById("newPassword").value.trim();
+
+        if (!gameName || !age || !newPass) {
+            alert("لطفاً نام، سن و رمز عبور را وارد کنید");
+            return;
+        }
+        if (isNaN(age) || age < 5 || age > 99) {
+            alert("سن بین ۵ تا ۹۹ وارد کنید");
+            return;
+        }
+        const phone = tempPhone;
+        if (!phone) {
+            alert("خطا در شماره تلفن");
+            return;
+        }
+        usersDB[phone] = {
+            password: newPass,
+            name: gameName,
+            age: age,
+            avatar: selectedAvatarSrc,
+            rank: 'کاربر',      // کاربر عادی
+            fullProfile: true
+        };
+        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+        redirectToMainPage(phone);
+    });
+
+    // ========== بخش سرور JSONBin (برای هماهنگی نام کاربری و غیره) ==========
+    // تنظیمات سرور رایگان برای ذخیره نام کاربری و اطلاعات اولیه
+    const JSONBIN_ID = '6984ae3a43b1c97be967c32b';
+    const JSONBIN_KEY = '$2a$10$P2f/7ECPzq3HSI.6DSdcr.MaV748WQF7smMQL1bczP6YF4XKwjNvG';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+    async function syncUserToServer(userPhone) {
+        try {
+            const user = usersDB[userPhone];
+            if (!user) return;
+            let data = await fetch(BIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } }).then(r=>r.json()).catch(()=>({record:{}}));
+            if (!data.record) data.record = {};
+            if (!data.record.users) data.record.users = {};
+            data.record.users[userPhone] = {
+                name: user.name,
+                avatar: user.avatar,
+                rank: user.rank,
+                lastSeen: Date.now()
+            };
+            await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+                body: JSON.stringify(data.record)
+            });
+        } catch(e) { console.log('سرور در دسترس نیست، اما بازی ادامه دارد'); }
+    }
+
+    // اصلاح redirectToMainPage برای همگام‌سازی با سرور
+    const originalRedirect = redirectToMainPage;
+    window.redirectToMainPage = function(userPhone) {
+        syncUserToServer(userPhone);
+        originalRedirect(userPhone);
+    };
+    redirectToMainPage = window.redirectToMainPage;
+
+    // ========== مدیریت لودینگ و انتقال ==========
+    // اگر کاربر قبلاً وارد شده باشد، مستقیم به بازی می‌رود (بدون نمایش صفحه احراز هویت)
+    const alreadyLogged = checkAlreadyLoggedIn();
+    if (!alreadyLogged) {
+        // بعد از ۳ ثانیه لودینگ، صفحه احراز هویت نشان داده شود
+        setTimeout(() => {
+            // دوباره چک کن که شاید حین لودینگ لاگین شده باشد
+            if (!localStorage.getItem('currentLoggedInUser')) {
+                showPage("authPage");
+                document.getElementById("stepPhone").style.display = "block";
+                document.getElementById("stepPassword").style.display = "none";
+                document.getElementById("stepOtp").style.display = "none";
+                document.getElementById("phoneInput").value = "";
+                document.getElementById("passwordInput").value = "";
+                document.getElementById("otpInput").value = "";
+                tempPhone = null;
+            }
+        }, 3000);
+    }
+
+    document.getElementById("selectedAvatarImg").src = selectedAvatarSrc;
+    // جلوگیری از خطای عکس
+    const allImgs = document.querySelectorAll('img');
+    allImgs.forEach(img => {
+        img.onerror = function() { this.style.display = 'none'; };
+    });
+</script>
+</body>
+</html>
