@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>رقابتی | مافیا</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; user-select:none; }
+body {
+    font-family:'Segoe UI',Tahoma,system-ui,sans-serif;
+    min-height:100vh;
+    background-image:url('IMG_20260607_211616_929.jpg');
+    background-size:cover; background-position:center;
+    background-repeat:no-repeat; background-attachment:fixed;
+}
+@keyframes fadePulse {
+    0% { opacity:0.7; transform:translateX(-50%) scale(1); }
+    50% { opacity:1; transform:translateX(-50%) scale(1.03); }
+    100% { opacity:0.7; transform:translateX(-50%) scale(1); }
+}
+.waiting-text {
+    position:fixed; top:30px; left:50%; transform:translateX(-50%);
+    color:white; font-size:24px; font-weight:bold; text-align:center;
+    white-space:nowrap; z-index:100;
+    animation:fadePulse 1.5s ease-in-out infinite;
+}
+.back-button {
+    position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+    width:60px; height:60px; cursor:pointer;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4)); z-index:200;
+}
+.back-button:active { transform:translateX(-50%) scale(0.94); }
+</style>
+</head>
+<body>
+<div class="waiting-text" id="waitingText">در حال انتظار 1...</div>
+<img class="back-button" id="backBtn" src="InShot_20260608_012500931.png" alt="بازگشت">
+<audio id="clickSound" src="sedatoseda.ir.mp3" preload="auto"></audio>
+
+<script>
+const JSONBIN_ID = '6984ae3a43b1c97be967c32b';
+const JSONBIN_KEY = '$2a$10$P2f/7ECPzq3HSI.6DSdcr.MaV748WQF7smMQL1bczP6YF4XKwjNvG';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+const GAME_PAGE_URL = 'index.html';
+
+const clickAudio = document.getElementById('clickSound');
+function playClick() {
+    const sound = clickAudio.cloneNode();
+    sound.volume = 0.3;
+    sound.play().catch(e => {});}
+
+// اطلاعات کاربر
+let playerId = sessionStorage.getItem('regabati_playerId');
+if(!playerId) {
+    playerId = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random());
+    sessionStorage.setItem('regabati_playerId', playerId);
+}
+
+// نام کاربر (اگر ندارد بساز)
+let playerName = sessionStorage.getItem('mafiaUserName');
+if(!playerName) {
+    playerName = 'بازیکن_' + Math.floor(Math.random()*1000);
+    sessionStorage.setItem('mafiaUserName', playerName);
+}
+
+let currentCount = 0;
+let isStarted = false;
+let pollInterval = null;
+let isLeaving = false;
+const waitingDiv = document.getElementById('waitingText');
+
+function updateUI() {
+    waitingDiv.innerText = `در حال انتظار ${currentCount}...`;
+    if(currentCount >= 10 && !isStarted) {
+        isStarted = true;
+        if(pollInterval) clearInterval(pollInterval);
+        waitingDiv.innerText = '🎮 شروع بازی...';
+        setTimeout(() => { window.location.href = GAME_PAGE_URL; }, 2000);
+    }
+}
+
+async function fetchGameState() {
+    try {
+        const res = await fetch(BIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
+        if(!res.ok) return null;
+        const data = await res.json();
+        return data.record;
+    } catch { return null; }
+}
+
+async function updateGameState(newState, retries = 3) {
+    try {
+        const putResp = await fetch(BIN_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_KEY,
+                'X-Bin-Versioning': 'false'
+            },            body: JSON.stringify(newState)
+        });
+        if(!putResp.ok) {
+            if(retries > 0 && putResp.status === 409) {
+                await new Promise(r => setTimeout(r, 500));
+                return updateGameState(newState, retries - 1);
+            }
+            return false;
+        }
+        return true;
+    } catch { return false; }
+}
+
+async function joinGame() {
+    let state = await fetchGameState();
+    if(!state) state = { competitive: { count: 0, players: [] } };
+    if(!state.competitive) state.competitive = { count: 0, players: [] };
+
+    // آیا قبلاً در لیست هستم؟
+    const existing = state.competitive.players.find(p => p.id === playerId);
+    if(existing) {
+        currentCount = state.competitive.count;
+        updateUI();
+        startPolling();
+        return;
+    }
+
+    if(state.competitive.count >= 10) {
+        waitingDiv.innerText = 'بازی شروع شده';
+        return;
+    }
+
+    // اضافه کردن با نام
+    const newPlayers = [...(state.competitive.players || []), { id: playerId, name: playerName }];
+    const newCount = newPlayers.length;
+    const newState = { competitive: { count: newCount, players: newPlayers, lastUpdate: Date.now() } };
+    
+    if(await updateGameState(newState)) {
+        currentCount = newCount;
+        updateUI();
+        startPolling();
+    } else {
+        setTimeout(() => joinGame(), 2000);
+    }
+}
+
+async function leaveGame() {
+    if(isLeaving) return;
+    isLeaving = true;
+    let state = await fetchGameState();    if(!state || !state.competitive) return;
+    if(!state.competitive.players) return;
+    const newPlayers = state.competitive.players.filter(p => p.id !== playerId);
+    const newState = { competitive: { count: newPlayers.length, players: newPlayers, lastUpdate: Date.now() } };
+    await updateGameState(newState);
+}
+
+async function pollState() {
+    const state = await fetchGameState();
+    if(state && state.competitive && state.competitive.count !== currentCount) {
+        currentCount = state.competitive.count;
+        updateUI();
+        if(currentCount >= 10 && !isStarted) {
+            isStarted = true;
+            if(pollInterval) clearInterval(pollInterval);
+            updateUI();
+        }
+    }
+}
+
+function startPolling() {
+    if(pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(pollState, 3000);
+}
+
+window.addEventListener('beforeunload', () => leaveGame());
+
+document.getElementById('backBtn').addEventListener('click', () => {
+    playClick();
+    leaveGame();
+    setTimeout(() => { window.location.href = 'Safe Asli Bazi.html'; }, 100);
+});
+
+joinGame();
+</script>
+</body>
+</html>
