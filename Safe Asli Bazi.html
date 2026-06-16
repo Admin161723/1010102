@@ -47,8 +47,7 @@
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.25);
             transition: 0.2s;
-        }
-        .account-card:hover {
+        }        .account-card:hover {
             background: rgba(0,0,0,0.75);
             transform: scale(1.02);
         }
@@ -94,10 +93,10 @@
             display: flex;
             gap: 10px;
             z-index: 100;
+            align-items: center;
         }
         .currency-item {
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.55);            backdrop-filter: blur(8px);
             border-radius: 30px;
             padding: 4px 12px;
             display: flex;
@@ -109,29 +108,107 @@
             border: 1px solid rgba(255,255,255,0.25);
         }
 
-        /* دکمه‌های سمت راست - 50x50 */
-        .right-buttons {
+        /* ===== منوی اپلیکیشنی (مربعی و کوچک‌تر) ===== */
+        .app-menu-container {
             position: fixed;
             top: 80px;
             right: 20px;
+            z-index: 150;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            z-index: 100;
+            align-items: flex-end;
         }
-        .right-btn {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
+
+        .menu-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px; /* مربعی با گوشه‌های گرد - شبیه اپ واقعی */
+            background: linear-gradient(145deg, #2a8a5e, #1a5a3e);
+            border: 2px solid #6eacda;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px; /* کوچک‌تر برای دکمه مربعی */
             cursor: pointer;
-            transition: 0.2s;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-            display: block;
-            background: transparent;
-            border: none;
+            transition: all 0.3s ease;
+            position: relative;
         }
-        .right-btn:active {
-            transform: scale(0.94);
+        .menu-toggle-btn:active {
+            transform: scale(0.92);
+        }
+        .menu-toggle-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e94560;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;            border-radius: 20px;
+            display: none;
+        }
+
+        .app-menu {
+            background: rgba(20, 25, 35, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(110, 172, 218, 0.5);
+            border-radius: 16px; /* کوچک‌تر از 24px */
+            padding: 8px 0; /* کوچک‌تر */
+            min-width: 190px; /* کمی کوچک‌تر از 210px */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            margin-top: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 1px;
+            animation: menuSlideIn 0.25s ease;
+        }
+        .app-menu.open {
+            display: flex;
+        }
+        @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px; /* کوچک‌تر */
+            color: #e0e0e0;
+            font-size: 13px; /* کوچک‌تر */
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: right;
+            font-family: inherit;
+        }
+        .menu-item:hover {
+            background: rgba(110, 172, 218, 0.15);
+        }
+        .menu-item:active {
+            background: rgba(110, 172, 218, 0.25);
+            transform: scale(0.98);
+        }
+        .menu-item .icon {            font-size: 18px; /* کوچک‌تر */
+            min-width: 30px; /* کوچک‌تر */
+            text-align: center;
+        }
+        .menu-item .label {
+            flex: 1;
+        }
+        .menu-item .arrow {
+            color: #5a6a7a;
+            font-size: 14px;
+        }
+        .menu-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 3px 14px;
         }
 
         /* دکمه‌های پایین (سرورها و رقابتی) */
@@ -166,8 +243,7 @@
             top: 0;
             right: -100%;
             width: 100%;
-            height: 100%;
-            background-image: url('IMG_20260405_103001_954.jpg');
+            height: 100%;            background-image: url('IMG_20260405_103001_954.jpg');
             background-size: cover;
             background-position: center;
             z-index: 1000;
@@ -216,8 +292,7 @@
         }
         .profile-name {
             text-align: center;
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 22px;            font-weight: bold;
             color: white;
             margin: 10px;
             display: flex;
@@ -245,28 +320,11 @@
             font-size: 14px;
             cursor: pointer;
         }
-        .profile-stats {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px;
-            background: rgba(0,0,0,0.45);
-            padding: 15px;
-            border-radius: 25px;
-        }
-        .stat-box {
-            text-align: center;
-            color: white;
-            min-width: 70px;
-            font-size: 13px;
-        }
         .profile-group {
             text-align: center;
             color: #ffd966;
             margin: 10px;
         }
-        /* دکمه تنظیمات در پایین پروفایل */
         .settings-btn {
             background: #2ecc71;
             border: none;
@@ -284,7 +342,6 @@
         .settings-btn:active {
             transform: scale(0.96);
         }
-
         /* مودال تنظیمات صدا */
         .settings-modal {
             position: fixed;
@@ -333,8 +390,7 @@
             background-image: url('IMG_20260405_103001_954.jpg');
             background-size: cover;
             background-position: center;
-            z-index: 1100;
-            display: none;
+            z-index: 1100;            display: none;
             flex-direction: column;
             overflow-y: auto;
             padding: 20px;
@@ -383,8 +439,7 @@
             color: black;
         }
         .shop-section {
-            margin-bottom: 30px;
-        }
+            margin-bottom: 30px;        }
         .section-title {
             color: gold;
             font-size: 16px;
@@ -433,6 +488,10 @@
             font-weight: bold;
             font-size: 12px;
         }
+        /* ===== اسکرول‌های ساده ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -456,12 +515,49 @@
         <div class="currency-item"><span>💎</span> <span id="gemAmount">0</span></div>
     </div>
 
-    <!-- دکمه‌های سمت راست -->
-    <div class="right-buttons">
-        <img class="right-btn" id="groupsBtn" src="InShot_20260607_201952781.png" alt="گروه‌ها">
-        <img class="right-btn" id="shopBtn" src="InShot_20260607_201924030.png" alt="فروشگاه">
-        <img class="right-btn" id="cupBtn" src="InShot_20260607_201903196.png" alt="کاپ لیگ برتر">
-        <img class="right-btn" id="liveBtn" src="InShot_20260607_201807218.png" alt="پخش زنده">
+    <!-- ===== منوی اپلیکیشنی (مربعی و کوچک‌تر) ===== -->
+    <div class="app-menu-container">
+        <div class="menu-toggle-btn" id="menuToggle">
+            <span class="icon">☰</span>
+            <span class="badge" id="menuBadge">●</span>
+        </div>
+        <div class="app-menu" id="appMenu">
+            <button class="menu-item" data-section="donate">
+                <span class="icon">🎁</span>
+                <span class="label">اهدای جم</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="groups">
+                <span class="icon">👥</span>
+                <span class="label">گروه‌ها</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="rankings">
+                <span class="icon">🏆</span>
+                <span class="label">رتبه‌بندی</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="live">                <span class="icon">📺</span>
+                <span class="label">پخش زنده</span>
+                <span class="arrow">›</span>
+            </button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" data-section="gem-shop">
+                <span class="icon">❌</span>
+                <span class="label">فروشگاه جم و سکه</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="shop">
+                <span class="icon">🛍️</span>
+                <span class="label">فروشگاه آواتار</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="profile">
+                <span class="icon">👤</span>
+                <span class="label">پروفایل</span>
+                <span class="arrow">›</span>
+            </button>
+        </div>
     </div>
 
     <!-- دکمه‌های پایین -->
@@ -490,11 +586,10 @@
         <div class="stat-box">🏆 برد سرور<br><span id="serverWins">0</span></div>
         <div class="stat-box">⚔️ برد رقابتی<br><span id="compWins">0</span></div>
         <div class="stat-box">🎖️ کاپ<br><span id="cups">0</span></div>
-    </div>
-    <div class="settings-btn" id="settingsBtn">تنظیمات صدا</div>
+    </div>    <div class="settings-btn" id="settingsBtn">تنظیمات صدا</div>
 </div>
 
-<!-- مودال تنظیمات صدا -->
+<!-- مودال تنظیمات -->
 <div id="settingsModal" class="settings-modal">
     <h3>تنظیم صدای آهنگ</h3>
     <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
@@ -518,32 +613,30 @@
 <audio id="clickSound" src="sedatoseda.ir.mp3" preload="auto"></audio>
 
 <script>
-    // ======================== صداها ========================
+    // ==================== سرور JSONBin (برای هماهنگی کاربران) ====================
+    const JSONBIN_ID = '6a310a04da38895dfec86661';
+    const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+    // ==================== صداها ====================
     const bgAudio = document.getElementById('bgMusic');
     const clickAudio = document.getElementById('clickSound');
-    
-    // تنظیم صدای اولیه آهنگ (50%)
+
     bgAudio.volume = 0.5;
-    
-    // تابع پخش صدای کلیک (برای همه دکمه‌ها)
     function playClick() {
-        // clone for overlapping sounds
         const sound = clickAudio.cloneNode();
-        sound.volume = 0.3;  // صدای کلیک کمی آرام‌تر
+        sound.volume = 0.3;
         sound.play().catch(e => console.log("صدای کلیک پخش نشد:", e));
     }
-    
-    // تنظیم صدای آهنگ از طریق اسلایدر
+
     const volumeSlider = document.getElementById('volumeSlider');
     volumeSlider.addEventListener('input', (e) => {
         bgAudio.volume = e.target.value / 100;
     });
-    
-    // نمایش مودال تنظیمات
+
     const settingsModal = document.getElementById('settingsModal');
-    const settingsBtn = document.getElementById('settingsBtn');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-    
+    const settingsBtn = document.getElementById('settingsBtn');    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
     settingsBtn.addEventListener('click', () => {
         playClick();
         settingsModal.classList.add('open');
@@ -552,26 +645,24 @@
         playClick();
         settingsModal.classList.remove('open');
     });
-    // بستن با کلیک خارج از مودال (اختیاری)
     window.addEventListener('click', (e) => {
         if (e.target === settingsModal) {
             settingsModal.classList.remove('open');
         }
     });
-    
-    // ======================== آهنگ پس‌زمینه خودکار ========================
+
     window.addEventListener('load', () => {
         bgAudio.play().catch(e => {
             document.body.addEventListener('click', () => bgAudio.play(), { once: true });
         });
     });
-    
-    // ======================== اطلاعات کاربر (مثل قبل) ========================
+
+    // ==================== اطلاعات کاربر (هماهنگ با سرور) ====================
     let currentUserPhone = sessionStorage.getItem('currentUserPhone');
     let currentUserRank = sessionStorage.getItem('currentUserRank') || 'کاربر';
     let currentUserName = sessionStorage.getItem('currentUserName') || 'کاربر';
     let currentUserAvatar = sessionStorage.getItem('currentUserAvatar') || 'InShot_20260225_191621541.png';
-    
+
     let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
     let userData = usersDB[currentUserPhone];
     if (!userData) {
@@ -593,8 +684,7 @@
             currentAvatar: currentUserAvatar,
             currentFrame: 'InShot_20260607_164903273.png'
         };
-        usersDB[currentUserPhone] = userData;
-        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+        usersDB[currentUserPhone] = userData;        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     } else {
         if (!userData.ownedAvatars) userData.ownedAvatars = [userData.avatar];
         if (!userData.ownedFrames) userData.ownedFrames = ['InShot_20260607_164903273.png'];
@@ -606,13 +696,68 @@
         usersDB[currentUserPhone] = userData;
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     }
-    
+
     const storeAvatars = [
         { src: 'InShot_20260403_212249999.png', price: 200, currency: 'gems', name: 'آواتار شعله‌ای' },
         { src: 'InShot_20260403_212625191.png', price: 250, currency: 'gems', name: 'آواتار یخی' }
     ];
     const storeFrames = [];
-    
+
+    // ==================== همگام‌سازی با سرور ====================
+    async function syncUserToServer() {
+        try {
+            const state = { users: {} };
+            state.users[currentUserPhone] = {
+                name: userData.name,
+                avatar: userData.currentAvatar,
+                rank: userData.rank,
+                coins: userData.coins,
+                gems: userData.gems,
+                level: userData.level,
+                group: userData.group,
+                lastSeen: Date.now()
+            };
+            await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_KEY,
+                    'X-Bin-Versioning': 'false'
+                },
+                body: JSON.stringify({ users: state.users })
+            });
+        } catch(e) { console.warn('سرور در دسترس نیست'); }
+    }
+
+    async function loadFromServer() {
+        try {
+            const res = await fetch(BIN_URL + '/latest', {
+                headers: { 'X-Master-Key': JSONBIN_KEY }
+            });            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.users && data.users[currentUserPhone]) {
+                const remote = data.users[currentUserPhone];
+                userData.name = remote.name || userData.name;
+                userData.rank = remote.rank || userData.rank;
+                userData.coins = remote.coins !== undefined ? remote.coins : userData.coins;
+                userData.gems = remote.gems !== undefined ? remote.gems : userData.gems;
+                userData.level = remote.level || userData.level;
+                userData.group = remote.group || userData.group;
+                if (remote.avatar) userData.currentAvatar = remote.avatar;
+                usersDB[currentUserPhone] = userData;
+                localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                updateUI();
+            }
+        } catch(e) {}
+    }
+
+    // همگام‌سازی دوره‌ای
+    setInterval(() => {
+        syncUserToServer();
+        loadFromServer();
+    }, 8000);
+
+    // ==================== توابع UI ====================
     function updateUI() {
         document.getElementById('accountName').innerText = userData.name;
         document.getElementById('accountAvatar').src = userData.currentAvatar;
@@ -637,19 +782,18 @@
         document.getElementById('cups').innerText = userData.cups || 0;
         document.getElementById('groupName').innerHTML = 'گروه: ' + (userData.group || 'مافیا');
     }
-    
-    function generateUserId(phone) {
+        function generateUserId(phone) {
         let hash = 0;
         for(let i=0; i<phone.length; i++) hash = ((hash<<5)-hash)+phone.charCodeAt(i);
         return Math.abs(hash % 100000000) + 1;
     }
-    
+
     document.getElementById('userIdCopy')?.addEventListener('click', () => {
         playClick();
         navigator.clipboard.writeText(document.getElementById('userIdCode').innerText);
         alert('کد کاربری کپی شد');
     });
-    
+
     let nameChangeUsed = false;
     document.getElementById('editNameBtn')?.addEventListener('click', () => {
         playClick();
@@ -661,13 +805,14 @@
                 userData.name = newName.trim();
                 usersDB[currentUserPhone] = userData;
                 localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                syncUserToServer();
                 updateUI();
                 alert('اسم شما به ' + newName + ' تغییر کرد. ۱۰۰ سکه کسر شد.');
             } else if(nameChangeUsed) alert('شما قبلاً یک بار نام خود را تغییر داده‌اید.');
             else alert('سکه کافی نیست!');
         }
     });
-    
+
     document.getElementById('accountCard').onclick = () => {
         playClick();
         document.getElementById('profileModal').classList.add('open');
@@ -681,13 +826,12 @@
         playClick();
         openShop();
     };
-    
-    // فروشگاه (همانند قبل با افزودن صدای کلیک به دکمه‌ها)
+
+    // فروشگاه
     const shopOverlay = document.getElementById('shopOverlay');
     const shopContent = document.getElementById('shopContent');
     let currentShopTab = 'my';
-    
-    function openShop() {
+        function openShop() {
         playClick();
         shopOverlay.classList.add('open');
         renderShop();
@@ -697,7 +841,7 @@
         shopOverlay.classList.remove('open'); 
     }
     document.getElementById('shopBackBtn').onclick = closeShop;
-    
+
     function renderShop() {
         shopContent.innerHTML = '';
         if (currentShopTab === 'my') {
@@ -719,6 +863,7 @@
                         userData.currentAvatar = av;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
                         updateUI();
                         alert('آواتار جاری تغییر کرد');
                         renderShop();
@@ -735,13 +880,13 @@
                 ownedFrames.forEach(fr => {
                     const card = document.createElement('div');
                     card.className = 'shop-card';
-                    card.innerHTML = `<img src="${fr}" style="border-radius:12px;"><div class="owned-badge">مالک</div><button>انتخاب قالب</button>`;
-                    const btn = card.querySelector('button');
+                    card.innerHTML = `<img src="${fr}" style="border-radius:12px;"><div class="owned-badge">مالک</div><button>انتخاب قالب</button>`;                    const btn = card.querySelector('button');
                     btn.onclick = () => {
                         playClick();
                         userData.currentFrame = fr;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
                         updateUI();
                         alert('قالب جاری تغییر کرد');
                         renderShop();
@@ -768,20 +913,23 @@
                         if (item.currency === 'gems' && userData.gems >= item.price) {
                             userData.gems -= item.price;
                             userData.ownedAvatars.push(item.src);
+                            usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
                             alert('خرید موفق!');
                             renderShop();
                             updateUI();
                         } else if (item.currency === 'coins' && userData.coins >= item.price) {
                             userData.coins -= item.price;
                             userData.ownedAvatars.push(item.src);
+                            usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
                             alert('خرید موفق!');
                             renderShop();
                             updateUI();
                         } else alert('اعتبار کافی نیست');
-                    };
-                    card.appendChild(btn);
+                    };                    card.appendChild(btn);
                 } else {
                     card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
                     const selectBtn = card.querySelector('button:not(.owned-badge)');
@@ -790,6 +938,7 @@
                         userData.currentAvatar = item.src;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
                         updateUI();
                         alert('آواتار جاری تغییر کرد');
                         renderShop();
@@ -816,7 +965,9 @@
                             if (userData.coins >= frame.price) {
                                 userData.coins -= frame.price;
                                 userData.ownedFrames.push(frame.src);
+                                usersDB[currentUserPhone] = userData;
                                 localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                                syncUserToServer();
                                 alert('قالب خریداری شد');
                                 renderShop();
                                 updateUI();
@@ -827,10 +978,10 @@
                         card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
                         const selectBtn = card.querySelector('button:not(.owned-badge)');
                         selectBtn.onclick = () => {
-                            playClick();
-                            userData.currentFrame = frame.src;
+                            playClick();                            userData.currentFrame = frame.src;
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
                             updateUI();
                             alert('قالب جاری تغییر کرد');
                             renderShop();
@@ -841,7 +992,7 @@
             }
         }
     }
-    
+
     document.querySelectorAll('.shop-tab').forEach(tab => {
         tab.onclick = () => {
             playClick();
@@ -851,34 +1002,74 @@
             renderShop();
         };
     });
-    
-    // ======================== رویداد دکمه‌ها با صدای کلیک و هدایت ========================
+
+    // ==================== منوی اپلیکیشنی ====================
+    const menuToggle = document.getElementById('menuToggle');
+    const appMenu = document.getElementById('appMenu');
+    const menuBadge = document.getElementById('menuBadge');
+
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playClick();
+        appMenu.classList.toggle('open');
+        // نشانگر آنلاین یا نوتیف
+        menuBadge.style.display = 'none';
+    });
+
+    // بستن منو با کلیک خارج
+    document.addEventListener('click', (e) => {
+        if (!appMenu.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
+            appMenu.classList.remove('open');
+        }
+    });
+
+    // آیتم‌های منو
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            playClick();
+            appMenu.classList.remove('open');            const section = item.dataset.section;
+            switch(section) {
+                case 'donate':
+                    alert('🎁 بخش اهدای جم - به زودی');
+                    break;
+                case 'groups':
+                    alert('👥 بخش گروه‌ها - به زودی');
+                    break;
+                case 'rankings':
+                    alert('🏆 بخش رتبه‌بندی - به زودی');
+                    break;
+                case 'live':
+                    alert('📺 پخش زنده - به زودی');
+                    break;
+                case 'gem-shop':
+                    alert('❌ فروشگاه جم و سکه - به زودی');
+                    break;
+                case 'shop':
+                    openShop();
+                    break;
+                case 'profile':
+                    document.getElementById('profileModal').classList.add('open');
+                    updateUI();
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
+
+    // ==================== رویداد دکمه‌های پایین ====================
     document.getElementById('serverBtn').onclick = () => {
         playClick();
         alert('بخش سرورها');
     };
     document.getElementById('competitiveBtn').onclick = () => {
         playClick();
-        window.location.href = 'Regabati.html';   // هدایت به صفحه رقابتی
+        window.location.href = 'Regabati.html';
     };
-    document.getElementById('groupsBtn').onclick = () => {
-        playClick();
-        alert('بخش گروه‌ها');
-    };
-    document.getElementById('shopBtn').onclick = () => {
-        playClick();
-        alert('فروشگاه (جم، سکه، VIP تیکت)');
-    };
-    document.getElementById('cupBtn').onclick = () => {
-        playClick();
-        alert('کاپ لیگ برتر');
-    };
-    document.getElementById('liveBtn').onclick = () => {
-        playClick();
-        alert('پخش زنده');
-    };
-    
+
     updateUI();
+    loadFromServer();
+    syncUserToServer();
 </script>
 </body>
 </html>
