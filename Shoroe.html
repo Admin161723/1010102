@@ -193,8 +193,9 @@ body { background:var(--bg-dark); color:white; overflow:hidden; height:100vh; wi
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-// ==================== تنظیمات سرور ====================
-const JSONBIN_ID = '6984ae3a43b1c97be967c32b';const JSONBIN_KEY = '$2a$10$P2f/7ECPzq3HSI.6DSdcr.MaV748WQF7smMQL1bczP6YF4XKwjNvG';
+// ==================== تنظیمات سرور (همان رقابتی) ====================
+const JSONBIN_ID = '6a310a04da38895dfec86661';
+const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
 // ==================== اطلاعات کاربر ====================
@@ -307,7 +308,7 @@ async function saveServer(data) {
 // ==================== WebRTC (PeerJS) ====================
 function setupPeer() {
     if(myPeer) return;
-    
+
     myPeer = new Peer(undefined, {
         host: '0.peerjs.com',
         port: 443,
@@ -322,11 +323,11 @@ function setupPeer() {
             ]
         }
     });
-    
+
     myPeer.on('open', async id => {
         console.log('✅ Peer ID:', id);
         showToast('✅ اتصال صوتی برقرار شد', 'success');
-        
+
         // ذخیره peerId در سرور
         const data = await fetchServer();
         if(data && data.game && data.game.players) {
@@ -337,7 +338,7 @@ function setupPeer() {
                 lastServerData = data;
             }
         }
-        
+
         // اتصال به بقیه
         if(players.length > 0) {
             for(const p of players) {
@@ -346,16 +347,16 @@ function setupPeer() {
             }
         }
     });
-    
+
     myPeer.on('call', async call => {
         if(localStream) call.answer(localStream);
         else call.answer();
-        
+
         const uid = call.metadata.userId;
         call.on('stream', stream => addRemoteAudio(stream, uid));
         peerConnections[uid] = call;
     });
-    
+
     myPeer.on('error', err => {
         console.error('Peer error:', err);
     });
@@ -363,7 +364,7 @@ function setupPeer() {
 
 function connectToPeer(uid, peerId) {
     if(peerConnections[uid] || !myPeer) return;
-    
+
     const call = myPeer.call(peerId, localStream, { metadata: { userId: myId } });
     call.on('stream', stream => addRemoteAudio(stream, uid));
     peerConnections[uid] = call;
@@ -372,7 +373,7 @@ function connectToPeer(uid, peerId) {
 function addRemoteAudio(stream, uid) {
     const existing = document.getElementById(`audio-${uid}`);
     if(existing) existing.remove();
-    
+
     const audio = document.createElement('audio');
     audio.id = `audio-${uid}`;
     audio.srcObject = stream;
@@ -384,14 +385,14 @@ function addRemoteAudio(stream, uid) {
 async function toggleMic() {
     const btn = document.getElementById('micBtn');
     if(!btn) return;
-    
+
     if(!localStream) {
         try {
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             setupPeer();
             btn.classList.add('active');
             btn.innerText = '🎤 خاموش';            showToast('🎤 میکروفون فعال شد', 'success');
-            
+
             // اتصال به همه
             for(const p of players) {
                 if(p.id !== myId && p.peerId) {
@@ -407,7 +408,7 @@ async function toggleMic() {
         btn.classList.remove('active');
         btn.innerText = '🎤 روشن';
         showToast('🔇 میکروفون خاموش شد');
-        
+
         for(let id in peerConnections) {
             peerConnections[id].close();
         }
@@ -420,14 +421,14 @@ function renderChairs() {
     players.slice(0, 10).forEach((p, idx) => {
         const chair = document.getElementById(`chair-${idx+1}`);
         if(!chair) return;
-        
+
         chair.className = 'chair';
         if(!p.isAlive) chair.classList.add('dead');
-        
+
         const avatar = AVATARS[idx % AVATARS.length];
         const crown = idx === 0 ? '<span class="crown-icon"></span>' : '';
         const mic = p.peerId ? '<div class="mic-indicator">🎤</div>' : '';
-        
+
         chair.innerHTML = `
             <div class="chair-avatar">
                 <img src="${avatar}">
@@ -445,7 +446,7 @@ function showReactionOnProfile(playerId, type) {
     const avatar = chair.querySelector('.chair-avatar');
     const old = avatar.querySelector('.floating-reaction');
     if(old) old.remove();
-    
+
     const el = document.createElement('div');
     el.className = 'floating-reaction';
     el.innerText = type === 'like' ? '👍' : '👎';
@@ -456,14 +457,14 @@ function showReactionOnProfile(playerId, type) {
 // ==================== شروع بازی (بدون لابی) ====================
 async function loadGame() {
     showToast('🔄 در حال بارگذاری بازی...');
-    
+
     const data = await fetchServer();
     if(!data || !data.competitive || data.competitive.count < 10) {
         showToast('❌ هنوز ۱۰ بازیکن جمع نشده‌اند', 'error');
         setTimeout(loadGame, 3000);
         return;
     }
-    
+
     // آیا بازی قبلاً شروع شده؟
     if(data.game && data.game.started) {
         // ادامه بازی
@@ -473,7 +474,7 @@ async function loadGame() {
         dayCount = data.game.dayCount || 1;
         isHost = players[0].id === myId;
         lastServerData = data;
-        
+
         showToast('✅ به بازی پیوستید', 'success');
         renderChairs();
         startGameFromPhase();
@@ -481,7 +482,7 @@ async function loadGame() {
         setupPeer();
         return;
     }
-    
+
     // شروع بازی جدید
     if(data.competitive.players.length !== 10) {
         showToast('⏳ در انتظار ۱۰ بازیکن...', 'info');
@@ -491,7 +492,7 @@ async function loadGame() {
         // فقط اولین بازیکن (میزبان) بازی را شروع می‌کند
     const firstPlayer = data.competitive.players[0];
     isHost = firstPlayer.id === myId;
-    
+
     if(isHost) {
         // من میزبان هستم - بازی را شروع می‌کنم
         await initializeNewGame(data);
@@ -504,10 +505,10 @@ async function loadGame() {
 
 async function initializeNewGame(serverData) {
     showToast('🎮 در حال شروع بازی...');
-    
+
     const competitivePlayers = serverData.competitive.players;
     const shuffledRoles = shuffle(ROLES);
-    
+
     // ساخت آرایه بازیکنان با نقش‌ها
     const gamePlayers = competitivePlayers.map((p, idx) => ({
         id: p.id,
@@ -519,7 +520,7 @@ async function initializeNewGame(serverData) {
         isAlive: true,
         peerId: null
     }));
-    
+
     const newGameData = {
         competitive: { count: 0, players: [], lastUpdate: Date.now() }, // پاک کردن صف
         game: {
@@ -532,19 +533,19 @@ async function initializeNewGame(serverData) {
             lastUpdate: Date.now()
         }
     };
-    
+
     const saved = await saveServer(newGameData);
     if(!saved) {
         showToast('❌ خطا در شروع بازی', 'error');
         setTimeout(() => initializeNewGame(serverData), 2000);
         return;    }
-    
+
     lastServerData = newGameData;
     players = gamePlayers;
     gamePhase = 'intro_day';
     speakerIndex = 0;
     dayCount = 0;
-    
+
     showToast('🎮 بازی شروع شد!', 'success');
     renderChairs();
     startGameFromPhase();
@@ -557,7 +558,7 @@ function startWaitingForGame() {
     syncInterval = setInterval(async () => {
         const data = await fetchServer();
         if(!data) return;
-        
+
         if(data.game && data.game.started) {
             clearInterval(syncInterval);
             players = data.game.players;
@@ -566,7 +567,7 @@ function startWaitingForGame() {
             dayCount = data.game.dayCount || 1;
             isHost = players[0].id === myId;
             lastServerData = data;
-            
+
             showToast('✅ بازی شروع شد!', 'success');
             renderChairs();
             startGameFromPhase();
@@ -579,7 +580,7 @@ function startWaitingForGame() {
 function startGameFromPhase() {
     if(isProcessingPhase) return;
     isProcessingPhase = true;
-    
+
     setTimeout(() => {
         if(gamePhase === 'intro_day') startIntroDay();
         else if(gamePhase === 'intro_night') startIntroNight();
@@ -597,7 +598,7 @@ function startIntroDay() {
     document.getElementById('phaseBadge').innerText = '☀️ روز معارفه';
     document.getElementById('game-page').classList.remove('night-dim');
     speakerIndex = 0;
-    
+
     const me = players.find(p => p.id === myId);
     if(me && me.role) {
         showModal('🎮 بازی شروع شد', 
@@ -610,21 +611,21 @@ function startIntroDay() {
 
 function processSpeakingOrder(isIntro) {
     if(timerInterval) clearInterval(timerInterval);
-    
+
     const alive = players.filter(p => p.isAlive);
     if(speakerIndex >= alive.length) {
         if(isIntro) startIntroNight();
         else startVotingPhase();
         return;
     }
-    
+
     const speaker = alive[speakerIndex];
     highlightSpeaker(speaker.chair);
-    
+
     const isMyTurn = speaker.id === myId;
     const btnsDiv = document.getElementById('actionButtonsContainer');
     btnsDiv.innerHTML = '';
-    
+
     // میکروفون
     const micBtn = document.createElement('button');
     micBtn.id = 'micBtn';
@@ -633,19 +634,19 @@ function processSpeakingOrder(isIntro) {
     if(localStream) micBtn.classList.add('active');
     micBtn.onclick = toggleMic;
     btnsDiv.appendChild(micBtn);
-    
+
     // لایک/دیس‌لایک
     const likeBtn = document.createElement('button');    likeBtn.className = 'action-btn like-btn';
     likeBtn.innerText = '👍';
     likeBtn.onclick = () => showReactionOnProfile(myId, 'like');
     btnsDiv.appendChild(likeBtn);
-    
+
     const dislikeBtn = document.createElement('button');
     dislikeBtn.className = 'action-btn dislike-btn';
     dislikeBtn.innerText = '👎';
     dislikeBtn.onclick = () => showReactionOnProfile(myId, 'dislike');
     btnsDiv.appendChild(dislikeBtn);
-    
+
     if(isMyTurn) {
         const skipBtn = document.createElement('button');
         skipBtn.className = 'action-btn';
@@ -653,10 +654,10 @@ function processSpeakingOrder(isIntro) {
         skipBtn.onclick = skipTurn;
         btnsDiv.appendChild(skipBtn);
     }
-    
+
     document.getElementById('actionText').innerHTML = `نوبت صحبت: <span>${speaker.name}</span>`;
     document.getElementById('actionBar').classList.add('show');
-    
+
     startTimer(30, () => {
         speakerIndex++;
         updateServerState();
@@ -677,7 +678,7 @@ function startIntroNight() {
     document.getElementById('phaseBadge').innerText = '🌙 شب معارفه';
     document.getElementById('game-page').classList.add('night-dim');
     highlightSpeaker(null);
-    
+
     showModal('🌙 شب معارفه', 
         'مافیاها یکدیگر را می‌شناسند.<br><span style="color:#ff8a8a;">امشب کسی کشته نمی‌شود.</span>',
         'ادامه', () => {
@@ -695,12 +696,12 @@ function startDayPhase() {
     document.getElementById('phaseBadge').innerText = `☀️ روز ${dayCount}`;
     document.getElementById('game-page').classList.remove('night-dim');
     speakerIndex = 0;
-    
+
     if(checkWinCondition()) return;
-    
+
     const btnsDiv = document.getElementById('actionButtonsContainer');
     btnsDiv.innerHTML = '';
-    
+
     const micBtn = document.createElement('button');
     micBtn.id = 'micBtn';
     micBtn.className = 'action-btn mic-btn';
@@ -708,28 +709,28 @@ function startDayPhase() {
     if(localStream) micBtn.classList.add('active');
     micBtn.onclick = toggleMic;
     btnsDiv.appendChild(micBtn);
-    
+
     const voteBtn = document.createElement('button');
     voteBtn.className = 'action-btn';
     voteBtn.innerText = '🗳️ رأی‌گیری';
     voteBtn.onclick = startVotingPhase;
     btnsDiv.appendChild(voteBtn);
-    
+
     const likeBtn = document.createElement('button');
     likeBtn.className = 'action-btn like-btn';
     likeBtn.innerText = '👍';
     likeBtn.onclick = () => showReactionOnProfile(myId, 'like');
     btnsDiv.appendChild(likeBtn);
-    
+
     const dislikeBtn = document.createElement('button');
     dislikeBtn.className = 'action-btn dislike-btn';
     dislikeBtn.innerText = '👎';
     dislikeBtn.onclick = () => showReactionOnProfile(myId, 'dislike');
     btnsDiv.appendChild(dislikeBtn);
-    
+
     document.getElementById('actionText').innerHTML = 'روز عادی: بحث و گفتگو';
     document.getElementById('actionBar').classList.add('show');
-    
+
     processSpeakingOrder(false);
 }
 
@@ -737,10 +738,10 @@ function startDayPhase() {
     gamePhase = 'voting';
     document.getElementById('phaseBadge').innerText = '🗳️ رأی‌گیری';
     userVote = null;
-    
+
     const btnsDiv = document.getElementById('actionButtonsContainer');
     btnsDiv.innerHTML = '';
-    
+
     const confirmBtn = document.createElement('button');
     confirmBtn.className = 'action-btn';
     confirmBtn.innerText = '✅ ثبت رأی';
@@ -752,32 +753,32 @@ function startDayPhase() {
         resolveVoting();
     };
     btnsDiv.appendChild(confirmBtn);
-    
+
     document.getElementById('actionText').innerHTML = 'روی بازیکن مورد نظر کلیک کنید';
     document.getElementById('actionBar').classList.add('show');
-    
+
     players.forEach(p => {
         if(p.isAlive && p.id !== myId) {
             const chair = document.getElementById(`chair-${p.chair}`);
             if(chair) chair.classList.add('selectable');
         }
     });
-    
+
     startTimer(30, () => resolveVoting());
 }
 
 function resolveVoting() {
     if(timerInterval) clearInterval(timerInterval);
-    
+
     const votes = {};
-    
+
     // رأی من
     if(userVote) {
         const myPlayer = players.find(p => p.id === myId);
         const weight = myPlayer && myPlayer.role === 'شهروند با نفوذ' ? 2 : 1;
         votes[userVote] = (votes[userVote] || 0) + weight;
     }
-    
+
     // رأی بقیه (شبیه‌سازی)
     players.forEach(voter => {
         if(voter.id === myId || !voter.isAlive) return;
@@ -788,29 +789,29 @@ function resolveVoting() {
             : candidates[Math.floor(Math.random()*candidates.length)];
         votes[target.id] = (votes[target.id] || 0) + weight;
     });
-    
+
     let maxVotes = 0;
     for(const count of Object.values(votes)) {
         if(count > maxVotes) maxVotes = count;
     }
-    
+
     if(maxVotes === 0) {
         showToast('⚠️ رأی‌گیری به نتیجه نرسید');
         setTimeout(() => startNightPhase(), 1500);
         return;
     }
-    
+
     const tiedPlayers = players.filter(p => votes[p.id] === maxVotes);
-    
+
     if(tiedPlayers.length === 1) {
         const eliminated = tiedPlayers[0];
         eliminated.isAlive = false;
         renderChairs();
         showToast(`💀 ${eliminated.name} با ${maxVotes} رأی حذف شد`, 'error');
-        
+
         updateServerState();
         if(checkWinCondition()) return;
-        
+
         setTimeout(() => startNightPhase(), 2000);
     } else {
         const names = tiedPlayers.map(p => p.name).join(' و ');
@@ -826,55 +827,55 @@ function startNightPhase() {
     document.getElementById('game-page').classList.add('night-dim');
     nightActions = {};
     currentNightAction = null;
-    
+
     highlightSpeaker(null);
     showToast('🌙 شب فرا رسید');
-    
+
     setTimeout(() => processNightQueue(0), 2000);
 }
 function processNightQueue(step) {
     const roleOrder = ['تهمت‌زن', 'خرابکار', 'رئیس مافیا', 'دکتر', 'کارآگاه', 'تفنگدار'];
-    
+
     if(step >= roleOrder.length) {
         setTimeout(resolveNight, 1500);
         return;
     }
-    
+
     const roleName = roleOrder[step];
     const actor = players.find(p => p.role === roleName && p.isAlive);
-    
+
     if(!actor) {
         processNightQueue(step + 1);
         return;
     }
-    
+
     if(actor.id === myId) {
         currentNightAction = { role: roleName, actorId: actor.id, step: step };
-        
+
         document.getElementById('actionText').innerHTML = `نوبت شما (<span>${roleName}</span>): انتخاب هدف`;
         const btnsDiv = document.getElementById('actionButtonsContainer');
         btnsDiv.innerHTML = '';
-        
+
         const skipBtn = document.createElement('button');
         skipBtn.className = 'action-btn';
         skipBtn.innerText = '⏩ رد کردن';
         skipBtn.onclick = () => finishNightAction();
         btnsDiv.appendChild(skipBtn);
-        
+
         document.getElementById('actionBar').classList.add('show');
-        
+
         players.forEach(p => {
             if(p.isAlive && p.id !== myId) {
                 const chair = document.getElementById(`chair-${p.chair}`);
                 if(chair) chair.classList.add('selectable');
             }
         });
-        
+
         startTimer(20, () => finishNightAction());
     } else {
         document.getElementById('actionText').innerHTML = `${roleName} در حال اقدام...`;
         document.getElementById('actionBar').classList.add('show');
-        
+
         setTimeout(() => {
             aiChooseTarget(roleName, actor);
             showToast(`${roleName} اقدام کرد`);
@@ -885,7 +886,7 @@ function processNightQueue(step) {
 function handleChairClick(pid) {
     const p = players.find(pl => pl.id === pid);
     if(!p || !p.isAlive) return;
-    
+
     if(gamePhase === 'day' || gamePhase === 'intro_day') {
         if(pid !== myId) {
             showReactionOnProfile(pid, 'like');
@@ -907,17 +908,17 @@ function handleChairClick(pid) {
 function executeNightAbility(target) {
     if(timerInterval) clearInterval(timerInterval);
     const { role } = currentNightAction;
-    
+
     if(role === 'کارآگاه') {
         let result = 'منفی (شهروند) ✅';
         if(target.role === 'رئیس مافیا') result = 'منفی (شهروند) ✅';
         else if(target.role === 'تهمت‌زن') result = 'مثبت (مافیا) ❌';
         else if(target.team === 'mafia') result = 'مثبت (مافیا) ❌';
-        
+
         showModal('🔍 استعلام', `استعلام <b>${target.name}</b>: <b style="color:${result.includes('مثبت')?'#e74c3c':'#2ecc71'}">${result}</b>`, 'باشه', () => finishNightAction());
         return;
     }
-    
+
     if(role === 'رئیس مافیا') {
         nightActions.kill = target.id;
         showToast(`🔪 ${target.name} هدف شلیک قرار گرفت`, 'error');
@@ -930,26 +931,26 @@ function executeNightAbility(target) {
     } else if(role === 'تهمت‌زن') {
         nightActions.frame = target.id;
         showToast(`🎭 به ${target.name} تهمت زده شد`);    }
-    
+
     finishNightAction();
 }
 
 function finishNightAction() {
     document.querySelectorAll('.chair').forEach(c => c.classList.remove('selectable'));
     if(timerInterval) clearInterval(timerInterval);
-    
+
     const nextStep = currentNightAction.step + 1;
     currentNightAction = null;
-    
+
     setTimeout(() => processNightQueue(nextStep), 1000);
 }
 
 function aiChooseTarget(roleName, actor) {
     const alive = players.filter(p => p.isAlive && p.id !== actor.id);
     if(alive.length === 0) return;
-    
+
     let target = alive[Math.floor(Math.random() * alive.length)];
-    
+
     if(roleName === 'رئیس مافیا') {
         nightActions.kill = target.id;
     } else if(roleName === 'دکتر') {
@@ -964,14 +965,14 @@ function aiChooseTarget(roleName, actor) {
 function resolveNight() {
     const killed = nightActions.kill;
     const saved = nightActions.save;
-    
+
     if(killed && killed !== saved) {
         const victim = players.find(p => p.id === killed);
         if(victim) {
             victim.isAlive = false;
             showToast(`💀 ${victim.name} توسط مافیا کشته شد`, 'error');
             renderChairs();
-            
+
             updateServerState();
             if(checkWinCondition()) return;
         }
@@ -981,7 +982,7 @@ function resolveNight() {
         dayCount++;
     gamePhase = 'day';
     updateServerState();
-    
+
     setTimeout(() => startDayPhase(), 2000);
 }
 
@@ -989,7 +990,7 @@ function resolveNight() {
 function checkWinCondition() {
     const citizens = players.filter(p => p.isAlive && p.team === 'citizen').length;
     const mafia = players.filter(p => p.isAlive && p.team === 'mafia').length;
-    
+
     if(mafia === 0) {
         showEndScreen('city');
         return true;
@@ -1005,10 +1006,10 @@ function showEndScreen(winner) {
     const isCityWin = winner === 'city';
     const title = isCityWin ? '🎉 پیروزی شهروندان!' : '💀 پیروزی مافیا!';
     const desc = isCityWin ? 'تمام مافیاها حذف شدند!' : 'مافیا برنده شد!';
-    
+
     let tableHtml = `<table style="width:100%; border-collapse:collapse; margin:20px 0; font-size:14px;">
         <tr style="background:rgba(255,217,102,0.2);"><th style="padding:10px;">بازیکن</th><th style="padding:10px;">نقش</th><th style="padding:10px;">تیم</th></tr>`;
-    
+
     players.forEach(p => {
         const isMafia = p.team === 'mafia';
         const color = isMafia ? '#e94560' : '#2ecc71';
@@ -1019,7 +1020,7 @@ function showEndScreen(winner) {
         </tr>`;
     });
     tableHtml += `</table>`;
-    
+
     showModal(title, desc + tableHtml, 'بازی جدید', () => location.reload());
 }
 
@@ -1029,7 +1030,7 @@ function startTimer(seconds, onEnd) {
     let left = seconds;
     const badge = document.getElementById('timerBadge');    badge.innerText = left;
     badge.classList.add('show');
-    
+
     timerInterval = setInterval(() => {
         left--;
         badge.innerText = left;
@@ -1060,7 +1061,7 @@ function highlightSpeaker(chairNum) {
 // ==================== به‌روزرسانی سرور ====================
 async function updateServerState() {
     if(!lastServerData) return;
-    
+
     lastServerData.game = {
         started: true,
         phase: gamePhase,
@@ -1070,7 +1071,7 @@ async function updateServerState() {
         nightActions: nightActions,
         lastUpdate: Date.now()
     };
-    
+
     await saveServer(lastServerData);
 }
 
@@ -1080,15 +1081,15 @@ function startSync() {
     syncInterval = setInterval(async () => {
         const data = await fetchServer();
         if(!data || !data.game || !data.game.started) return;
-        
+
         // بررسی تغییرات
         if(JSON.stringify(data.game) === JSON.stringify(lastServerData?.game)) return;
-        
+
         lastServerData = data;
-        
+
         const updated = data.game;
         players = updated.players;
-        
+
         if(updated.phase !== gamePhase) {
             gamePhase = updated.phase;
             speakerIndex = updated.speakerIndex || 0;
@@ -1098,7 +1099,7 @@ function startSync() {
             speakerIndex = updated.speakerIndex;
             processSpeakingOrder(gamePhase === 'intro_day');
         }
-        
+
         renderChairs();
     }, 3000);
 }
