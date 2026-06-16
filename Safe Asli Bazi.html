@@ -31,7 +31,6 @@
             padding: 20px;
         }
 
-        /* بخش حساب (چپ بالا) */
         .account-card {
             position: fixed;
             top: 20px;
@@ -94,7 +93,6 @@
             opacity: 0.8;
         }
 
-        /* جم و سکه (راست بالا) */
         .currency-bar {
             position: fixed;
             top: 20px;
@@ -118,7 +116,6 @@
             border: 1px solid rgba(255,255,255,0.25);
         }
 
-        /* ===== منوی اپلیکیشنی (مربعی و خاکستری) ===== */
         .app-menu-container {
             position: fixed;
             top: 80px;
@@ -219,7 +216,6 @@
             margin: 3px 14px;
         }
 
-        /* ===== منوی سرورها (کشویی پایین - فقط دو عکس با پس‌زمینه) ===== */
         .server-menu-backdrop {
             position: fixed;
             bottom: 0;
@@ -240,7 +236,7 @@
 
         .server-menu-overlay {
             position: fixed;
-            bottom: 250px; /* بالاتر از قبل */
+            bottom: 250px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 200;
@@ -257,8 +253,8 @@
         }
 
         .server-menu-btn {
-            width: 170px;  /* بزرگ‌تر */
-            height: 170px; /* بزرگ‌تر */
+            width: 170px;
+            height: 170px;
             object-fit: contain;
             cursor: pointer;
             transition: transform 0.15s;
@@ -274,7 +270,6 @@
             transform: scale(1.05);
         }
 
-        /* دکمه‌های پایین (سرورها و رقابتی) */
         .bottom-buttons {
             position: fixed;
             bottom: 100px;
@@ -300,7 +295,6 @@
             transform: scale(0.96);
         }
 
-        /* مودال پروفایل */
         .profile-modal {
             position: fixed;
             top: 0;
@@ -423,7 +417,7 @@
         .settings-btn:active {
             transform: scale(0.96);
         }
-        /* مودال تنظیمات صدا */
+
         .settings-modal {
             position: fixed;
             top: 50%;
@@ -461,7 +455,6 @@
             cursor: pointer;
         }
 
-        /* فروشگاه */
         .shop-overlay {
             position: fixed;
             top: 0;
@@ -643,7 +636,7 @@
         </div>
     </div>
 
-    <!-- ===== منوی سرورها (فقط دو عکس با پس‌زمینه) ===== -->
+    <!-- منوی سرورها -->
     <div class="server-menu-backdrop" id="serverBackdrop"></div>
     <div class="server-menu-overlay" id="serverMenu">
         <img class="server-menu-btn" id="adultServerBtn" src="InShot_20260616_223548506.jpg" alt="سرور بزرگسالان">
@@ -744,9 +737,28 @@
         userData.canAccessAdult = canAccessAdult;
         userData.canAccessTeen = canAccessTeen;
         userData.age = currentUserAge;
+        if (!userData.ownedAvatars) userData.ownedAvatars = ['InShot_20260225_191621541.png','InShot_20260224_194133998.png','InShot_20260208_214035107.png','InShot_20260208_214116629.png'];
+        if (!userData.ownedFrames) userData.ownedFrames = ['InShot_20260607_164903273.png'];
         usersDB[currentUserPhone] = userData;
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     }
+
+    // ==================== آواتارهای جدید فروشگاه ====================
+    const storeAvatars = [
+        { src: 'InShot_20260219_185448062.png', price: 200, currency: 'gems', name: 'آواتار شعله‌ای' },
+        { src: 'InShot_20260219_185413696.png', price: 190, currency: 'gems', name: 'آواتار آبی' },
+        { src: 'InShot_20260219_185328676.png', price: 100, currency: 'gems', name: 'آواتار سبز' },
+        { src: 'InShot_20260219_185247894.png', price: 150, currency: 'gems', name: 'آواتار طلایی' },
+        { src: 'InShot_20260219_185152210.png', price: 100, currency: 'coins', name: 'آواتار صورتی' },
+        { src: 'InShot_20260219_185049749.png', price: 200, currency: 'coins', name: 'آواتار نارنجی' },
+        { src: 'InShot_20260217_183611271.png', price: 150, currency: 'gems', name: 'آواتار بنفش' },
+        { src: 'InShot_20260216_031531507.png', price: 180, currency: 'gems', name: 'آواتار یخی' },
+        { src: 'InShot_20260216_031443956.png', price: 300, currency: 'gems', name: 'آواتار الماسی' },
+        { src: 'InShot_20260216_031355260.png', price: 200, currency: 'gems', name: 'آواتار سلطنتی' },
+        { src: 'InShot_20260213_195217329.png', price: 80, currency: 'gems', name: 'آواتار ساده ۱' },
+        { src: 'InShot_20260213_195059047.png', price: 80, currency: 'gems', name: 'آواتار ساده ۲' }
+    ];
+    const storeFrames = [];
 
     // ==================== صداها ====================
     const bgAudio = document.getElementById('bgMusic');
@@ -806,8 +818,8 @@
     function updateUI() {
         document.getElementById('accountName').innerText = userData.name;
         document.getElementById('accountAvatar').src = userData.currentAvatar;
-        document.getElementById('coinAmount').innerText = userData.coins;
-        document.getElementById('gemAmount').innerText = userData.gems;
+        document.getElementById('coinAmount').innerText = userData.coins || 0;
+        document.getElementById('gemAmount').innerText = userData.gems || 0;
         document.getElementById('accountLevel').innerHTML = 'سطح ' + (Math.floor(userData.level) || 1);
 
         const rank = userData.rank;
@@ -883,11 +895,6 @@
     const shopOverlay = document.getElementById('shopOverlay');
     const shopContent = document.getElementById('shopContent');
     let currentShopTab = 'my';
-    const storeAvatars = [
-        { src: 'InShot_20260403_212249999.png', price: 200, currency: 'gems', name: 'آواتار شعله‌ای' },
-        { src: 'InShot_20260403_212625191.png', price: 250, currency: 'gems', name: 'آواتار یخی' }
-    ];
-    const storeFrames = [];
 
     function openShop() {
         playClick();
@@ -903,8 +910,8 @@
     function renderShop() {
         shopContent.innerHTML = '';
         if (currentShopTab === 'my') {
-            const ownedAvatars = userData.ownedAvatars;
-            const ownedFrames = userData.ownedFrames;
+            const ownedAvatars = userData.ownedAvatars || [];
+            const ownedFrames = userData.ownedFrames || [];
             if (ownedAvatars.length) {
                 const sec = document.createElement('div');
                 sec.className = 'shop-section';
@@ -958,7 +965,7 @@
             shopContent.appendChild(sec);
             const grid = sec.querySelector('#storeAvatarsGrid');
             storeAvatars.forEach(item => {
-                const alreadyOwned = userData.ownedAvatars.includes(item.src);
+                const alreadyOwned = userData.ownedAvatars ? userData.ownedAvatars.includes(item.src) : false;
                 const card = document.createElement('div');
                 card.className = 'shop-card';
                 card.innerHTML = `<img src="${item.src}"><div class="price">${item.price} ${item.currency === 'gems' ? 'جم' : 'سکه'}</div>`;
@@ -969,6 +976,7 @@
                         playClick();
                         if (item.currency === 'gems' && userData.gems >= item.price) {
                             userData.gems -= item.price;
+                            if (!userData.ownedAvatars) userData.ownedAvatars = [];
                             userData.ownedAvatars.push(item.src);
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
@@ -977,6 +985,7 @@
                             updateUI();
                         } else if (item.currency === 'coins' && userData.coins >= item.price) {
                             userData.coins -= item.price;
+                            if (!userData.ownedAvatars) userData.ownedAvatars = [];
                             userData.ownedAvatars.push(item.src);
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
@@ -1008,7 +1017,7 @@
                 shopContent.appendChild(sec2);
                 const grid2 = sec2.querySelector('#storeFramesGrid');
                 storeFrames.forEach(frame => {
-                    const alreadyOwned = userData.ownedFrames.includes(frame.src);
+                    const alreadyOwned = userData.ownedFrames ? userData.ownedFrames.includes(frame.src) : false;
                     const card = document.createElement('div');
                     card.className = 'shop-card';
                     card.innerHTML = `<img src="${frame.src}" style="border-radius:12px;"><div class="price">${frame.price} سکه</div>`;
@@ -1019,6 +1028,7 @@
                             playClick();
                             if (userData.coins >= frame.price) {
                                 userData.coins -= frame.price;
+                                if (!userData.ownedFrames) userData.ownedFrames = [];
                                 userData.ownedFrames.push(frame.src);
                                 usersDB[currentUserPhone] = userData;
                                 localStorage.setItem('mafia_users', JSON.stringify(usersDB));
@@ -1109,7 +1119,7 @@
         });
     });
 
-    // ==================== منوی سرورها (کشویی با دو عکس و پس‌زمینه) ====================
+    // ==================== منوی سرورها ====================
     const serverMenu = document.getElementById('serverMenu');
     const serverBackdrop = document.getElementById('serverBackdrop');
     const serverBtn = document.getElementById('serverBtn');
@@ -1136,27 +1146,24 @@
         }
     });
 
-    // بستن با کلیک روی پس‌زمینه
     serverBackdrop.addEventListener('click', closeServerMenu);
 
-    // دکمه سرور بزرگسالان
     adultBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessAdult) {
             alert('✅ ورود به سرور بزرگسالان');
         } else {
-            alert('❌ شما دسترسی به سرور بزرگسالان ندارید. (سن شما کمتر از ۱۸ سال یا مقام شما اجازه نمی‌دهد)');
+            alert('❌ شما دسترسی به سرور بزرگسالان ندارید.');
         }
         closeServerMenu();
     });
 
-    // دکمه سرور نوجوانان
     teenBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessTeen) {
             alert('✅ ورود به سرور نوجوانان');
         } else {
-            alert('❌ شما دسترسی به سرور نوجوانان ندارید. (سن شما ۱۸ سال یا بیشتر است یا مقام شما اجازه نمی‌دهد)');
+            alert('❌ شما دسترسی به سرور نوجوانان ندارید.');
         }
         closeServerMenu();
     });
