@@ -1,1113 +1,1075 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>مافیا آنلاین | بازی کامل</title>
-<style>
-:root {
-    --primary: #e94560;
-    --accent: #ffd966;
-    --success: #2ecc71;
-    --bg-dark: #050810;
-    --glass: rgba(10, 15, 30, 0.92);
-}
-* { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; font-family:'Vazirmatn','Segoe UI',Tahoma,sans-serif; }
-body { background:var(--bg-dark); color:white; overflow:hidden; height:100vh; width:100vw; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>بازی مافیا | صفحه اصلی</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-#game-page {
-    position:fixed; inset:0;
-    background: linear-gradient(135deg, #050810, #16213e);
-    background-image: url('https://s8.uupload.ir/files/inshot_20260213_024334942_qu0p.jpg');
-    background-size:cover; background-position:center;
-    transition:filter 1s ease;
-}
-#game-page.night-dim { filter:brightness(0.55) blur(1px); }
-#game-page.night-dim .table-wrapper { filter:brightness(1.2) blur(0); }
+        body {
+            font-family: 'Segoe UI', Tahoma, system-ui, sans-serif;
+            background: #0a0f1e;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-.table-container { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-.table-wrapper { position:relative; width:min(1000px,95vw); height:min(900px,85vh); transition:filter 1s; }
-.table {
-    width:min(450px,45vw); height:min(450px,45vw);
-    background:url('https://s8.uupload.ir/files/inshot_20260213_024704366_un99.png') center/contain no-repeat;
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    z-index:10; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.9));
-}
+        .main-page {
+            width: 100%;
+            min-height: 100vh;
+            background-image: url('IMG_20260607_170932_059.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+            padding: 20px;
+        }
 
-.chair {
-    position:absolute; width:100px; height:100px;
-    background-size:contain; background-repeat:no-repeat; background-position:center;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    z-index:20; transform:translate(-50%,-50%); transition:all 0.3s; cursor:pointer;
-}
-.chair.dead { opacity:0.2; filter:grayscale(1); pointer-events:none; }
-.chair.speaking { filter:drop-shadow(0 0 30px #ffeb3b); transform:translate(-50%,-50%) scale(1.15); z-index:25; }
-.chair.selectable { animation:floatSelect 1.5s infinite ease-in-out; cursor:pointer; }
-.chair.selected-target { transform:translate(-50%,-50%) scale(1.1); filter:drop-shadow(0 0 25px var(--success)) !important; border:2px solid var(--success); border-radius:50%; }
-@keyframes floatSelect { 0%,100%{transform:translate(-50%,-50%) translateY(0);} 50%{transform:translate(-50%,-50%) translateY(-8px);} }
+        /* بخش حساب (چپ بالا) */
+        .account-card {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 6px 15px 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: 0.2s;
+        }        .account-card:hover {
+            background: rgba(0,0,0,0.75);
+            transform: scale(1.02);
+        }
+        .account-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2ecc71;
+        }
+        .account-info {
+            color: white;
+        }
+        .account-name {
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .rank-tick {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            background-color: #aaa;
+        }
+        .account-level {
+            font-size: 10px;
+            opacity: 0.8;
+        }
 
-.chair-avatar {
-    width:55px; height:55px; border-radius:50%; overflow:visible;    border:3px solid rgba(255,255,255,0.8); background:#1a1e24;
-    box-shadow:0 4px 12px rgba(0,0,0,0.6); position:relative;
-}
-.chair-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+        /* جم و سکه (راست بالا) */
+        .currency-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+            align-items: center;
+        }
+        .currency-item {
+            background: rgba(0,0,0,0.55);            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffd966;
+            font-weight: bold;
+            font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
 
-.mic-indicator {
-    position:absolute; top:-8px; right:-8px;
-    width:22px; height:22px; border-radius:50%;
-    background:#2ecc71; display:flex; align-items:center; justify-content:center;
-    font-size:12px; animation:pulse 1.5s infinite;
-    box-shadow:0 0 10px #2ecc71;
-}
-@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.2);} }
+        /* ===== منوی اپلیکیشنی (مربعی و کوچک‌تر) ===== */
+        .app-menu-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
 
-.floating-reaction {
-    position:absolute; top:-15px; left:50%; transform:translateX(-50%);
-    font-size:28px; animation:floatUp 3s forwards;
-    pointer-events:none; z-index:40; text-shadow:0 2px 10px rgba(0,0,0,0.8);
-}
-@keyframes floatUp {
-    0% { opacity:0; transform:translateX(-50%) translateY(10px) scale(0.5); }
-    20% { opacity:1; transform:translateX(-50%) translateY(0) scale(1.2); }
-    80% { opacity:1; transform:translateX(-50%) translateY(-15px) scale(1); }
-    100% { opacity:0; transform:translateX(-50%) translateY(-30px) scale(0.8); }
-}
+        .menu-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px; /* مربعی با گوشه‌های گرد - شبیه اپ واقعی */
+            background: linear-gradient(145deg, #2a8a5e, #1a5a3e);
+            border: 2px solid #6eacda;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px; /* کوچک‌تر برای دکمه مربعی */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .menu-toggle-btn:active {
+            transform: scale(0.92);
+        }
+        .menu-toggle-btn .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e94560;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;            border-radius: 20px;
+            display: none;
+        }
 
-.chair-name {
-    color:white; font-size:11px; font-weight:700;
-    background:rgba(0,0,0,0.85); backdrop-filter:blur(4px);
-    border-radius:12px; padding:3px 8px; margin-top:6px;
-    white-space:nowrap; max-width:95px; overflow:hidden; text-overflow:ellipsis;
-    display:flex; align-items:center; gap:4px;
-}
-.crown-icon { display:inline-block; width:14px; height:14px; background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M12 2L15 8L21 9L17 14L18 21L12 17.5L6 21L7 14L3 9L9 8L12 2Z"/></svg>') center/contain no-repeat; }
+        .app-menu {
+            background: rgba(20, 25, 35, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(110, 172, 218, 0.5);
+            border-radius: 16px; /* کوچک‌تر از 24px */
+            padding: 8px 0; /* کوچک‌تر */
+            min-width: 190px; /* کمی کوچک‌تر از 210px */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            margin-top: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 1px;
+            animation: menuSlideIn 0.25s ease;
+        }
+        .app-menu.open {
+            display: flex;
+        }
+        @keyframes menuSlideIn {
+            from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
 
-.action-bar {
-    position:fixed; bottom:25px; left:50%; transform:translateX(-50%);
-    width:92%; max-width:650px;
-    background:var(--glass); backdrop-filter:blur(15px);
-    border:1px solid rgba(255,255,255,0.15); border-radius:25px;
-    padding:12px 20px; display:flex; justify-content:space-between; align-items:center; gap:10px;
-    z-index:1000; opacity:0; pointer-events:none; transform:translateX(-50%) translateY(20px);
-    transition:all 0.4s ease;
-}
-.action-bar.show { opacity:1; pointer-events:all; transform:translateX(-50%) translateY(0); }
-.action-text { font-size:13px; font-weight:600; color:#fff; flex:1; text-align:center; line-height:1.4; }
-.action-text span { color:var(--accent); font-weight:800; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px; /* کوچک‌تر */
+            color: #e0e0e0;
+            font-size: 13px; /* کوچک‌تر */
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: right;
+            font-family: inherit;
+        }
+        .menu-item:hover {
+            background: rgba(110, 172, 218, 0.15);
+        }
+        .menu-item:active {
+            background: rgba(110, 172, 218, 0.25);
+            transform: scale(0.98);
+        }
+        .menu-item .icon {            font-size: 18px; /* کوچک‌تر */
+            min-width: 30px; /* کوچک‌تر */
+            text-align: center;
+        }
+        .menu-item .label {
+            flex: 1;
+        }
+        .menu-item .arrow {
+            color: #5a6a7a;
+            font-size: 14px;
+        }
+        .menu-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 3px 14px;
+        }
 
-.action-btn {
-    background:var(--primary); border:none; border-radius:18px;    padding:10px 15px; color:white; font-weight:700; font-size:13px;
-    cursor:pointer; transition:0.2s; white-space:nowrap;
-}
-.action-btn:hover { transform:translateY(-2px); }
-.action-btn:active { transform:scale(0.95); }
-.action-btn.like-btn { background:#2ecc71; }
-.action-btn.dislike-btn { background:#e74c3c; }
-.action-btn.mic-btn { background:#3498db; }
-.action-btn.mic-btn.active { background:#e74c3c; animation:pulse 1.5s infinite; }
+        /* دکمه‌های پایین (سرورها و رقابتی) */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            z-index: 100;
+        }
+        .bottom-btn {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            cursor: pointer;
+            transition: 0.2s;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+            display: block;
+            background: transparent;
+            border: none;
+        }
+        .bottom-btn:active {
+            transform: scale(0.96);
+        }
 
-.timer-badge {
-    position:fixed; top:15px; left:15px;
-    background:rgba(233,69,96,0.9); color:white;
-    font-size:1.2rem; font-weight:800; padding:6px 15px; border-radius:15px;
-    z-index:1500; display:none;
-}
-.timer-badge.show { display:block; animation:pulse 1s infinite; }
+        /* مودال پروفایل */
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;            background-image: url('IMG_20260405_103001_954.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            transition: 0.4s ease;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-modal.open {
+            right: 0;
+        }
+        .close-profile {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .profile-avatar-circle {
+            width: 130px;
+            height: 130px;
+            margin: 70px auto 20px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid #2ecc71;
+        }
+        .profile-avatar-circle img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile-name {
+            text-align: center;
+            font-size: 22px;            font-weight: bold;
+            color: white;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .edit-name {
+            background: #2ecc71;
+            border: none;
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            color: white;
+        }
+        .profile-userid {
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            width: fit-content;
+            margin: 10px auto;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #ccc;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .profile-group {
+            text-align: center;
+            color: #ffd966;
+            margin: 10px;
+        }
+        .settings-btn {
+            background: #2ecc71;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 200px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .settings-btn:active {
+            transform: scale(0.96);
+        }
+        /* مودال تنظیمات صدا */
+        .settings-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 300px;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 20px;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #2ecc71;
+        }
+        .settings-modal.open {
+            display: flex;
+        }
+        .settings-modal h3 {
+            color: white;
+        }
+        .volume-slider {
+            width: 100%;
+            direction: ltr;
+        }
+        .close-settings {
+            background: #e94560;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 20px;
+            color: white;
+            cursor: pointer;
+        }
 
-.phase-badge {
-    position:fixed; top:15px; right:15px;
-    background:var(--glass); backdrop-filter:blur(10px);
-    padding:8px 18px; border-radius:25px;
-    color:var(--accent); font-weight:800; font-size:14px;
-    z-index:1000; border-right:3px solid var(--primary);
-}
-
-.toast-container { position:fixed; top:70px; left:50%; transform:translateX(-50%); z-index:2000; display:flex; flex-direction:column; gap:10px; width:90%; max-width:400px; pointer-events:none; }
-.toast {
-    background:var(--glass); backdrop-filter:blur(10px); border-right:4px solid var(--accent);
-    padding:12px 20px; border-radius:12px; font-size:14px; font-weight:600; text-align:center;
-    animation:slideInToast 0.4s ease, fadeOutToast 0.4s ease 2.6s forwards;
-}
-.toast.error { border-color:var(--primary); color:#ff8a8a; }
-.toast.success { border-color:var(--success); color:#8aff8a; }
-@keyframes slideInToast { from{opacity:0;transform:translateY(-20px);} to{opacity:1;transform:translateY(0);} }
-@keyframes fadeOutToast { to{opacity:0;transform:translateY(-20px);} }
-
-.modal {
-    position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(10px);
-    z-index:3000; display:none; align-items:center; justify-content:center; padding:20px;
-}
-.modal.show { display:flex; }
-.modal-content {
-    background:linear-gradient(145deg,#1a1e2e,#252a40); border:2px solid var(--accent); border-radius:25px;
-    padding:30px; max-width:600px; width:100%; text-align:center;
-}
-.modal-title { font-size:1.6rem; color:var(--accent); margin-bottom:15px; font-weight:800; }
-.modal-text { font-size:1.1rem; line-height:1.7; margin-bottom:20px; color:#ddd; }
-
-@media (max-width:600px) {    .chair { width:80px; height:80px; }
-    .chair-avatar { width:45px; height:45px; }
-    .chair-name { font-size:9px; max-width:70px; }
-    .action-bar { padding:10px 15px; flex-wrap:wrap; justify-content:center; }
-    .action-text { width:100%; margin-bottom:5px; font-size:11px; }
-    .action-btn { padding:8px 12px; font-size:11px; }
-}
-</style>
+        /* فروشگاه */
+        .shop-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('IMG_20260405_103001_954.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 1100;            display: none;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .shop-overlay.open {
+            display: flex;
+        }
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 40px;
+            margin-bottom: 20px;
+        }
+        .shop-back {
+            font-size: 26px;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .shop-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .shop-tab {
+            background: rgba(0,0,0,0.6);
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .shop-tab.active {
+            background: #2ecc71;
+            color: black;
+        }
+        .shop-section {
+            margin-bottom: 30px;        }
+        .section-title {
+            color: gold;
+            font-size: 16px;
+            margin: 15px 0 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .shop-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+        .shop-card {
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .shop-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 6px;
+        }
+        .shop-card .price {
+            color: gold;
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .shop-card button {
+            background: #2ecc71;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+        .shop-card .owned-badge {
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        /* ===== اسکرول‌های ساده ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    </style>
 </head>
 <body>
 
-<div id="game-page">
-    <div class="table-container">
-        <div class="table-wrapper">
-            <div class="table"></div>
-            <div id="chair-1" class="chair" style="top:12%;left:25%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');"></div>
-            <div id="chair-2" class="chair" style="top:32%;left:12%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');"></div>
-            <div id="chair-3" class="chair" style="top:58%;left:12%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');"></div>
-            <div id="chair-4" class="chair" style="top:78%;left:25%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');"></div>
-            <div id="chair-5" class="chair" style="top:88%;left:50%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101720411_53m5.png');"></div>
-            <div id="chair-6" class="chair" style="top:78%;left:75%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');"></div>
-            <div id="chair-7" class="chair" style="top:58%;left:88%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');"></div>
-            <div id="chair-8" class="chair" style="top:32%;left:88%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');"></div>
-            <div id="chair-9" class="chair" style="top:12%;left:75%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');"></div>
-            <div id="chair-10" class="chair" style="top:5%;left:50%;background-image:url('https://s8.uupload.ir/files/inshot_20260213_024911666_6b.png');"></div>
+<div class="main-page">
+    <!-- حساب کاربری -->
+    <div class="account-card" id="accountCard">
+        <img class="account-avatar" id="accountAvatar" src="" alt="avatar">
+        <div class="account-info">
+            <div class="account-name">
+                <span id="accountName"></span>
+                <span id="accountTick" class="rank-tick" style="display:none;">✓</span>
+            </div>
+            <div class="account-level" id="accountLevel">سطح 1</div>
         </div>
     </div>
-</div>
 
-<div id="timerBadge" class="timer-badge">30</div>
-<div id="phaseBadge" class="phase-badge">🎬 در حال بارگذاری...</div>
-<div class="toast-container" id="toastContainer"></div>
+    <!-- جم و سکه -->
+    <div class="currency-bar">
+        <div class="currency-item"><span>🪙</span> <span id="coinAmount">0</span></div>
+        <div class="currency-item"><span>💎</span> <span id="gemAmount">0</span></div>
+    </div>
 
-<div id="actionBar" class="action-bar">
-    <div class="action-text" id="actionText">در حال اتصال...</div>
-    <div id="actionButtonsContainer" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
-</div>
+    <!-- ===== منوی اپلیکیشنی (مربعی و کوچک‌تر) ===== -->
+    <div class="app-menu-container">
+        <div class="menu-toggle-btn" id="menuToggle">
+            <span class="icon">☰</span>
+            <span class="badge" id="menuBadge">●</span>
+        </div>
+        <div class="app-menu" id="appMenu">
+            <button class="menu-item" data-section="donate">
+                <span class="icon">🎁</span>
+                <span class="label">اهدای جم</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="groups">
+                <span class="icon">👥</span>
+                <span class="label">گروه‌ها</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="rankings">
+                <span class="icon">🏆</span>
+                <span class="label">رتبه‌بندی</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="live">                <span class="icon">📺</span>
+                <span class="label">پخش زنده</span>
+                <span class="arrow">›</span>
+            </button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" data-section="gem-shop">
+                <span class="icon">❌</span>
+                <span class="label">فروشگاه جم و سکه</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="shop">
+                <span class="icon">🛍️</span>
+                <span class="label">فروشگاه آواتار</span>
+                <span class="arrow">›</span>
+            </button>
+            <button class="menu-item" data-section="profile">
+                <span class="icon">👤</span>
+                <span class="label">پروفایل</span>
+                <span class="arrow">›</span>
+            </button>
+        </div>
+    </div>
 
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <div id="modalTitle" class="modal-title"></div>
-        <div id="modalText" class="modal-text"></div>
-        <button id="modalBtn" class="action-btn" style="width:100%; margin-top:15px; padding:15px; font-size:16px;">ادامه</button>
+    <!-- دکمه‌های پایین -->
+    <div class="bottom-buttons">
+        <img class="bottom-btn" id="serverBtn" src="InShot_20260607_182328911.png" alt="سرورها">
+        <img class="bottom-btn" id="competitiveBtn" src="InShot_20260607_175214175.png" alt="رقابتی">
     </div>
 </div>
 
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<!-- مودال پروفایل -->
+<div id="profileModal" class="profile-modal">
+    <div class="close-profile" id="closeProfileBtn">✕</div>
+    <div class="profile-avatar-circle" id="profileAvatarCircle">
+        <img id="profileAvatarImg" src="" alt="avatar">
+    </div>
+    <div class="profile-name">
+        <span id="profileName"></span>
+        <button class="edit-name" id="editNameBtn">✎</button>
+        <span id="profileTick" class="rank-tick" style="display:none;">✓</span>
+    </div>
+    <div class="profile-userid" id="userIdCopy">کد کاربری: <span id="userIdCode"></span> 📋</div>
+    <div class="profile-group" id="groupName">گروه: بدون گروه</div>
+    <div class="profile-stats">
+        <div class="stat-box">⏱️ ساعت بازی<br><span id="playHours">0</span></div>
+        <div class="stat-box">👀 ناظری<br><span id="observerCount">0</span></div>
+        <div class="stat-box">🏆 برد سرور<br><span id="serverWins">0</span></div>
+        <div class="stat-box">⚔️ برد رقابتی<br><span id="compWins">0</span></div>
+        <div class="stat-box">🎖️ کاپ<br><span id="cups">0</span></div>
+    </div>    <div class="settings-btn" id="settingsBtn">تنظیمات صدا</div>
+</div>
+
+<!-- مودال تنظیمات -->
+<div id="settingsModal" class="settings-modal">
+    <h3>تنظیم صدای آهنگ</h3>
+    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
+    <button class="close-settings" id="closeSettingsBtn">بستن</button>
+</div>
+
+<!-- فروشگاه -->
+<div id="shopOverlay" class="shop-overlay">
+    <div class="shop-header">
+        <div class="shop-back" id="shopBackBtn">←</div>
+        <div class="shop-tabs">
+            <div class="shop-tab" data-shop-tab="my">خریدهای من</div>
+            <div class="shop-tab" data-shop-tab="store">خریدها</div>
+        </div>
+        <div style="width:36px;"></div>
+    </div>
+    <div id="shopContent"></div>
+</div>
+
+<audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+<audio id="clickSound" src="sedatoseda.ir.mp3" preload="auto"></audio>
+
 <script>
-// ==================== تنظیمات سرور (همان رقابتی) ====================
-const JSONBIN_ID = '6a310a04da38895dfec86661';
-const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
-const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+    // ==================== سرور JSONBin (برای هماهنگی کاربران) ====================
+    const JSONBIN_ID = '6a310a04da38895dfec86661';
+    const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
-// ==================== اطلاعات کاربر ====================
-const myId = sessionStorage.getItem('regabati_playerId') || ('user_' + Date.now());
-const myName = sessionStorage.getItem('mafiaUserName') || 'بازیکن';
+    // ==================== صداها ====================
+    const bgAudio = document.getElementById('bgMusic');
+    const clickAudio = document.getElementById('clickSound');
+    
+    bgAudio.volume = 0.5;
+    function playClick() {
+        const sound = clickAudio.cloneNode();
+        sound.volume = 0.3;
+        sound.play().catch(e => console.log("صدای کلیک پخش نشد:", e));
+    }
+    
+    const volumeSlider = document.getElementById('volumeSlider');
+    volumeSlider.addEventListener('input', (e) => {
+        bgAudio.volume = e.target.value / 100;
+    });
+    
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsBtn = document.getElementById('settingsBtn');    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    
+    settingsBtn.addEventListener('click', () => {
+        playClick();
+        settingsModal.classList.add('open');
+    });
+    closeSettingsBtn.addEventListener('click', () => {
+        playClick();
+        settingsModal.classList.remove('open');
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            settingsModal.classList.remove('open');
+        }
+    });
+    
+    window.addEventListener('load', () => {
+        bgAudio.play().catch(e => {
+            document.body.addEventListener('click', () => bgAudio.play(), { once: true });
+        });
+    });
 
-// ==================== وضعیت بازی ====================
-let players = [];
-let gamePhase = 'loading';
-let speakerIndex = 0;
-let dayCount = 0;
-let nightActions = {};
-let currentNightAction = null;
-let userVote = null;
-let timerInterval = null;
-let syncInterval = null;
-let myPeer = null;
-let localStream = null;
-let peerConnections = {};
-let lastServerData = null;
-let isProcessingPhase = false;
-let isHost = false; // اولین بازیکن در لیست = میزبان
+    // ==================== اطلاعات کاربر (هماهنگ با سرور) ====================
+    let currentUserPhone = sessionStorage.getItem('currentUserPhone');
+    let currentUserRank = sessionStorage.getItem('currentUserRank') || 'کاربر';
+    let currentUserName = sessionStorage.getItem('currentUserName') || 'کاربر';
+    let currentUserAvatar = sessionStorage.getItem('currentUserAvatar') || 'InShot_20260225_191621541.png';
 
-// ==================== نقش‌ها ====================
-const ROLES = [
-    { name:"رئیس مافیا", team:"mafia", desc:"رهبر مافیا. هر شب یک نفر را می‌کشد." },
-    { name:"خرابکار", team:"mafia", desc:"هر شب خرابکاری می‌کند." },
-    { name:"تهمت‌زن", team:"mafia", desc:"استعلام کارآگاه را معکوس می‌کند." },
-    { name:"کارآگاه", team:"citizen", desc:"هر شب استعلام می‌گیرد." },
-    { name:"دکتر", team:"citizen", desc:"هر شب یک نفر را نجات می‌دهد." },
-    { name:"تفنگدار", team:"citizen", desc:"شب تفنگ می‌دهد." },
-    { name:"شهروند با نفوذ", team:"citizen", desc:"رای دو برابر دارد." },
-    { name:"روانشناس", team:"citizen", desc:"رفتار مشکوک را تشخیص می‌دهد." },
-    { name:"خبرنگار", team:"citizen", desc:"اطلاعات مخفی کسب می‌کند." },
-    { name:"کدخدا", team:"citizen", desc:"فردی قابل اعتماد." }
-];
-
-const AVATARS = [
-    'https://s8.uupload.ir/files/inshot_20260208_214035107_wkwk.png',
-    'https://s8.uupload.ir/files/inshot_20260208_214116629_6joe.png',
-    'https://s8.uupload.ir/files/inshot_20260212_151231364_umrq.png',
-    'https://s8.uupload.ir/files/inshot_20260212_151120584_7df6.png'
-];
-
-// ==================== توابع کمکی ====================
-function showToast(msg, type='info') {
-    const container = document.getElementById('toastContainer');
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;    t.innerHTML = msg;
-    container.appendChild(t);
-    setTimeout(() => t.remove(), 3000);
-}
-
-function showModal(title, text, btnText, callback) {
-    document.getElementById('modal').classList.remove('show');
-    setTimeout(() => {
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalText').innerHTML = text;
-        const btn = document.getElementById('modalBtn');
-        btn.innerText = btnText;
-        btn.onclick = () => {
-            document.getElementById('modal').classList.remove('show');
-            if(callback) setTimeout(callback, 150);
+    let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
+    let userData = usersDB[currentUserPhone];
+    if (!userData) {
+        userData = {
+            name: currentUserName,
+            avatar: currentUserAvatar,
+            rank: currentUserRank,
+            level: 1,
+            coins: 200,
+            gems: 10,
+            playHours: 12,
+            observerCount: 3,
+            serverWins: 8,
+            compWins: 5,
+            cups: 2,
+            group: 'مافیا',
+            ownedAvatars: ['InShot_20260225_191621541.png','InShot_20260224_194133998.png','InShot_20260208_214035107.png','InShot_20260208_214116629.png'],
+            ownedFrames: ['InShot_20260607_164903273.png'],
+            currentAvatar: currentUserAvatar,
+            currentFrame: 'InShot_20260607_164903273.png'
         };
-        document.getElementById('modal').classList.add('show');
-    }, 50);
-}
-
-function shuffle(arr) {
-    const a = [...arr];
-    for(let i=a.length-1;i>0;i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
+        usersDB[currentUserPhone] = userData;        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+    } else {
+        if (!userData.ownedAvatars) userData.ownedAvatars = [userData.avatar];
+        if (!userData.ownedFrames) userData.ownedFrames = ['InShot_20260607_164903273.png'];
+        if (!userData.currentFrame) userData.currentFrame = 'InShot_20260607_164903273.png';
+        if (userData.coins === undefined) userData.coins = 200;
+        if (userData.gems === undefined) userData.gems = 10;
+        const baseAvatars = ['InShot_20260225_191621541.png','InShot_20260224_194133998.png','InShot_20260208_214035107.png','InShot_20260208_214116629.png'];
+        baseAvatars.forEach(av => { if(!userData.ownedAvatars.includes(av)) userData.ownedAvatars.push(av); });
+        usersDB[currentUserPhone] = userData;
+        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     }
-    return a;
-}
+    
+    const storeAvatars = [
+        { src: 'InShot_20260403_212249999.png', price: 200, currency: 'gems', name: 'آواتار شعله‌ای' },
+        { src: 'InShot_20260403_212625191.png', price: 250, currency: 'gems', name: 'آواتار یخی' }
+    ];
+    const storeFrames = [];
 
-// ==================== سرور JSONBin ====================
-async function fetchServer() {
-    try {
-        const res = await fetch(JSONBIN_URL + '/latest', {
-            headers: { 'X-Master-Key': JSONBIN_KEY }
-        });
-        if(!res.ok) return null;
-        const data = await res.json();
-        return data.record;
-    } catch(e) {
-        console.error('Fetch error:', e);
-        return null;
-    }
-}
-
-async function saveServer(data) {
-    try {
-        const res = await fetch(JSONBIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',                'X-Master-Key': JSONBIN_KEY,
-                'X-Bin-Versioning': 'false'
-            },
-            body: JSON.stringify(data)
-        });
-        return res.ok;
-    } catch(e) {
-        console.error('Save error:', e);
-        return false;
-    }
-}
-
-// ==================== WebRTC (PeerJS) ====================
-function setupPeer() {
-    if(myPeer) return;
-
-    myPeer = new Peer(undefined, {
-        host: '0.peerjs.com',
-        port: 443,
-        path: '/',
-        secure: true,
-        config: {
-            iceServers: [
-                { urls: "stun:stun.l.google.com:19302" },
-                { urls: "stun:stun1.l.google.com:19302" },
-                { urls: "stun:stun.relay.metered.ca:80" },
-                { urls: "turn:global.relay.metered.ca:80", username: "c0043e641a838e7f6c2a948a", credential: "WXOE0gZ6BnE+yxxl" }
-            ]
-        }
-    });
-
-    myPeer.on('open', async id => {
-        console.log('✅ Peer ID:', id);
-        showToast('✅ اتصال صوتی برقرار شد', 'success');
-
-        // ذخیره peerId در سرور
-        const data = await fetchServer();
-        if(data && data.game && data.game.players) {
-            const me = data.game.players.find(p => p.id === myId);
-            if(me) {
-                me.peerId = id;
-                await saveServer(data);
-                lastServerData = data;
-            }
-        }
-
-        // اتصال به بقیه
-        if(players.length > 0) {
-            for(const p of players) {
-                if(p.id !== myId && p.peerId) {                    connectToPeer(p.id, p.peerId);
-                }
-            }
-        }
-    });
-
-    myPeer.on('call', async call => {
-        if(localStream) call.answer(localStream);
-        else call.answer();
-
-        const uid = call.metadata.userId;
-        call.on('stream', stream => addRemoteAudio(stream, uid));
-        peerConnections[uid] = call;
-    });
-
-    myPeer.on('error', err => {
-        console.error('Peer error:', err);
-    });
-}
-
-function connectToPeer(uid, peerId) {
-    if(peerConnections[uid] || !myPeer) return;
-
-    const call = myPeer.call(peerId, localStream, { metadata: { userId: myId } });
-    call.on('stream', stream => addRemoteAudio(stream, uid));
-    peerConnections[uid] = call;
-}
-
-function addRemoteAudio(stream, uid) {
-    const existing = document.getElementById(`audio-${uid}`);
-    if(existing) existing.remove();
-
-    const audio = document.createElement('audio');
-    audio.id = `audio-${uid}`;
-    audio.srcObject = stream;
-    audio.autoplay = true;
-    audio.style.display = 'none';
-    document.body.appendChild(audio);
-}
-
-async function toggleMic() {
-    const btn = document.getElementById('micBtn');
-    if(!btn) return;
-
-    if(!localStream) {
+    // ==================== همگام‌سازی با سرور ====================
+    async function syncUserToServer() {
         try {
-            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            setupPeer();
-            btn.classList.add('active');
-            btn.innerText = '🎤 خاموش';            showToast('🎤 میکروفون فعال شد', 'success');
-
-            // اتصال به همه
-            for(const p of players) {
-                if(p.id !== myId && p.peerId) {
-                    connectToPeer(p.id, p.peerId);
-                }
-            }
-        } catch(e) {
-            showToast('❌ دسترسی به میکروفون رد شد', 'error');
-        }
-    } else {
-        localStream.getTracks().forEach(t => t.stop());
-        localStream = null;
-        btn.classList.remove('active');
-        btn.innerText = '🎤 روشن';
-        showToast('🔇 میکروفون خاموش شد');
-
-        for(let id in peerConnections) {
-            peerConnections[id].close();
-        }
-        peerConnections = {};
-    }
-}
-
-// ==================== رندر صندلی‌ها ====================
-function renderChairs() {
-    players.slice(0, 10).forEach((p, idx) => {
-        const chair = document.getElementById(`chair-${idx+1}`);
-        if(!chair) return;
-
-        chair.className = 'chair';
-        if(!p.isAlive) chair.classList.add('dead');
-
-        const avatar = AVATARS[idx % AVATARS.length];
-        const crown = idx === 0 ? '<span class="crown-icon"></span>' : '';
-        const mic = p.peerId ? '<div class="mic-indicator">🎤</div>' : '';
-
-        chair.innerHTML = `
-            <div class="chair-avatar">
-                <img src="${avatar}">
-                ${mic}
-            </div>
-            <div class="chair-name">${crown}<span>${p.name}</span></div>
-        `;
-        chair.dataset.playerId = p.id;
-        chair.onclick = () => handleChairClick(p.id);
-    });
-}
-function showReactionOnProfile(playerId, type) {
-    const chair = document.querySelector(`.chair[data-player-id="${playerId}"]`);
-    if(!chair) return;
-    const avatar = chair.querySelector('.chair-avatar');
-    const old = avatar.querySelector('.floating-reaction');
-    if(old) old.remove();
-
-    const el = document.createElement('div');
-    el.className = 'floating-reaction';
-    el.innerText = type === 'like' ? '👍' : '👎';
-    avatar.appendChild(el);
-    setTimeout(() => el.remove(), 3000);
-}
-
-// ==================== شروع بازی (بدون لابی) ====================
-async function loadGame() {
-    showToast('🔄 در حال بارگذاری بازی...');
-
-    const data = await fetchServer();
-    if(!data || !data.competitive || data.competitive.count < 10) {
-        showToast('❌ هنوز ۱۰ بازیکن جمع نشده‌اند', 'error');
-        setTimeout(loadGame, 3000);
-        return;
-    }
-
-    // آیا بازی قبلاً شروع شده؟
-    if(data.game && data.game.started) {
-        // ادامه بازی
-        players = data.game.players;
-        gamePhase = data.game.phase;
-        speakerIndex = data.game.speakerIndex || 0;
-        dayCount = data.game.dayCount || 1;
-        isHost = players[0].id === myId;
-        lastServerData = data;
-
-        showToast('✅ به بازی پیوستید', 'success');
-        renderChairs();
-        startGameFromPhase();
-        startSync();
-        setupPeer();
-        return;
-    }
-
-    // شروع بازی جدید
-    if(data.competitive.players.length !== 10) {
-        showToast('⏳ در انتظار ۱۰ بازیکن...', 'info');
-        setTimeout(loadGame, 2000);
-        return;
-    }
-        // فقط اولین بازیکن (میزبان) بازی را شروع می‌کند
-    const firstPlayer = data.competitive.players[0];
-    isHost = firstPlayer.id === myId;
-
-    if(isHost) {
-        // من میزبان هستم - بازی را شروع می‌کنم
-        await initializeNewGame(data);
-    } else {
-        // منتظر میزبان می‌مانم
-        showToast('⏳ منتظر شروع بازی توسط میزبان...');
-        startWaitingForGame();
-    }
-}
-
-async function initializeNewGame(serverData) {
-    showToast('🎮 در حال شروع بازی...');
-
-    const competitivePlayers = serverData.competitive.players;
-    const shuffledRoles = shuffle(ROLES);
-
-    // ساخت آرایه بازیکنان با نقش‌ها
-    const gamePlayers = competitivePlayers.map((p, idx) => ({
-        id: p.id,
-        name: p.name,
-        chair: idx + 1,
-        role: shuffledRoles[idx].name,
-        team: shuffledRoles[idx].team,
-        roleDesc: shuffledRoles[idx].desc,
-        isAlive: true,
-        peerId: null
-    }));
-
-    const newGameData = {
-        competitive: { count: 0, players: [], lastUpdate: Date.now() }, // پاک کردن صف
-        game: {
-            started: true,
-            phase: 'intro_day',
-            players: gamePlayers,
-            speakerIndex: 0,
-            dayCount: 0,
-            nightActions: {},
-            lastUpdate: Date.now()
-        }
-    };
-
-    const saved = await saveServer(newGameData);
-    if(!saved) {
-        showToast('❌ خطا در شروع بازی', 'error');
-        setTimeout(() => initializeNewGame(serverData), 2000);
-        return;    }
-
-    lastServerData = newGameData;
-    players = gamePlayers;
-    gamePhase = 'intro_day';
-    speakerIndex = 0;
-    dayCount = 0;
-
-    showToast('🎮 بازی شروع شد!', 'success');
-    renderChairs();
-    startGameFromPhase();
-    startSync();
-    setupPeer();
-}
-
-function startWaitingForGame() {
-    if(syncInterval) clearInterval(syncInterval);
-    syncInterval = setInterval(async () => {
-        const data = await fetchServer();
-        if(!data) return;
-
-        if(data.game && data.game.started) {
-            clearInterval(syncInterval);
-            players = data.game.players;
-            gamePhase = data.game.phase;
-            speakerIndex = data.game.speakerIndex || 0;
-            dayCount = data.game.dayCount || 1;
-            isHost = players[0].id === myId;
-            lastServerData = data;
-
-            showToast('✅ بازی شروع شد!', 'success');
-            renderChairs();
-            startGameFromPhase();
-            startSync();
-            setupPeer();
-        }
-    }, 2000);
-}
-
-function startGameFromPhase() {
-    if(isProcessingPhase) return;
-    isProcessingPhase = true;
-
-    setTimeout(() => {
-        if(gamePhase === 'intro_day') startIntroDay();
-        else if(gamePhase === 'intro_night') startIntroNight();
-        else if(gamePhase === 'day') startDayPhase();
-        else if(gamePhase === 'night') startNightPhase();
-        else if(gamePhase === 'voting') startVotingPhase();
-                renderChairs();
-        isProcessingPhase = false;
-    }, 100);
-}
-
-// ==================== روز معارفه ====================
-function startIntroDay() {
-    gamePhase = 'intro_day';
-    document.getElementById('phaseBadge').innerText = '☀️ روز معارفه';
-    document.getElementById('game-page').classList.remove('night-dim');
-    speakerIndex = 0;
-
-    const me = players.find(p => p.id === myId);
-    if(me && me.role) {
-        showModal('🎮 بازی شروع شد', 
-            `نقش شما: <b style="color:var(--accent);font-size:1.4rem">${me.role}</b><br><br>${me.roleDesc}`,
-            'شروع معارفه', () => processSpeakingOrder(true));
-    } else {
-        processSpeakingOrder(true);
-    }
-}
-
-function processSpeakingOrder(isIntro) {
-    if(timerInterval) clearInterval(timerInterval);
-
-    const alive = players.filter(p => p.isAlive);
-    if(speakerIndex >= alive.length) {
-        if(isIntro) startIntroNight();
-        else startVotingPhase();
-        return;
-    }
-
-    const speaker = alive[speakerIndex];
-    highlightSpeaker(speaker.chair);
-
-    const isMyTurn = speaker.id === myId;
-    const btnsDiv = document.getElementById('actionButtonsContainer');
-    btnsDiv.innerHTML = '';
-
-    // میکروفون
-    const micBtn = document.createElement('button');
-    micBtn.id = 'micBtn';
-    micBtn.className = 'action-btn mic-btn';
-    micBtn.innerText = localStream ? '🎤 خاموش' : '🎤 روشن';
-    if(localStream) micBtn.classList.add('active');
-    micBtn.onclick = toggleMic;
-    btnsDiv.appendChild(micBtn);
-
-    // لایک/دیس‌لایک
-    const likeBtn = document.createElement('button');    likeBtn.className = 'action-btn like-btn';
-    likeBtn.innerText = '👍';
-    likeBtn.onclick = () => showReactionOnProfile(myId, 'like');
-    btnsDiv.appendChild(likeBtn);
-
-    const dislikeBtn = document.createElement('button');
-    dislikeBtn.className = 'action-btn dislike-btn';
-    dislikeBtn.innerText = '👎';
-    dislikeBtn.onclick = () => showReactionOnProfile(myId, 'dislike');
-    btnsDiv.appendChild(dislikeBtn);
-
-    if(isMyTurn) {
-        const skipBtn = document.createElement('button');
-        skipBtn.className = 'action-btn';
-        skipBtn.innerText = '⏩ رد نوبت';
-        skipBtn.onclick = skipTurn;
-        btnsDiv.appendChild(skipBtn);
-    }
-
-    document.getElementById('actionText').innerHTML = `نوبت صحبت: <span>${speaker.name}</span>`;
-    document.getElementById('actionBar').classList.add('show');
-
-    startTimer(30, () => {
-        speakerIndex++;
-        updateServerState();
-        processSpeakingOrder(isIntro);
-    });
-}
-
-function skipTurn() {
-    if(timerInterval) clearInterval(timerInterval);
-    speakerIndex++;
-    updateServerState();
-    processSpeakingOrder(gamePhase === 'intro_day');
-}
-
-// ==================== شب معارفه ====================
-function startIntroNight() {
-    gamePhase = 'intro_night';
-    document.getElementById('phaseBadge').innerText = '🌙 شب معارفه';
-    document.getElementById('game-page').classList.add('night-dim');
-    highlightSpeaker(null);
-
-    showModal('🌙 شب معارفه', 
-        'مافیاها یکدیگر را می‌شناسند.<br><span style="color:#ff8a8a;">امشب کسی کشته نمی‌شود.</span>',
-        'ادامه', () => {
-            startTimer(5, () => {
-                dayCount = 1;
-                gamePhase = 'day';
-                updateServerState();                startDayPhase();
+            const state = { users: {} };
+            state.users[currentUserPhone] = {
+                name: userData.name,
+                avatar: userData.currentAvatar,
+                rank: userData.rank,
+                coins: userData.coins,
+                gems: userData.gems,
+                level: userData.level,
+                group: userData.group,
+                lastSeen: Date.now()
+            };
+            await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_KEY,
+                    'X-Bin-Versioning': 'false'
+                },
+                body: JSON.stringify({ users: state.users })
             });
-        });
-}
+        } catch(e) { console.warn('سرور در دسترس نیست'); }
+    }
 
-// ==================== روز عادی ====================
-function startDayPhase() {
-    gamePhase = 'day';
-    document.getElementById('phaseBadge').innerText = `☀️ روز ${dayCount}`;
-    document.getElementById('game-page').classList.remove('night-dim');
-    speakerIndex = 0;
+    async function loadFromServer() {
+        try {
+            const res = await fetch(BIN_URL + '/latest', {
+                headers: { 'X-Master-Key': JSONBIN_KEY }
+            });            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.users && data.users[currentUserPhone]) {
+                const remote = data.users[currentUserPhone];
+                userData.name = remote.name || userData.name;
+                userData.rank = remote.rank || userData.rank;
+                userData.coins = remote.coins !== undefined ? remote.coins : userData.coins;
+                userData.gems = remote.gems !== undefined ? remote.gems : userData.gems;
+                userData.level = remote.level || userData.level;
+                userData.group = remote.group || userData.group;
+                if (remote.avatar) userData.currentAvatar = remote.avatar;
+                usersDB[currentUserPhone] = userData;
+                localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                updateUI();
+            }
+        } catch(e) {}
+    }
 
-    if(checkWinCondition()) return;
+    // همگام‌سازی دوره‌ای
+    setInterval(() => {
+        syncUserToServer();
+        loadFromServer();
+    }, 8000);
 
-    const btnsDiv = document.getElementById('actionButtonsContainer');
-    btnsDiv.innerHTML = '';
-
-    const micBtn = document.createElement('button');
-    micBtn.id = 'micBtn';
-    micBtn.className = 'action-btn mic-btn';
-    micBtn.innerText = localStream ? '🎤 خاموش' : '🎤 روشن';
-    if(localStream) micBtn.classList.add('active');
-    micBtn.onclick = toggleMic;
-    btnsDiv.appendChild(micBtn);
-
-    const voteBtn = document.createElement('button');
-    voteBtn.className = 'action-btn';
-    voteBtn.innerText = '🗳️ رأی‌گیری';
-    voteBtn.onclick = startVotingPhase;
-    btnsDiv.appendChild(voteBtn);
-
-    const likeBtn = document.createElement('button');
-    likeBtn.className = 'action-btn like-btn';
-    likeBtn.innerText = '👍';
-    likeBtn.onclick = () => showReactionOnProfile(myId, 'like');
-    btnsDiv.appendChild(likeBtn);
-
-    const dislikeBtn = document.createElement('button');
-    dislikeBtn.className = 'action-btn dislike-btn';
-    dislikeBtn.innerText = '👎';
-    dislikeBtn.onclick = () => showReactionOnProfile(myId, 'dislike');
-    btnsDiv.appendChild(dislikeBtn);
-
-    document.getElementById('actionText').innerHTML = 'روز عادی: بحث و گفتگو';
-    document.getElementById('actionBar').classList.add('show');
-
-    processSpeakingOrder(false);
-}
-
-// ==================== رأی‌گیری ====================function startVotingPhase() {
-    gamePhase = 'voting';
-    document.getElementById('phaseBadge').innerText = '🗳️ رأی‌گیری';
-    userVote = null;
-
-    const btnsDiv = document.getElementById('actionButtonsContainer');
-    btnsDiv.innerHTML = '';
-
-    const confirmBtn = document.createElement('button');
-    confirmBtn.className = 'action-btn';
-    confirmBtn.innerText = '✅ ثبت رأی';
-    confirmBtn.onclick = () => {
-        if(!userVote) {
-            showToast('❌ ابتدا روی یک بازیکن کلیک کنید', 'error');
-            return;
+    // ==================== توابع UI ====================
+    function updateUI() {
+        document.getElementById('accountName').innerText = userData.name;
+        document.getElementById('accountAvatar').src = userData.currentAvatar;
+        document.getElementById('coinAmount').innerText = userData.coins;
+        document.getElementById('gemAmount').innerText = userData.gems;
+        document.getElementById('accountLevel').innerHTML = 'سطح ' + (Math.floor(userData.level) || 1);
+        const rank = userData.rank;
+        const specialRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین', 'ناظر', 'کاربر ویژه'];
+        const hasTick = specialRanks.includes(rank);
+        const tickColor = {'سازنده':'#0088ff','پشتیبانی':'#66ccff','گرداننده':'#ff4444','ادمین ارشد':'#222','ادمین':'#8B4513','ناظر':'#ff9900','کاربر ویژه':'#ffffff'}[rank] || '#aaa';
+        document.getElementById('accountTick').style.display = hasTick ? 'inline-block' : 'none';
+        if(hasTick) document.getElementById('accountTick').style.backgroundColor = tickColor;
+        document.getElementById('profileTick').style.display = hasTick ? 'inline-block' : 'none';
+        if(hasTick) document.getElementById('profileTick').style.backgroundColor = tickColor;
+        document.getElementById('profileName').innerText = userData.name;
+        document.getElementById('profileAvatarImg').src = userData.currentAvatar;
+        document.getElementById('userIdCode').innerText = generateUserId(currentUserPhone);
+        document.getElementById('playHours').innerText = userData.playHours || 0;
+        document.getElementById('observerCount').innerText = userData.observerCount || 0;
+        document.getElementById('serverWins').innerText = userData.serverWins || 0;
+        document.getElementById('compWins').innerText = userData.compWins || 0;
+        document.getElementById('cups').innerText = userData.cups || 0;
+        document.getElementById('groupName').innerHTML = 'گروه: ' + (userData.group || 'مافیا');
+    }
+        function generateUserId(phone) {
+        let hash = 0;
+        for(let i=0; i<phone.length; i++) hash = ((hash<<5)-hash)+phone.charCodeAt(i);
+        return Math.abs(hash % 100000000) + 1;
+    }
+    
+    document.getElementById('userIdCopy')?.addEventListener('click', () => {
+        playClick();
+        navigator.clipboard.writeText(document.getElementById('userIdCode').innerText);
+        alert('کد کاربری کپی شد');
+    });
+    
+    let nameChangeUsed = false;
+    document.getElementById('editNameBtn')?.addEventListener('click', () => {
+        playClick();
+        let newName = prompt('اسم جدید خود را وارد کنید', userData.name);
+        if(newName && newName.trim()) {
+            if(!nameChangeUsed && userData.coins >= 100) {
+                userData.coins -= 100;
+                nameChangeUsed = true;
+                userData.name = newName.trim();
+                usersDB[currentUserPhone] = userData;
+                localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                syncUserToServer();
+                updateUI();
+                alert('اسم شما به ' + newName + ' تغییر کرد. ۱۰۰ سکه کسر شد.');
+            } else if(nameChangeUsed) alert('شما قبلاً یک بار نام خود را تغییر داده‌اید.');
+            else alert('سکه کافی نیست!');
         }
-        resolveVoting();
+    });
+    
+    document.getElementById('accountCard').onclick = () => {
+        playClick();
+        document.getElementById('profileModal').classList.add('open');
+        updateUI();
     };
-    btnsDiv.appendChild(confirmBtn);
+    document.getElementById('closeProfileBtn').onclick = () => {
+        playClick();
+        document.getElementById('profileModal').classList.remove('open');
+    };
+    document.getElementById('profileAvatarCircle').onclick = () => {
+        playClick();
+        openShop();
+    };
+    
+    // فروشگاه
+    const shopOverlay = document.getElementById('shopOverlay');
+    const shopContent = document.getElementById('shopContent');
+    let currentShopTab = 'my';
+        function openShop() {
+        playClick();
+        shopOverlay.classList.add('open');
+        renderShop();
+    }
+    function closeShop() { 
+        playClick();
+        shopOverlay.classList.remove('open'); 
+    }
+    document.getElementById('shopBackBtn').onclick = closeShop;
+    
+    function renderShop() {
+        shopContent.innerHTML = '';
+        if (currentShopTab === 'my') {
+            const ownedAvatars = userData.ownedAvatars;
+            const ownedFrames = userData.ownedFrames;
+            if (ownedAvatars.length) {
+                const sec = document.createElement('div');
+                sec.className = 'shop-section';
+                sec.innerHTML = '<div class="section-title">آواتارهای من</div><div class="shop-items-grid" id="myAvatarsGrid"></div>';
+                shopContent.appendChild(sec);
+                const grid = sec.querySelector('#myAvatarsGrid');
+                ownedAvatars.forEach(av => {
+                    const card = document.createElement('div');
+                    card.className = 'shop-card';
+                    card.innerHTML = `<img src="${av}"><div class="owned-badge">مالک</div><button>انتخاب</button>`;
+                    const btn = card.querySelector('button');
+                    btn.onclick = () => {
+                        playClick();
+                        userData.currentAvatar = av;
+                        usersDB[currentUserPhone] = userData;
+                        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
+                        updateUI();
+                        alert('آواتار جاری تغییر کرد');
+                        renderShop();
+                    };
+                    grid.appendChild(card);
+                });
+            }
+            if (ownedFrames.length) {
+                const sec = document.createElement('div');
+                sec.className = 'shop-section';
+                sec.innerHTML = '<div class="section-title">قالب‌های من</div><div class="shop-items-grid" id="myFramesGrid"></div>';
+                shopContent.appendChild(sec);
+                const grid = sec.querySelector('#myFramesGrid');
+                ownedFrames.forEach(fr => {
+                    const card = document.createElement('div');
+                    card.className = 'shop-card';
+                    card.innerHTML = `<img src="${fr}" style="border-radius:12px;"><div class="owned-badge">مالک</div><button>انتخاب قالب</button>`;                    const btn = card.querySelector('button');
+                    btn.onclick = () => {
+                        playClick();
+                        userData.currentFrame = fr;
+                        usersDB[currentUserPhone] = userData;
+                        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
+                        updateUI();
+                        alert('قالب جاری تغییر کرد');
+                        renderShop();
+                    };
+                    grid.appendChild(card);
+                });
+            }
+        } else {
+            const sec = document.createElement('div');
+            sec.className = 'shop-section';
+            sec.innerHTML = '<div class="section-title">آواتارهای فروشگاه</div><div class="shop-items-grid" id="storeAvatarsGrid"></div>';
+            shopContent.appendChild(sec);
+            const grid = sec.querySelector('#storeAvatarsGrid');
+            storeAvatars.forEach(item => {
+                const alreadyOwned = userData.ownedAvatars.includes(item.src);
+                const card = document.createElement('div');
+                card.className = 'shop-card';
+                card.innerHTML = `<img src="${item.src}"><div class="price">${item.price} ${item.currency === 'gems' ? 'جم' : 'سکه'}</div>`;
+                if (!alreadyOwned) {
+                    const btn = document.createElement('button');
+                    btn.innerText = 'خرید';
+                    btn.onclick = () => {
+                        playClick();
+                        if (item.currency === 'gems' && userData.gems >= item.price) {
+                            userData.gems -= item.price;
+                            userData.ownedAvatars.push(item.src);
+                            usersDB[currentUserPhone] = userData;
+                            localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
+                            alert('خرید موفق!');
+                            renderShop();
+                            updateUI();
+                        } else if (item.currency === 'coins' && userData.coins >= item.price) {
+                            userData.coins -= item.price;
+                            userData.ownedAvatars.push(item.src);
+                            usersDB[currentUserPhone] = userData;
+                            localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
+                            alert('خرید موفق!');
+                            renderShop();
+                            updateUI();
+                        } else alert('اعتبار کافی نیست');
+                    };                    card.appendChild(btn);
+                } else {
+                    card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
+                    const selectBtn = card.querySelector('button:not(.owned-badge)');
+                    selectBtn.onclick = () => {
+                        playClick();
+                        userData.currentAvatar = item.src;
+                        usersDB[currentUserPhone] = userData;
+                        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        syncUserToServer();
+                        updateUI();
+                        alert('آواتار جاری تغییر کرد');
+                        renderShop();
+                    };
+                }
+                grid.appendChild(card);
+            });
+            if (storeFrames.length) {
+                const sec2 = document.createElement('div');
+                sec2.className = 'shop-section';
+                sec2.innerHTML = '<div class="section-title">قالب‌های فروشگاه</div><div class="shop-items-grid" id="storeFramesGrid"></div>';
+                shopContent.appendChild(sec2);
+                const grid2 = sec2.querySelector('#storeFramesGrid');
+                storeFrames.forEach(frame => {
+                    const alreadyOwned = userData.ownedFrames.includes(frame.src);
+                    const card = document.createElement('div');
+                    card.className = 'shop-card';
+                    card.innerHTML = `<img src="${frame.src}" style="border-radius:12px;"><div class="price">${frame.price} سکه</div>`;
+                    if (!alreadyOwned && frame.price > 0) {
+                        const btn = document.createElement('button');
+                        btn.innerText = 'خرید';
+                        btn.onclick = () => {
+                            playClick();
+                            if (userData.coins >= frame.price) {
+                                userData.coins -= frame.price;
+                                userData.ownedFrames.push(frame.src);
+                                usersDB[currentUserPhone] = userData;
+                                localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                                syncUserToServer();
+                                alert('قالب خریداری شد');
+                                renderShop();
+                                updateUI();
+                            } else alert('سکه کافی نیست');
+                        };
+                        card.appendChild(btn);
+                    } else if (alreadyOwned) {
+                        card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
+                        const selectBtn = card.querySelector('button:not(.owned-badge)');
+                        selectBtn.onclick = () => {
+                            playClick();                            userData.currentFrame = frame.src;
+                            usersDB[currentUserPhone] = userData;
+                            localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            syncUserToServer();
+                            updateUI();
+                            alert('قالب جاری تغییر کرد');
+                            renderShop();
+                        };
+                    }
+                    grid2.appendChild(card);
+                });
+            }
+        }
+    }
+    
+    document.querySelectorAll('.shop-tab').forEach(tab => {
+        tab.onclick = () => {
+            playClick();
+            document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentShopTab = tab.getAttribute('data-shop-tab');
+            renderShop();
+        };
+    });
 
-    document.getElementById('actionText').innerHTML = 'روی بازیکن مورد نظر کلیک کنید';
-    document.getElementById('actionBar').classList.add('show');
+    // ==================== منوی اپلیکیشنی ====================
+    const menuToggle = document.getElementById('menuToggle');
+    const appMenu = document.getElementById('appMenu');
+    const menuBadge = document.getElementById('menuBadge');
 
-    players.forEach(p => {
-        if(p.isAlive && p.id !== myId) {
-            const chair = document.getElementById(`chair-${p.chair}`);
-            if(chair) chair.classList.add('selectable');
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playClick();
+        appMenu.classList.toggle('open');
+        // نشانگر آنلاین یا نوتیف
+        menuBadge.style.display = 'none';
+    });
+
+    // بستن منو با کلیک خارج
+    document.addEventListener('click', (e) => {
+        if (!appMenu.contains(e.target) && e.target !== menuToggle && !menuToggle.contains(e.target)) {
+            appMenu.classList.remove('open');
         }
     });
 
-    startTimer(30, () => resolveVoting());
-}
-
-function resolveVoting() {
-    if(timerInterval) clearInterval(timerInterval);
-
-    const votes = {};
-
-    // رأی من
-    if(userVote) {
-        const myPlayer = players.find(p => p.id === myId);
-        const weight = myPlayer && myPlayer.role === 'شهروند با نفوذ' ? 2 : 1;
-        votes[userVote] = (votes[userVote] || 0) + weight;
-    }
-
-    // رأی بقیه (شبیه‌سازی)
-    players.forEach(voter => {
-        if(voter.id === myId || !voter.isAlive) return;
-        const candidates = players.filter(p => p.isAlive && p.id !== voter.id);
-        if(candidates.length === 0) return;        const weight = voter.role === 'شهروند با نفوذ' ? 2 : 1;
-        const target = voter.team === 'mafia' 
-            ? (candidates.filter(p => p.team === 'citizen')[0] || candidates[0])
-            : candidates[Math.floor(Math.random()*candidates.length)];
-        votes[target.id] = (votes[target.id] || 0) + weight;
-    });
-
-    let maxVotes = 0;
-    for(const count of Object.values(votes)) {
-        if(count > maxVotes) maxVotes = count;
-    }
-
-    if(maxVotes === 0) {
-        showToast('⚠️ رأی‌گیری به نتیجه نرسید');
-        setTimeout(() => startNightPhase(), 1500);
-        return;
-    }
-
-    const tiedPlayers = players.filter(p => votes[p.id] === maxVotes);
-
-    if(tiedPlayers.length === 1) {
-        const eliminated = tiedPlayers[0];
-        eliminated.isAlive = false;
-        renderChairs();
-        showToast(`💀 ${eliminated.name} با ${maxVotes} رأی حذف شد`, 'error');
-
-        updateServerState();
-        if(checkWinCondition()) return;
-
-        setTimeout(() => startNightPhase(), 2000);
-    } else {
-        const names = tiedPlayers.map(p => p.name).join(' و ');
-        showToast(`⚖️ رأی مساوی: ${names}`, 'error');
-        setTimeout(() => startNightPhase(), 2000);
-    }
-}
-
-// ==================== شب ====================
-function startNightPhase() {
-    gamePhase = 'night';
-    document.getElementById('phaseBadge').innerText = `🌙 شب ${dayCount}`;
-    document.getElementById('game-page').classList.add('night-dim');
-    nightActions = {};
-    currentNightAction = null;
-
-    highlightSpeaker(null);
-    showToast('🌙 شب فرا رسید');
-
-    setTimeout(() => processNightQueue(0), 2000);
-}
-function processNightQueue(step) {
-    const roleOrder = ['تهمت‌زن', 'خرابکار', 'رئیس مافیا', 'دکتر', 'کارآگاه', 'تفنگدار'];
-
-    if(step >= roleOrder.length) {
-        setTimeout(resolveNight, 1500);
-        return;
-    }
-
-    const roleName = roleOrder[step];
-    const actor = players.find(p => p.role === roleName && p.isAlive);
-
-    if(!actor) {
-        processNightQueue(step + 1);
-        return;
-    }
-
-    if(actor.id === myId) {
-        currentNightAction = { role: roleName, actorId: actor.id, step: step };
-
-        document.getElementById('actionText').innerHTML = `نوبت شما (<span>${roleName}</span>): انتخاب هدف`;
-        const btnsDiv = document.getElementById('actionButtonsContainer');
-        btnsDiv.innerHTML = '';
-
-        const skipBtn = document.createElement('button');
-        skipBtn.className = 'action-btn';
-        skipBtn.innerText = '⏩ رد کردن';
-        skipBtn.onclick = () => finishNightAction();
-        btnsDiv.appendChild(skipBtn);
-
-        document.getElementById('actionBar').classList.add('show');
-
-        players.forEach(p => {
-            if(p.isAlive && p.id !== myId) {
-                const chair = document.getElementById(`chair-${p.chair}`);
-                if(chair) chair.classList.add('selectable');
+    // آیتم‌های منو
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            playClick();
+            appMenu.classList.remove('open');            const section = item.dataset.section;
+            switch(section) {
+                case 'donate':
+                    alert('🎁 بخش اهدای جم - به زودی');
+                    break;
+                case 'groups':
+                    alert('👥 بخش گروه‌ها - به زودی');
+                    break;
+                case 'rankings':
+                    alert('🏆 بخش رتبه‌بندی - به زودی');
+                    break;
+                case 'live':
+                    alert('📺 پخش زنده - به زودی');
+                    break;
+                case 'gem-shop':
+                    alert('❌ فروشگاه جم و سکه - به زودی');
+                    break;
+                case 'shop':
+                    openShop();
+                    break;
+                case 'profile':
+                    document.getElementById('profileModal').classList.add('open');
+                    updateUI();
+                    break;
+                default:
+                    break;
             }
         });
-
-        startTimer(20, () => finishNightAction());
-    } else {
-        document.getElementById('actionText').innerHTML = `${roleName} در حال اقدام...`;
-        document.getElementById('actionBar').classList.add('show');
-
-        setTimeout(() => {
-            aiChooseTarget(roleName, actor);
-            showToast(`${roleName} اقدام کرد`);
-            setTimeout(() => processNightQueue(step + 1), 1000);
-        }, 2000);
-    }}
-
-function handleChairClick(pid) {
-    const p = players.find(pl => pl.id === pid);
-    if(!p || !p.isAlive) return;
-
-    if(gamePhase === 'day' || gamePhase === 'intro_day') {
-        if(pid !== myId) {
-            showReactionOnProfile(pid, 'like');
-        }
-    } else if(gamePhase === 'voting' && pid !== myId) {
-        userVote = pid;
-        showToast(`✅ رأی شما به ${p.name} ثبت شد`, 'success');
-        document.querySelectorAll('.chair').forEach(c => c.classList.remove('selected-target'));
-        document.getElementById(`chair-${p.chair}`).classList.add('selected-target');
-    } else if(gamePhase === 'night' && currentNightAction && currentNightAction.actorId === myId) {
-        if(pid === myId) {
-            showToast('❌ نمی‌توانید خودتان را انتخاب کنید', 'error');
-            return;
-        }
-        executeNightAbility(p);
-    }
-}
-
-function executeNightAbility(target) {
-    if(timerInterval) clearInterval(timerInterval);
-    const { role } = currentNightAction;
-
-    if(role === 'کارآگاه') {
-        let result = 'منفی (شهروند) ✅';
-        if(target.role === 'رئیس مافیا') result = 'منفی (شهروند) ✅';
-        else if(target.role === 'تهمت‌زن') result = 'مثبت (مافیا) ❌';
-        else if(target.team === 'mafia') result = 'مثبت (مافیا) ❌';
-
-        showModal('🔍 استعلام', `استعلام <b>${target.name}</b>: <b style="color:${result.includes('مثبت')?'#e74c3c':'#2ecc71'}">${result}</b>`, 'باشه', () => finishNightAction());
-        return;
-    }
-
-    if(role === 'رئیس مافیا') {
-        nightActions.kill = target.id;
-        showToast(`🔪 ${target.name} هدف شلیک قرار گرفت`, 'error');
-    } else if(role === 'دکتر') {
-        nightActions.save = target.id;
-        showToast(`💊 ${target.name} سیو شد`, 'success');
-    } else if(role === 'خرابکار') {
-        nightActions.sabotage = target.id;
-        showToast(`💥 ${target.name} خرابکاری شد`, 'error');
-    } else if(role === 'تهمت‌زن') {
-        nightActions.frame = target.id;
-        showToast(`🎭 به ${target.name} تهمت زده شد`);    }
-
-    finishNightAction();
-}
-
-function finishNightAction() {
-    document.querySelectorAll('.chair').forEach(c => c.classList.remove('selectable'));
-    if(timerInterval) clearInterval(timerInterval);
-
-    const nextStep = currentNightAction.step + 1;
-    currentNightAction = null;
-
-    setTimeout(() => processNightQueue(nextStep), 1000);
-}
-
-function aiChooseTarget(roleName, actor) {
-    const alive = players.filter(p => p.isAlive && p.id !== actor.id);
-    if(alive.length === 0) return;
-
-    let target = alive[Math.floor(Math.random() * alive.length)];
-
-    if(roleName === 'رئیس مافیا') {
-        nightActions.kill = target.id;
-    } else if(roleName === 'دکتر') {
-        nightActions.save = target.id;
-    } else if(roleName === 'خرابکار') {
-        nightActions.sabotage = target.id;
-    } else if(roleName === 'تهمت‌زن') {
-        nightActions.frame = target.id;
-    }
-}
-
-function resolveNight() {
-    const killed = nightActions.kill;
-    const saved = nightActions.save;
-
-    if(killed && killed !== saved) {
-        const victim = players.find(p => p.id === killed);
-        if(victim) {
-            victim.isAlive = false;
-            showToast(`💀 ${victim.name} توسط مافیا کشته شد`, 'error');
-            renderChairs();
-
-            updateServerState();
-            if(checkWinCondition()) return;
-        }
-    } else {
-        showToast('✅ امشب کسی کشته نشد', 'success');
-    }
-        dayCount++;
-    gamePhase = 'day';
-    updateServerState();
-
-    setTimeout(() => startDayPhase(), 2000);
-}
-
-// ==================== شرایط برد ====================
-function checkWinCondition() {
-    const citizens = players.filter(p => p.isAlive && p.team === 'citizen').length;
-    const mafia = players.filter(p => p.isAlive && p.team === 'mafia').length;
-
-    if(mafia === 0) {
-        showEndScreen('city');
-        return true;
-    }
-    if(mafia >= citizens) {
-        showEndScreen('mafia');
-        return true;
-    }
-    return false;
-}
-
-function showEndScreen(winner) {
-    const isCityWin = winner === 'city';
-    const title = isCityWin ? '🎉 پیروزی شهروندان!' : '💀 پیروزی مافیا!';
-    const desc = isCityWin ? 'تمام مافیاها حذف شدند!' : 'مافیا برنده شد!';
-
-    let tableHtml = `<table style="width:100%; border-collapse:collapse; margin:20px 0; font-size:14px;">
-        <tr style="background:rgba(255,217,102,0.2);"><th style="padding:10px;">بازیکن</th><th style="padding:10px;">نقش</th><th style="padding:10px;">تیم</th></tr>`;
-
-    players.forEach(p => {
-        const isMafia = p.team === 'mafia';
-        const color = isMafia ? '#e94560' : '#2ecc71';
-        tableHtml += `<tr>
-            <td style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">${p.name} ${p.id === myId ? '(شما)' : ''}</td>
-            <td style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1);">${p.role}</td>
-            <td style="padding:10px; border-bottom:1px solid rgba(255,255,255,0.1); color:${color}; font-weight:bold;">${isMafia ? 'مافیا' : 'شهروند'}</td>
-        </tr>`;
     });
-    tableHtml += `</table>`;
 
-    showModal(title, desc + tableHtml, 'بازی جدید', () => location.reload());
-}
-
-// ==================== تایمر ====================
-function startTimer(seconds, onEnd) {
-    if(timerInterval) clearInterval(timerInterval);
-    let left = seconds;
-    const badge = document.getElementById('timerBadge');    badge.innerText = left;
-    badge.classList.add('show');
-
-    timerInterval = setInterval(() => {
-        left--;
-        badge.innerText = left;
-        if(left <= 0) {
-            clearInterval(timerInterval);
-            badge.classList.remove('show');
-            if(onEnd) onEnd();
-        }
-    }, 1000);
-}
-
-function stopTimer() {
-    if(timerInterval) clearInterval(timerInterval);
-    document.getElementById('timerBadge').classList.remove('show');
-}
-
-function highlightSpeaker(chairNum) {
-    for(let i=1;i<=10;i++) {
-        const ch = document.getElementById(`chair-${i}`);
-        if(ch) ch.classList.remove('speaking');
-    }
-    if(chairNum) {
-        const ch = document.getElementById(`chair-${chairNum}`);
-        if(ch) ch.classList.add('speaking');
-    }
-}
-
-// ==================== به‌روزرسانی سرور ====================
-async function updateServerState() {
-    if(!lastServerData) return;
-
-    lastServerData.game = {
-        started: true,
-        phase: gamePhase,
-        players: players,
-        speakerIndex: speakerIndex,
-        dayCount: dayCount,
-        nightActions: nightActions,
-        lastUpdate: Date.now()
+    // ==================== رویداد دکمه‌های پایین ====================
+    document.getElementById('serverBtn').onclick = () => {
+        playClick();
+        alert('بخش سرورها');
     };
-
-    await saveServer(lastServerData);
-}
-
-// ==================== Sync با سرور ====================
-function startSync() {
-    if(syncInterval) clearInterval(syncInterval);    
-    syncInterval = setInterval(async () => {
-        const data = await fetchServer();
-        if(!data || !data.game || !data.game.started) return;
-
-        // بررسی تغییرات
-        if(JSON.stringify(data.game) === JSON.stringify(lastServerData?.game)) return;
-
-        lastServerData = data;
-
-        const updated = data.game;
-        players = updated.players;
-
-        if(updated.phase !== gamePhase) {
-            gamePhase = updated.phase;
-            speakerIndex = updated.speakerIndex || 0;
-            dayCount = updated.dayCount || dayCount;
-            startGameFromPhase();
-        } else if((gamePhase === 'day' || gamePhase === 'intro_day') && updated.speakerIndex !== speakerIndex) {
-            speakerIndex = updated.speakerIndex;
-            processSpeakingOrder(gamePhase === 'intro_day');
-        }
-
-        renderChairs();
-    }, 3000);
-}
-
-// ==================== شروع ====================
-document.addEventListener('DOMContentLoaded', () => {
-    loadGame();
-});
+    document.getElementById('competitiveBtn').onclick = () => {
+        playClick();
+        window.location.href = 'Regabati.html';
+    };
+    
+    updateUI();
+    loadFromServer();
+    syncUserToServer();
 </script>
 </body>
 </html>
