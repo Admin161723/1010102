@@ -291,9 +291,19 @@
     // ======================== داده‌های اولیه ========================
     let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
 
-    // افزودن اکانت‌های ویژه (سازنده و پشتیبانی) اگر وجود نداشتند
+    // ======== تابع کمکی برای تنظیم دسترسی بر اساس سن و مقام ========
+    function setAccessByAge(age, rank) {
+        // مقام‌های ویژه می‌توانند دسترسی را override کنند، اما در اینجا طبق درخواست کاربر تنظیم می‌کنیم
+        // برای کاربران عادی بر اساس سن
+        return {
+            canAccessAdult: age >= 18,
+            canAccessTeen: age < 18
+        };
+    }
+
+    // ======== افزودن تمام حساب‌های ویژه ========
     function initSpecialAccounts() {
-        // سازنده
+        // سازنده (همیشه وجود دارد)
         if (!usersDB['09904844031']) {
             usersDB['09904844031'] = {
                 password: 'Admin16172-matin-1000',
@@ -301,7 +311,9 @@
                 age: 30,
                 avatar: 'InShot_20260225_191621541.png',
                 rank: 'سازنده',
-                fullProfile: true
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: true
             };
         }
         // پشتیبانی شماره اول
@@ -312,7 +324,9 @@
                 age: 25,
                 avatar: 'InShot_20260224_194133998.png',
                 rank: 'پشتیبانی',
-                fullProfile: true
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: true
             };
         }
         // پشتیبانی شماره دوم
@@ -323,11 +337,143 @@
                 age: 28,
                 avatar: 'InShot_20260224_194133998.png',
                 rank: 'پشتیبانی',
-                fullProfile: true
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: true
             };
         }
+
+        // ======== گرداننده (دسترسی کامل به هر دو سرور) ========
+        if (!usersDB['09123456788']) {
+            usersDB['09123456788'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'گرداننده',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'گرداننده',
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: true
+            };
+        }
+
+        // ======== ادمین ارشد بزرگسالان (شماره جدا) ========
+        if (!usersDB['09123456789']) {
+            usersDB['09123456789'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ادمین ارشد بزرگسالان',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ادمین ارشد',
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: false  // فقط بزرگسالان
+            };
+        }
+
+        // ======== ادمین ارشد نوجوانان ========
+        if (!usersDB['09123456780']) {
+            usersDB['09123456780'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ادمین ارشد نوجوانان',
+                age: 16,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ادمین ارشد',
+                fullProfile: true,
+                canAccessAdult: false,
+                canAccessTeen: true
+            };
+        }
+
+        // ======== ناظر ارشد بزرگسالان ========
+        if (!usersDB['09123456781']) {
+            usersDB['09123456781'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ناظر ارشد بزرگسالان',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ناظر ارشد',
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: false
+            };
+        }
+
+        // ======== ناظر ارشد نوجوانان ========
+        if (!usersDB['09123456782']) {
+            usersDB['09123456782'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ناظر ارشد نوجوانان',
+                age: 16,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ناظر ارشد',
+                fullProfile: true,
+                canAccessAdult: false,
+                canAccessTeen: true
+            };
+        }
+
+        // ======== ادمین بزرگسالان ========
+        if (!usersDB['09123456783']) {
+            usersDB['09123456783'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ادمین بزرگسالان',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ادمین',
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: false
+            };
+        }
+
+        // ======== ادمین نوجوانان ========
+        if (!usersDB['09936161483']) {
+            usersDB['09936161483'] = {
+                password: 'Abdollahi17',
+                name: 'Abozar',
+                age: 16,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ادمین',
+                fullProfile: true,
+                canAccessAdult: false,
+                canAccessTeen: true
+            };
+        }
+
+        // ======== ناظر بزرگسالان (شماره متفاوت) ========
+        if (!usersDB['09133456788']) {
+            usersDB['09133456788'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ناظر بزرگسالان',
+                age: 30,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ناظر',
+                fullProfile: true,
+                canAccessAdult: true,
+                canAccessTeen: false
+            };
+        }
+
+        // ======== ناظر نوجوانان ========
+        if (!usersDB['09123456785']) {
+            usersDB['09123456785'] = {
+                password: 'Admin16172-matin-1000',
+                name: 'ناظر نوجوانان',
+                age: 16,
+                avatar: 'InShot_20260225_191621541.png',
+                rank: 'ناظر',
+                fullProfile: true,
+                canAccessAdult: false,
+                canAccessTeen: true
+            };
+        }
+
+        // ذخیره در localStorage
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     }
+
+    // اجرای تابع برای ایجاد کاربران ویژه
     initSpecialAccounts();
 
     let tempPhone = null;
@@ -355,6 +501,9 @@
             sessionStorage.setItem('currentUserRank', user.rank || 'کاربر');
             sessionStorage.setItem('currentUserName', user.name);
             sessionStorage.setItem('currentUserAvatar', user.avatar);
+            sessionStorage.setItem('currentUserAge', user.age || 0);
+            sessionStorage.setItem('canAccessAdult', user.canAccessAdult ? 'true' : 'false');
+            sessionStorage.setItem('canAccessTeen', user.canAccessTeen ? 'true' : 'false');
             
             // ذخیره وضعیت ورود در localStorage (برای بازدیدهای بعدی)
             localStorage.setItem('currentLoggedInUser', JSON.stringify({
@@ -500,13 +649,20 @@
             alert("خطا در شماره تلفن");
             return;
         }
+        const ageNum = parseInt(age);
+        // تنظیم دسترسی بر اساس سن
+        const canAccessAdult = ageNum >= 18;
+        const canAccessTeen = ageNum < 18;
+
         usersDB[phone] = {
             password: newPass,
             name: gameName,
-            age: age,
+            age: ageNum,
             avatar: selectedAvatarSrc,
             rank: 'کاربر',      // کاربر عادی
-            fullProfile: true
+            fullProfile: true,
+            canAccessAdult: canAccessAdult,
+            canAccessTeen: canAccessTeen
         };
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
         redirectToMainPage(phone);
@@ -529,6 +685,9 @@
                 name: user.name,
                 avatar: user.avatar,
                 rank: user.rank,
+                age: user.age,
+                canAccessAdult: user.canAccessAdult,
+                canAccessTeen: user.canAccessTeen,
                 lastSeen: Date.now()
             };
             await fetch(BIN_URL, {
