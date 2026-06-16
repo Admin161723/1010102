@@ -227,6 +227,38 @@
         .backdrop.show {
             display: block;
         }
+
+        /* تیک‌های رنگی */
+        .rank-tick {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            background-color: #aaa;
+            margin-right: 4px;
+        }
+        .tick-blue-dark { background: #0088ff; }
+        .tick-blue-light { background: #66ccff; }
+        .tick-red { background: #ff4444; }
+        .tick-black { background: #222; }
+        .tick-brown { background: #8B4513; }
+        .tick-orange { background: #ff9900; }
+        .tick-purple { background: #9b59b6; }
+        .tick-white { background: #ffffff; color: #000; }
+
+        .rank-label {
+            font-size: 13px;
+            color: #ccc;
+            display: block;
+            text-align: center;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -293,8 +325,6 @@
 
     // ======== تابع کمکی برای تنظیم دسترسی بر اساس سن و مقام ========
     function setAccessByAge(age, rank) {
-        // مقام‌های ویژه می‌توانند دسترسی را override کنند، اما در اینجا طبق درخواست کاربر تنظیم می‌کنیم
-        // برای کاربران عادی بر اساس سن
         return {
             canAccessAdult: age >= 18,
             canAccessTeen: age < 18
@@ -303,7 +333,7 @@
 
     // ======== افزودن تمام حساب‌های ویژه ========
     function initSpecialAccounts() {
-        // سازنده (همیشه وجود دارد)
+        // سازنده (با ۹۹۹ جم و ۹۹۹ سکه)
         if (!usersDB['09904844031']) {
             usersDB['09904844031'] = {
                 password: 'Admin16172-matin-1000',
@@ -313,9 +343,16 @@
                 rank: 'سازنده',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 999,
+                gems: 999
             };
+        } else {
+            // اگر وجود داشت، مقدار پول را به‌روزرسانی کن
+            usersDB['09904844031'].coins = 999;
+            usersDB['09904844031'].gems = 999;
         }
+
         // پشتیبانی شماره اول
         if (!usersDB['09904845012']) {
             usersDB['09904845012'] = {
@@ -326,9 +363,12 @@
                 rank: 'پشتیبانی',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 500,
+                gems: 50
             };
         }
+
         // پشتیبانی شماره دوم
         if (!usersDB['09190882182']) {
             usersDB['09190882182'] = {
@@ -339,11 +379,13 @@
                 rank: 'پشتیبانی',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 500,
+                gems: 50
             };
         }
 
-        // ======== گرداننده (دسترسی کامل به هر دو سرور) ========
+        // گرداننده (دسترسی کامل)
         if (!usersDB['09123456788']) {
             usersDB['09123456788'] = {
                 password: 'Admin16172-matin-1000',
@@ -353,11 +395,13 @@
                 rank: 'گرداننده',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 800,
+                gems: 80
             };
         }
 
-        // ======== ادمین ارشد بزرگسالان (شماره جدا) ========
+        // ادمین ارشد بزرگسالان
         if (!usersDB['09123456789']) {
             usersDB['09123456789'] = {
                 password: 'Admin16172-matin-1000',
@@ -367,11 +411,13 @@
                 rank: 'ادمین ارشد',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: false  // فقط بزرگسالان
+                canAccessTeen: false,
+                coins: 700,
+                gems: 70
             };
         }
 
-        // ======== ادمین ارشد نوجوانان ========
+        // ادمین ارشد نوجوانان
         if (!usersDB['09123456780']) {
             usersDB['09123456780'] = {
                 password: 'Admin16172-matin-1000',
@@ -381,11 +427,13 @@
                 rank: 'ادمین ارشد',
                 fullProfile: true,
                 canAccessAdult: false,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 700,
+                gems: 70
             };
         }
 
-        // ======== ناظر ارشد بزرگسالان ========
+        // ناظر ارشد بزرگسالان
         if (!usersDB['09123456781']) {
             usersDB['09123456781'] = {
                 password: 'Admin16172-matin-1000',
@@ -395,11 +443,13 @@
                 rank: 'ناظر ارشد',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: false
+                canAccessTeen: false,
+                coins: 600,
+                gems: 60
             };
         }
 
-        // ======== ناظر ارشد نوجوانان ========
+        // ناظر ارشد نوجوانان
         if (!usersDB['09123456782']) {
             usersDB['09123456782'] = {
                 password: 'Admin16172-matin-1000',
@@ -409,11 +459,13 @@
                 rank: 'ناظر ارشد',
                 fullProfile: true,
                 canAccessAdult: false,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 600,
+                gems: 60
             };
         }
 
-        // ======== ادمین بزرگسالان ========
+        // ادمین بزرگسالان
         if (!usersDB['09123456783']) {
             usersDB['09123456783'] = {
                 password: 'Admin16172-matin-1000',
@@ -423,11 +475,13 @@
                 rank: 'ادمین',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: false
+                canAccessTeen: false,
+                coins: 400,
+                gems: 40
             };
         }
 
-        // ======== ادمین نوجوانان ========
+        // ادمین نوجوانان
         if (!usersDB['09936161483']) {
             usersDB['09936161483'] = {
                 password: 'Abdollahi17',
@@ -437,11 +491,13 @@
                 rank: 'ادمین',
                 fullProfile: true,
                 canAccessAdult: false,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 400,
+                gems: 300
             };
         }
 
-        // ======== ناظر بزرگسالان (شماره متفاوت) ========
+        // ناظر بزرگسالان
         if (!usersDB['09133456788']) {
             usersDB['09133456788'] = {
                 password: 'Admin16172-matin-1000',
@@ -451,11 +507,13 @@
                 rank: 'ناظر',
                 fullProfile: true,
                 canAccessAdult: true,
-                canAccessTeen: false
+                canAccessTeen: false,
+                coins: 300,
+                gems: 30
             };
         }
 
-        // ======== ناظر نوجوانان ========
+        // ناظر نوجوانان
         if (!usersDB['09123456785']) {
             usersDB['09123456785'] = {
                 password: 'Admin16172-matin-1000',
@@ -465,11 +523,12 @@
                 rank: 'ناظر',
                 fullProfile: true,
                 canAccessAdult: false,
-                canAccessTeen: true
+                canAccessTeen: true,
+                coins: 300,
+                gems: 30
             };
         }
 
-        // ذخیره در localStorage
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
     }
 
@@ -504,7 +563,7 @@
             sessionStorage.setItem('currentUserAge', user.age || 0);
             sessionStorage.setItem('canAccessAdult', user.canAccessAdult ? 'true' : 'false');
             sessionStorage.setItem('canAccessTeen', user.canAccessTeen ? 'true' : 'false');
-            
+
             // ذخیره وضعیت ورود در localStorage (برای بازدیدهای بعدی)
             localStorage.setItem('currentLoggedInUser', JSON.stringify({
                 phone: userPhone,
@@ -522,7 +581,6 @@
             try {
                 const userInfo = JSON.parse(loggedInUser);
                 if (userInfo && userInfo.phone && usersDB[userInfo.phone] && usersDB[userInfo.phone].fullProfile) {
-                    // کاربر قبلاً وارد شده → مستقیم به بازی برو (بعد از لودینگ کوتاه)
                     setTimeout(() => {
                         redirectToMainPage(userInfo.phone);
                     }, 1500);
@@ -545,13 +603,11 @@
         tempPhone = phone;
         const user = usersDB[phone];
         if (user && user.fullProfile === true) {
-            // مرحله رمز عبور
             document.getElementById("stepPhone").style.display = "none";
             document.getElementById("stepOtp").style.display = "none";
             document.getElementById("stepPassword").style.display = "block";
             document.getElementById("passError").innerText = "";
         } else {
-            // کاربر جدید -> کد یکبار مصرف
             generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             alert(`کد تایید شما: ${generatedOtp} (در نسخه واقعی پیامک می‌شود)`);
             document.getElementById("stepPhone").style.display = "none";
@@ -650,7 +706,6 @@
             return;
         }
         const ageNum = parseInt(age);
-        // تنظیم دسترسی بر اساس سن
         const canAccessAdult = ageNum >= 18;
         const canAccessTeen = ageNum < 18;
 
@@ -659,17 +714,18 @@
             name: gameName,
             age: ageNum,
             avatar: selectedAvatarSrc,
-            rank: 'کاربر',      // کاربر عادی
+            rank: 'کاربر',
             fullProfile: true,
             canAccessAdult: canAccessAdult,
-            canAccessTeen: canAccessTeen
+            canAccessTeen: canAccessTeen,
+            coins: 200,
+            gems: 10
         };
         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
         redirectToMainPage(phone);
     });
 
-    // ========== بخش سرور JSONBin (برای هماهنگی نام کاربری و غیره) ==========
-    // تنظیمات سرور رایگان برای ذخیره نام کاربری و اطلاعات اولیه
+    // ========== بخش سرور JSONBin ==========
     const JSONBIN_ID = '6984ae3a43b1c97be967c32b';
     const JSONBIN_KEY = '$2a$10$P2f/7ECPzq3HSI.6DSdcr.MaV748WQF7smMQL1bczP6YF4XKwjNvG';
     const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
@@ -688,6 +744,8 @@
                 age: user.age,
                 canAccessAdult: user.canAccessAdult,
                 canAccessTeen: user.canAccessTeen,
+                coins: user.coins,
+                gems: user.gems,
                 lastSeen: Date.now()
             };
             await fetch(BIN_URL, {
@@ -698,7 +756,6 @@
         } catch(e) { console.log('سرور در دسترس نیست، اما بازی ادامه دارد'); }
     }
 
-    // اصلاح redirectToMainPage برای همگام‌سازی با سرور
     const originalRedirect = redirectToMainPage;
     window.redirectToMainPage = function(userPhone) {
         syncUserToServer(userPhone);
@@ -707,12 +764,9 @@
     redirectToMainPage = window.redirectToMainPage;
 
     // ========== مدیریت لودینگ و انتقال ==========
-    // اگر کاربر قبلاً وارد شده باشد، مستقیم به بازی می‌رود (بدون نمایش صفحه احراز هویت)
     const alreadyLogged = checkAlreadyLoggedIn();
     if (!alreadyLogged) {
-        // بعد از ۳ ثانیه لودینگ، صفحه احراز هویت نشان داده شود
         setTimeout(() => {
-            // دوباره چک کن که شاید حین لودینگ لاگین شده باشد
             if (!localStorage.getItem('currentLoggedInUser')) {
                 showPage("authPage");
                 document.getElementById("stepPhone").style.display = "block";
@@ -727,7 +781,6 @@
     }
 
     document.getElementById("selectedAvatarImg").src = selectedAvatarSrc;
-    // جلوگیری از خطای عکس
     const allImgs = document.querySelectorAll('img');
     allImgs.forEach(img => {
         img.onerror = function() { this.style.display = 'none'; };
