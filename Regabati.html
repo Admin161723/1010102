@@ -20,9 +20,10 @@ body {
 }
 .waiting-text {
     position:fixed; top:30px; left:50%; transform:translateX(-50%);
-    color:white; font-size:24px; font-weight:bold; text-align:center;
+    color:white; font-size:28px; font-weight:bold; text-align:center;
     white-space:nowrap; z-index:100;
     animation:fadePulse 1.5s ease-in-out infinite;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.9);
 }
 .back-button {
     position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
@@ -33,30 +34,32 @@ body {
 </style>
 </head>
 <body>
-<div class="waiting-text" id="waitingText">در حال انتظار 1...</div>
+<div class="waiting-text" id="waitingText">در حال اتصال...</div>
 <img class="back-button" id="backBtn" src="InShot_20260608_012500931.png" alt="بازگشت">
 <audio id="clickSound" src="sedatoseda.ir.mp3" preload="auto"></audio>
 
 <script>
-const JSONBIN_ID = '6984ae3a43b1c97be967c32b';
-const JSONBIN_KEY = '$2a$10$P2f/7ECPzq3HSI.6DSdcr.MaV748WQF7smMQL1bczP6YF4XKwjNvG';
+// ==================== تنظیمات JSONBin (جدید) ====================
+const JSONBIN_ID = '6a310a04da38895dfec86661';
+const API_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
-const GAME_PAGE_URL = 'index.html';
+const GAME_PAGE_URL = 'index.html'; // صفحه اصلی بازی
 
+// ========== صدا ==========
 const clickAudio = document.getElementById('clickSound');
 function playClick() {
     const sound = clickAudio.cloneNode();
     sound.volume = 0.3;
-    sound.play().catch(e => {});}
+    sound.play().catch(e => {});
+}
 
-// اطلاعات کاربر
+// ========== اطلاعات کاربر ==========
 let playerId = sessionStorage.getItem('regabati_playerId');
 if(!playerId) {
-    playerId = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random());
+    playerId = 'p_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     sessionStorage.setItem('regabati_playerId', playerId);
 }
 
-// نام کاربر (اگر ندارد بساز)
 let playerName = sessionStorage.getItem('mafiaUserName');
 if(!playerName) {
     playerName = 'بازیکن_' + Math.floor(Math.random()*1000);
@@ -67,117 +70,212 @@ let currentCount = 0;
 let isStarted = false;
 let pollInterval = null;
 let isLeaving = false;
+let isUpdating = false;
+let updateQueue = Promise.resolve();
 const waitingDiv = document.getElementById('waitingText');
 
+// ========== دریافت وضعیت از JSONBin ==========
+async function fetchState() {
+    try {
+        const res = await fetch(BIN_URL, {
+            method: 'GET',
+            headers: {
+                'X-Master-Key': API_KEY,
+                'Accept': 'application/json'
+            }
+        });
+        if(!res.ok) {
+            console.error('Fetch failed:', res.status);
+            return null;
+        }
+        const data = await res.json();
+        return data.record;
+    } catch(e) {
+        console.error('Fetch error:', e);
+        return null;
+    }
+}
+
+// ========== ذخیره وضعیت در JSONBin (با قفل) ==========
+function safeUpdate(modifyFn) {
+    updateQueue = updateQueue.then(async () => {
+        if(isLeaving) return false;
+        isUpdating = true;
+        
+        for(let attempt = 0; attempt < 5; attempt++) {
+            try {
+                const state = await fetchState();
+                if(!state) {
+                    await new Promise(r => setTimeout(r, 400));
+                    continue;
+                }
+                
+                if(!state.competitive) state.competitive = { count: 0, players: [] };
+                if(!state.competitive.players) state.competitive.players = [];
+                
+                const changed = modifyFn(state);
+                if(!changed) {
+                    isUpdating = false;
+                    return true;
+                }
+                
+                const putRes = await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(state)
+                });
+                
+                if(putRes.ok) {
+                    isUpdating = false;
+                    return true;
+                }
+                
+                console.warn('PUT failed, retry...', attempt);
+                await new Promise(r => setTimeout(r, 400));
+            } catch(e) {
+                console.error('Update error:', e);
+                await new Promise(r => setTimeout(r, 400));
+            }
+        }
+        
+        isUpdating = false;
+        return false;
+    });
+    
+    return updateQueue;
+}
+
+// ========== به‌روزرسانی UI ==========
 function updateUI() {
     waitingDiv.innerText = `در حال انتظار ${currentCount}...`;
     if(currentCount >= 10 && !isStarted) {
         isStarted = true;
         if(pollInterval) clearInterval(pollInterval);
         waitingDiv.innerText = '🎮 شروع بازی...';
-        setTimeout(() => { window.location.href = GAME_PAGE_URL; }, 2000);
+        setTimeout(() => {
+            window.location.href = GAME_PAGE_URL;
+        }, 2000);
     }
 }
 
-async function fetchGameState() {
-    try {
-        const res = await fetch(BIN_URL, { headers: { 'X-Master-Key': JSONBIN_KEY } });
-        if(!res.ok) return null;
-        const data = await res.json();
-        return data.record;
-    } catch { return null; }
-}
-
-async function updateGameState(newState, retries = 3) {
-    try {
-        const putResp = await fetch(BIN_URL, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Master-Key': JSONBIN_KEY,
-                'X-Bin-Versioning': 'false'
-            },            body: JSON.stringify(newState)
-        });
-        if(!putResp.ok) {
-            if(retries > 0 && putResp.status === 409) {
-                await new Promise(r => setTimeout(r, 500));
-                return updateGameState(newState, retries - 1);
-            }
-            return false;
-        }
-        return true;
-    } catch { return false; }
-}
-
+// ========== ورود به بازی ==========
 async function joinGame() {
-    let state = await fetchGameState();
-    if(!state) state = { competitive: { count: 0, players: [] } };
-    if(!state.competitive) state.competitive = { count: 0, players: [] };
-
-    // آیا قبلاً در لیست هستم؟
-    const existing = state.competitive.players.find(p => p.id === playerId);
-    if(existing) {
-        currentCount = state.competitive.count;
-        updateUI();
-        startPolling();
-        return;
-    }
-
-    if(state.competitive.count >= 10) {
-        waitingDiv.innerText = 'بازی شروع شده';
-        return;
-    }
-
-    // اضافه کردن با نام
-    const newPlayers = [...(state.competitive.players || []), { id: playerId, name: playerName }];
-    const newCount = newPlayers.length;
-    const newState = { competitive: { count: newCount, players: newPlayers, lastUpdate: Date.now() } };
+    waitingDiv.innerText = 'در حال اتصال...';
     
-    if(await updateGameState(newState)) {
-        currentCount = newCount;
-        updateUI();
+    const success = await safeUpdate((state) => {
+        // آیا قبلاً در لیست هستم؟
+        const existing = state.competitive.players.find(p => p.id === playerId);
+        if(existing) return false;
+        
+        // اگر ۱۰ نفر پر است
+        if(state.competitive.players.length >= 10) return false;
+        
+        // اضافه کردن کاربر جدید
+        state.competitive.players.push({
+            id: playerId,
+            name: playerName,
+            joinedAt: Date.now()
+        });
+        state.competitive.count = state.competitive.players.length;
+        state.competitive.lastUpdate = Date.now();
+        
+        return true;
+    });
+    
+    if(success) {
+        const state = await fetchState();
+        if(state && state.competitive) {
+            currentCount = state.competitive.players.length;
+            updateUI();
+        }
         startPolling();
     } else {
-        setTimeout(() => joinGame(), 2000);
+        // اگر کاربر قبلاً داخل لیست است، فقط از سرور بخوان
+        const state = await fetchState();
+        if(state && state.competitive) {
+            const existing = state.competitive.players.find(p => p.id === playerId);
+            if(existing) {
+                currentCount = state.competitive.players.length;
+                updateUI();
+                startPolling();
+                return;
+            }
+        }
+        // اگر خطا بود، مجدد تلاش کن
+        setTimeout(joinGame, 2000);
     }
 }
 
+// ========== خروج از بازی ==========
 async function leaveGame() {
     if(isLeaving) return;
     isLeaving = true;
-    let state = await fetchGameState();    if(!state || !state.competitive) return;
-    if(!state.competitive.players) return;
-    const newPlayers = state.competitive.players.filter(p => p.id !== playerId);
-    const newState = { competitive: { count: newPlayers.length, players: newPlayers, lastUpdate: Date.now() } };
-    await updateGameState(newState);
+    
+    await safeUpdate((state) => {
+        if(!state.competitive || !state.competitive.players) return false;
+        
+        const before = state.competitive.players.length;
+        state.competitive.players = state.competitive.players.filter(p => p.id !== playerId);
+        
+        if(state.competitive.players.length === before) return false;
+        
+        state.competitive.count = state.competitive.players.length;
+        state.competitive.lastUpdate = Date.now();
+        return true;
+    });
 }
 
+// ========== نظرسنجی دوره‌ای ==========
 async function pollState() {
-    const state = await fetchGameState();
-    if(state && state.competitive && state.competitive.count !== currentCount) {
-        currentCount = state.competitive.count;
+    if(isUpdating) return;
+    
+    const state = await fetchState();
+    if(!state) return;
+    
+    if(!state.competitive) state.competitive = { count: 0, players: [] };
+    if(!state.competitive.players) state.competitive.players = [];
+    
+    const newCount = state.competitive.players.length;
+    
+    if(newCount !== currentCount) {
+        currentCount = newCount;
         updateUI();
-        if(currentCount >= 10 && !isStarted) {
-            isStarted = true;
-            if(pollInterval) clearInterval(pollInterval);
-            updateUI();
-        }
+    }
+    
+    // اگر بازی شروع شده
+    if(state.game && state.game.started && !isStarted) {
+        isStarted = true;
+        if(pollInterval) clearInterval(pollInterval);
+        waitingDiv.innerText = '🎮 ورود به بازی...';
+        setTimeout(() => {
+            window.location.href = GAME_PAGE_URL;
+        }, 1000);
     }
 }
 
 function startPolling() {
     if(pollInterval) clearInterval(pollInterval);
-    pollInterval = setInterval(pollState, 3000);
+    pollInterval = setInterval(pollState, 2000);
 }
 
-window.addEventListener('beforeunload', () => leaveGame());
+// ========== رویدادها ==========
+window.addEventListener('beforeunload', () => {
+    leaveGame();
+});
 
 document.getElementById('backBtn').addEventListener('click', () => {
     playClick();
     leaveGame();
-    setTimeout(() => { window.location.href = 'Safe Asli Bazi.html'; }, 100);
+    setTimeout(() => {
+        window.location.href = 'Safe Asli Bazi.html';
+    }, 300);
 });
 
+// ========== شروع ==========
 joinGame();
 </script>
 </body>
