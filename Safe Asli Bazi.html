@@ -697,7 +697,49 @@
 <audio id="clickSound" src="sedatoseda.ir.mp3" preload="auto"></audio>
 
 <script>
-    // ==================== اطلاعات کاربر از sessionStorage ====================
+    // ============================================================
+    // ===== تنظیمات JSONBin API =====
+    // ============================================================
+    const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
+    const JSONBIN_ID = '6a310a04da38895dfec86661';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+    // ============================================================
+    // ===== توابع API =====
+    // ============================================================
+    async function loadDataFromServer() {
+        try {
+            const response = await fetch(BIN_URL, {
+                headers: { 'X-Master-Key': JSONBIN_KEY }
+            });
+            const data = await response.json();
+            return data.record || {};
+        } catch (error) {
+            console.log('خطا در بارگذاری از سرور:', error);
+            return {};
+        }
+    }
+
+    async function saveDataToServer(data) {
+        try {
+            await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_KEY
+                },
+                body: JSON.stringify(data)
+            });
+            return true;
+        } catch (error) {
+            console.log('خطا در ذخیره در سرور:', error);
+            return false;
+        }
+    }
+
+    // ============================================================
+    // ===== اطلاعات کاربر از sessionStorage =====
+    // ============================================================
     let currentUserPhone = sessionStorage.getItem('currentUserPhone');
     let currentUserRank = sessionStorage.getItem('currentUserRank') || 'کاربر';
     let currentUserName = sessionStorage.getItem('currentUserName') || 'کاربر';
@@ -706,50 +748,75 @@
     let canAccessAdult = sessionStorage.getItem('canAccessAdult') === 'true';
     let canAccessTeen = sessionStorage.getItem('canAccessTeen') === 'true';
 
-    // ==================== بررسی وجود کاربر ====================
+    // ============================================================
+    // ===== بررسی وجود کاربر =====
+    // ============================================================
     if (!currentUserPhone) {
-        alert('❌ لطفاً ابتدا وارد شوید!');
+        alert('لطفاً ابتدا وارد شوید!');
         window.location.href = 'index.html';
     }
 
-    // ==================== دیتابیس محلی ====================
+    // ============================================================
+    // ===== دیتابیس محلی =====
+    // ============================================================
     let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
     let userData = usersDB[currentUserPhone];
-    if (!userData) {
-        userData = {
-            name: currentUserName,
-            avatar: currentUserAvatar,
-            rank: currentUserRank,
-            age: currentUserAge,
-            level: 1,
-            coins: 200,
-            gems: 10,
-            playHours: 12,
-            observerCount: 3,
-            serverWins: 8,
-            compWins: 5,
-            cups: 2,
-            group: 'مافیا',
-            ownedAvatars: ['InShot_20260225_191621541.png','InShot_20260224_194133998.png','InShot_20260208_214035107.png','InShot_20260208_214116629.png'],
-            ownedFrames: ['InShot_20260607_164903273.png'],
-            currentAvatar: currentUserAvatar,
-            currentFrame: 'InShot_20260607_164903273.png',
-            canAccessAdult: canAccessAdult,
-            canAccessTeen: canAccessTeen
-        };
-        usersDB[currentUserPhone] = userData;
-        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
-    } else {
-        userData.canAccessAdult = canAccessAdult;
-        userData.canAccessTeen = canAccessTeen;
-        userData.age = currentUserAge;
-        if (!userData.ownedAvatars) userData.ownedAvatars = ['InShot_20260225_191621541.png','InShot_20260224_194133998.png','InShot_20260208_214035107.png','InShot_20260208_214116629.png'];
-        if (!userData.ownedFrames) userData.ownedFrames = ['InShot_20260607_164903273.png'];
-        usersDB[currentUserPhone] = userData;
-        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+
+    // ============================================================
+    // ===== اطلاعات کامل مقام‌داران =====
+    // ============================================================
+    const RANK_DB = [
+        { phone: '09904844031', age: 30, password: 'Admin16172-matin-1000', rank: 'سازنده', serverAccess: 'both', tick: 'سازنده', lobbyName: 'پشتیبانی مافیاسان', groupName: 'مافیا سان', coins: 999, gems: 999 },
+        { phone: '09904845012', age: 25, password: 'Support@16172', rank: 'پشتیبانی', serverAccess: 'both', tick: 'پشتیبانی', lobbyName: 'پشتیبانی مافیا', groupName: 'مافیا', coins: 500, gems: 50 },
+        { phone: '09190882182', age: 28, password: 'Support@16172', rank: 'پشتیبانی', serverAccess: 'both', tick: 'پشتیبانی', lobbyName: 'پشتیبانی مافیا', groupName: 'مافیا', coins: 500, gems: 50 },
+        { phone: '09123456788', age: 30, password: 'Admin16172-matin-1000', rank: 'گرداننده', serverAccess: 'both', tick: 'گرداننده', lobbyName: 'تالار گرداننده', groupName: 'مافیا', coins: 800, gems: 80 },
+        { phone: '09123456789', age: 30, password: 'Admin16172-matin-1000', rank: 'ادمین ارشد', serverAccess: 'adults', tick: 'ادمین ارشد', lobbyName: 'تالار ادمین ارشد', groupName: 'مافیا', coins: 700, gems: 70 },
+        { phone: '09305075756', age: 17, password: 'Farzam1380', rank: 'ادمین ارشد', serverAccess: 'teens', tick: 'ادمین ارشد', lobbyName: 'تالار ادمین ارشد', groupName: 'مافیا', coins: 700, gems: 800 },
+        { phone: '09123456781', age: 30, password: 'Admin16172-matin-1000', rank: 'ناظر ارشد', serverAccess: 'adults', tick: 'ناظر ارشد', lobbyName: 'تالار ناظر ارشد', groupName: 'مافیا', coins: 600, gems: 60 },
+        { phone: '09123456782', age: 16, password: 'Admin16172-matin-1000', rank: 'ناظر ارشد', serverAccess: 'teens', tick: 'ناظر ارشد', lobbyName: 'تالار ناظر ارشد', groupName: 'مافیا', coins: 600, gems: 60 },
+        { phone: '09123456783', age: 30, password: 'Admin16172-matin-1000', rank: 'ادمین', serverAccess: 'adults', tick: 'ادمین', lobbyName: 'تالار ادمین', groupName: 'مافیا', coins: 400, gems: 40 },
+        { phone: '09936161483', age: 16, password: 'Abdollahi17', rank: 'ادمین', serverAccess: 'teens', tick: 'ادمین', lobbyName: 'تالار ادمین', groupName: 'مافیا', coins: 400, gems: 300 },
+        { phone: '09942785343', age: 30, password: 'mmmmmm', rank: 'ناظر', serverAccess: 'adults', tick: 'ناظر', lobbyName: 'تالار ناظر', groupName: 'مافیا', coins: 3000, gems: 2000 },
+        { phone: '09937119945', age: 16, password: 'ALI MASIH', rank: 'ناظر', serverAccess: 'teens', tick: 'ناظر', lobbyName: 'تالار ناظر', groupName: 'مافیا', coins: 300, gems: 400 }
+    ];
+
+    // ============================================================
+    // ===== تابع پیدا کردن مقام کاربر =====
+    // ============================================================
+    function findUserRank(phone, age, password) {
+        for (let entry of RANK_DB) {
+            if (entry.phone === phone && entry.age === age && entry.password === password) {
+                return entry;
+            }
+        }
+        return null;
     }
 
-    // ==================== آواتارهای جدید فروشگاه ====================
+    // ============================================================
+    // ===== لیست آواتارها =====
+    // ============================================================
+    const AVATAR_LIST = [
+        'InShot_20260225_191621541.png',
+        'InShot_20260224_194133998.png',
+        'InShot_20260208_214035107.png',
+        'InShot_20260208_214116629.png',
+        'InShot_20260219_185448062.png',
+        'InShot_20260219_185413696.png',
+        'InShot_20260219_185328676.png',
+        'InShot_20260219_185247894.png',
+        'InShot_20260219_185152210.png',
+        'InShot_20260219_185049749.png',
+        'InShot_20260217_183611271.png',
+        'InShot_20260216_031531507.png',
+        'InShot_20260216_031443956.png',
+        'InShot_20260216_031355260.png',
+        'InShot_20260213_195217329.png',
+        'InShot_20260213_195059047.png'
+    ];
+
+    // ============================================================
+    // ===== آواتارهای فروشگاه =====
+    // ============================================================
     const storeAvatars = [
         { src: 'InShot_20260219_185448062.png', price: 200, currency: 'gems', name: 'آواتار شعله‌ای' },
         { src: 'InShot_20260219_185413696.png', price: 190, currency: 'gems', name: 'آواتار آبی' },
@@ -764,49 +831,102 @@
         { src: 'InShot_20260213_195217329.png', price: 80, currency: 'gems', name: 'آواتار ساده ۱' },
         { src: 'InShot_20260213_195059047.png', price: 80, currency: 'gems', name: 'آواتار ساده ۲' }
     ];
-    const storeFrames = [];
 
-    // ==================== صداها ====================
-    const bgAudio = document.getElementById('bgMusic');
-    const clickAudio = document.getElementById('clickSound');
+    // ============================================================
+    // ===== بارگذاری داده‌ها از سرور =====
+    // ============================================================
+    async function loadUserData() {
+        const serverData = await loadDataFromServer();
+        const serverUsers = serverData.users || {};
 
-    bgAudio.volume = 0.5;
-    function playClick() {
-        const sound = clickAudio.cloneNode();
-        sound.volume = 0.3;
-        sound.play().catch(e => console.log("صدای کلیک پخش نشد:", e));
+        if (serverUsers[currentUserPhone]) {
+            const serverUser = serverUsers[currentUserPhone];
+            userData = {
+                name: serverUser.name || currentUserName,
+                avatar: serverUser.avatar || currentUserAvatar,
+                rank: serverUser.rank || currentUserRank,
+                age: serverUser.age || currentUserAge,
+                level: serverUser.level || 1,
+                coins: serverUser.coins || 200,
+                gems: serverUser.gems || 10,
+                playHours: serverUser.playHours || 12,
+                observerCount: serverUser.observerCount || 3,
+                serverWins: serverUser.serverWins || 8,
+                compWins: serverUser.compWins || 5,
+                cups: serverUser.cups || 2,
+                group: serverUser.group || 'مافیا',
+                ownedAvatars: serverUser.ownedAvatars || ['InShot_20260225_191621541.png', 'InShot_20260224_194133998.png', 'InShot_20260208_214035107.png', 'InShot_20260208_214116629.png'],
+                ownedFrames: serverUser.ownedFrames || ['InShot_20260607_164903273.png'],
+                currentAvatar: serverUser.currentAvatar || currentUserAvatar,
+                currentFrame: serverUser.currentFrame || 'InShot_20260607_164903273.png',
+                canAccessAdult: serverUser.canAccessAdult !== undefined ? serverUser.canAccessAdult : canAccessAdult,
+                canAccessTeen: serverUser.canAccessTeen !== undefined ? serverUser.canAccessTeen : canAccessTeen
+            };
+        } else {
+            if (!userData) {
+                userData = {
+                    name: currentUserName,
+                    avatar: currentUserAvatar,
+                    rank: currentUserRank,
+                    age: currentUserAge,
+                    level: 1,
+                    coins: 200,
+                    gems: 10,
+                    playHours: 12,
+                    observerCount: 3,
+                    serverWins: 8,
+                    compWins: 5,
+                    cups: 2,
+                    group: 'مافیا',
+                    ownedAvatars: ['InShot_20260225_191621541.png', 'InShot_20260224_194133998.png', 'InShot_20260208_214035107.png', 'InShot_20260208_214116629.png'],
+                    ownedFrames: ['InShot_20260607_164903273.png'],
+                    currentAvatar: currentUserAvatar,
+                    currentFrame: 'InShot_20260607_164903273.png',
+                    canAccessAdult: canAccessAdult,
+                    canAccessTeen: canAccessTeen
+                };
+            }
+        }
+
+        usersDB[currentUserPhone] = userData;
+        localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+        await saveUserToServer();
+        updateUI();
     }
 
-    const volumeSlider = document.getElementById('volumeSlider');
-    volumeSlider.addEventListener('input', (e) => {
-        bgAudio.volume = e.target.value / 100;
-    });
+    async function saveUserToServer() {
+        const serverData = await loadDataFromServer();
+        if (!serverData.users) serverData.users = {};
 
-    const settingsModal = document.getElementById('settingsModal');
-    const settingsBtn = document.getElementById('settingsBtn');
-    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        serverData.users[currentUserPhone] = {
+            name: userData.name,
+            avatar: userData.avatar,
+            rank: userData.rank,
+            age: userData.age,
+            level: userData.level,
+            coins: userData.coins,
+            gems: userData.gems,
+            playHours: userData.playHours,
+            observerCount: userData.observerCount,
+            serverWins: userData.serverWins,
+            compWins: userData.compWins,
+            cups: userData.cups,
+            group: userData.group,
+            ownedAvatars: userData.ownedAvatars,
+            ownedFrames: userData.ownedFrames,
+            currentAvatar: userData.currentAvatar,
+            currentFrame: userData.currentFrame,
+            canAccessAdult: userData.canAccessAdult,
+            canAccessTeen: userData.canAccessTeen,
+            lastUpdate: new Date().toISOString()
+        };
 
-    settingsBtn.addEventListener('click', () => {
-        playClick();
-        settingsModal.classList.add('open');
-    });
-    closeSettingsBtn.addEventListener('click', () => {
-        playClick();
-        settingsModal.classList.remove('open');
-    });
-    window.addEventListener('click', (e) => {
-        if (e.target === settingsModal) {
-            settingsModal.classList.remove('open');
-        }
-    });
+        await saveDataToServer(serverData);
+    }
 
-    window.addEventListener('load', () => {
-        bgAudio.play().catch(e => {
-            document.body.addEventListener('click', () => bgAudio.play(), { once: true });
-        });
-    });
-
-    // ==================== توابع UI ====================
+    // ============================================================
+    // ===== توابع UI =====
+    // ============================================================
     function getTickClass(rank) {
         const map = {
             'سازنده': 'tick-blue-dark',
@@ -855,10 +975,13 @@
 
     function generateUserId(phone) {
         let hash = 0;
-        for(let i=0; i<phone.length; i++) hash = ((hash<<5)-hash)+phone.charCodeAt(i);
+        for (let i = 0; i < phone.length; i++) hash = ((hash << 5) - hash) + phone.charCodeAt(i);
         return Math.abs(hash % 100000000) + 1;
     }
 
+    // ============================================================
+    // ===== رویدادها =====
+    // ============================================================
     document.getElementById('userIdCopy')?.addEventListener('click', () => {
         playClick();
         navigator.clipboard.writeText(document.getElementById('userIdCode').innerText);
@@ -866,19 +989,20 @@
     });
 
     let nameChangeUsed = false;
-    document.getElementById('editNameBtn')?.addEventListener('click', () => {
+    document.getElementById('editNameBtn')?.addEventListener('click', async () => {
         playClick();
         let newName = prompt('اسم جدید خود را وارد کنید', userData.name);
-        if(newName && newName.trim()) {
-            if(!nameChangeUsed && userData.coins >= 100) {
+        if (newName && newName.trim()) {
+            if (!nameChangeUsed && userData.coins >= 100) {
                 userData.coins -= 100;
                 nameChangeUsed = true;
                 userData.name = newName.trim();
                 usersDB[currentUserPhone] = userData;
                 localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                await saveUserToServer();
                 updateUI();
                 alert('اسم شما به ' + newName + ' تغییر کرد. ۱۰۰ سکه کسر شد.');
-            } else if(nameChangeUsed) alert('شما قبلاً یک بار نام خود را تغییر داده‌اید.');
+            } else if (nameChangeUsed) alert('شما قبلاً یک بار نام خود را تغییر داده‌اید.');
             else alert('سکه کافی نیست!');
         }
     });
@@ -888,16 +1012,20 @@
         document.getElementById('profileModal').classList.add('open');
         updateUI();
     };
+
     document.getElementById('closeProfileBtn').onclick = () => {
         playClick();
         document.getElementById('profileModal').classList.remove('open');
     };
+
     document.getElementById('profileAvatarCircle').onclick = () => {
         playClick();
         openShop();
     };
 
-    // ==================== فروشگاه ====================
+    // ============================================================
+    // ===== فروشگاه =====
+    // ============================================================
     const shopOverlay = document.getElementById('shopOverlay');
     const shopContent = document.getElementById('shopContent');
     let currentShopTab = 'my';
@@ -907,13 +1035,14 @@
         shopOverlay.classList.add('open');
         renderShop();
     }
+
     function closeShop() {
         playClick();
         shopOverlay.classList.remove('open');
     }
     document.getElementById('shopBackBtn').onclick = closeShop;
 
-    function renderShop() {
+    async function renderShop() {
         shopContent.innerHTML = '';
         if (currentShopTab === 'my') {
             const ownedAvatars = userData.ownedAvatars || [];
@@ -929,11 +1058,12 @@
                     card.className = 'shop-card';
                     card.innerHTML = `<img src="${av}"><div class="owned-badge">مالک</div><button>انتخاب</button>`;
                     const btn = card.querySelector('button');
-                    btn.onclick = () => {
+                    btn.onclick = async () => {
                         playClick();
                         userData.currentAvatar = av;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        await saveUserToServer();
                         updateUI();
                         alert('آواتار جاری تغییر کرد');
                         renderShop();
@@ -952,11 +1082,12 @@
                     card.className = 'shop-card';
                     card.innerHTML = `<img src="${fr}" style="border-radius:12px;"><div class="owned-badge">مالک</div><button>انتخاب قالب</button>`;
                     const btn = card.querySelector('button');
-                    btn.onclick = () => {
+                    btn.onclick = async () => {
                         playClick();
                         userData.currentFrame = fr;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        await saveUserToServer();
                         updateUI();
                         alert('قالب جاری تغییر کرد');
                         renderShop();
@@ -978,7 +1109,7 @@
                 if (!alreadyOwned) {
                     const btn = document.createElement('button');
                     btn.innerText = 'خرید';
-                    btn.onclick = () => {
+                    btn.onclick = async () => {
                         playClick();
                         if (item.currency === 'gems' && userData.gems >= item.price) {
                             userData.gems -= item.price;
@@ -986,6 +1117,7 @@
                             userData.ownedAvatars.push(item.src);
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            await saveUserToServer();
                             alert('خرید موفق!');
                             renderShop();
                             updateUI();
@@ -995,6 +1127,7 @@
                             userData.ownedAvatars.push(item.src);
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            await saveUserToServer();
                             alert('خرید موفق!');
                             renderShop();
                             updateUI();
@@ -1004,11 +1137,12 @@
                 } else {
                     card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
                     const selectBtn = card.querySelector('button:not(.owned-badge)');
-                    selectBtn.onclick = () => {
+                    selectBtn.onclick = async () => {
                         playClick();
                         userData.currentAvatar = item.src;
                         usersDB[currentUserPhone] = userData;
                         localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                        await saveUserToServer();
                         updateUI();
                         alert('آواتار جاری تغییر کرد');
                         renderShop();
@@ -1030,7 +1164,7 @@
                     if (!alreadyOwned && frame.price > 0) {
                         const btn = document.createElement('button');
                         btn.innerText = 'خرید';
-                        btn.onclick = () => {
+                        btn.onclick = async () => {
                             playClick();
                             if (userData.coins >= frame.price) {
                                 userData.coins -= frame.price;
@@ -1038,6 +1172,7 @@
                                 userData.ownedFrames.push(frame.src);
                                 usersDB[currentUserPhone] = userData;
                                 localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                                await saveUserToServer();
                                 alert('قالب خریداری شد');
                                 renderShop();
                                 updateUI();
@@ -1047,11 +1182,12 @@
                     } else if (alreadyOwned) {
                         card.innerHTML += `<div class="owned-badge">مالک</div><button>انتخاب</button>`;
                         const selectBtn = card.querySelector('button:not(.owned-badge)');
-                        selectBtn.onclick = () => {
+                        selectBtn.onclick = async () => {
                             playClick();
                             userData.currentFrame = frame.src;
                             usersDB[currentUserPhone] = userData;
                             localStorage.setItem('mafia_users', JSON.stringify(usersDB));
+                            await saveUserToServer();
                             updateUI();
                             alert('قالب جاری تغییر کرد');
                             renderShop();
@@ -1073,7 +1209,54 @@
         };
     });
 
-    // ==================== منوی اپلیکیشنی ====================
+    // ============================================================
+    // ===== صداها =====
+    // ============================================================
+    const bgAudio = document.getElementById('bgMusic');
+    const clickAudio = document.getElementById('clickSound');
+
+    bgAudio.volume = 0.5;
+
+    function playClick() {
+        const sound = clickAudio.cloneNode();
+        sound.volume = 0.3;
+        sound.play().catch(e => console.log("صدای کلیک پخش نشد:", e));
+    }
+
+    const volumeSlider = document.getElementById('volumeSlider');
+    volumeSlider.addEventListener('input', (e) => {
+        bgAudio.volume = e.target.value / 100;
+    });
+
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+
+    settingsBtn.addEventListener('click', () => {
+        playClick();
+        settingsModal.classList.add('open');
+    });
+
+    closeSettingsBtn.addEventListener('click', () => {
+        playClick();
+        settingsModal.classList.remove('open');
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            settingsModal.classList.remove('open');
+        }
+    });
+
+    window.addEventListener('load', () => {
+        bgAudio.play().catch(e => {
+            document.body.addEventListener('click', () => bgAudio.play(), { once: true });
+        });
+    });
+
+    // ============================================================
+    // ===== منوی اپلیکیشنی =====
+    // ============================================================
     const menuToggle = document.getElementById('menuToggle');
     const appMenu = document.getElementById('appMenu');
     const menuBadge = document.getElementById('menuBadge');
@@ -1096,7 +1279,7 @@
             playClick();
             appMenu.classList.remove('open');
             const section = item.dataset.section;
-            switch(section) {
+            switch (section) {
                 case 'donate':
                     alert('🎁 بخش اهدای جم - به زودی');
                     break;
@@ -1125,7 +1308,9 @@
         });
     });
 
-    // ==================== منوی سرورها ====================
+    // ============================================================
+    // ===== منوی سرورها =====
+    // ============================================================
     const serverMenu = document.getElementById('serverMenu');
     const serverBackdrop = document.getElementById('serverBackdrop');
     const serverBtn = document.getElementById('serverBtn');
@@ -1154,11 +1339,9 @@
 
     serverBackdrop.addEventListener('click', closeServerMenu);
 
-    // ==================== دکمه سرور بزرگسالان ====================
     adultBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessAdult) {
-            // هدایت به صفحه سرور بزرگسالان
             window.location.href = 'Safe Talare Bozorge Salan.html';
         } else {
             alert('❌ شما دسترسی به سرور بزرگسالان ندارید. سن شما باید بالای ۱۸ سال باشد.');
@@ -1166,11 +1349,9 @@
         closeServerMenu();
     });
 
-    // ==================== دکمه سرور نوجوانان ====================
     teenBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessTeen) {
-            // هدایت به صفحه سرور نوجوانان
             window.location.href = 'Safe Talare Nojavanan.html';
         } else {
             alert('❌ شما دسترسی به سرور نوجوانان ندارید. سن شما باید زیر ۱۸ سال باشد.');
@@ -1178,14 +1359,18 @@
         closeServerMenu();
     });
 
-    // ==================== دکمه رقابتی ====================
     document.getElementById('competitiveBtn').onclick = () => {
         playClick();
         window.location.href = 'Regabati.html';
     };
 
-    // ==================== شروع ====================
-    updateUI();
+    // ============================================================
+    // ===== شروع =====
+    // ============================================================
+    window.onload = async function() {
+        await loadUserData();
+        updateUI();
+    };
 </script>
 </body>
 </html>
