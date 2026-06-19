@@ -706,6 +706,12 @@
     let canAccessAdult = sessionStorage.getItem('canAccessAdult') === 'true';
     let canAccessTeen = sessionStorage.getItem('canAccessTeen') === 'true';
 
+    // ==================== بررسی وجود کاربر ====================
+    if (!currentUserPhone) {
+        alert('❌ لطفاً ابتدا وارد شوید!');
+        window.location.href = 'index.html';
+    }
+
     // ==================== دیتابیس محلی ====================
     let usersDB = JSON.parse(localStorage.getItem('mafia_users')) || {};
     let userData = usersDB[currentUserPhone];
@@ -1148,22 +1154,26 @@
 
     serverBackdrop.addEventListener('click', closeServerMenu);
 
+    // ==================== دکمه سرور بزرگسالان ====================
     adultBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessAdult) {
-            alert('✅ ورود به سرور بزرگسالان');
+            // هدایت به صفحه سرور بزرگسالان
+            window.location.href = 'Safe Talare Bozorge Salan.html';
         } else {
-            alert('❌ شما دسترسی به سرور بزرگسالان ندارید.');
+            alert('❌ شما دسترسی به سرور بزرگسالان ندارید. سن شما باید بالای ۱۸ سال باشد.');
         }
         closeServerMenu();
     });
 
+    // ==================== دکمه سرور نوجوانان ====================
     teenBtn.addEventListener('click', () => {
         playClick();
         if (userData.canAccessTeen) {
-            alert('✅ ورود به سرور نوجوانان');
+            // هدایت به صفحه سرور نوجوانان
+            window.location.href = 'Safe Talare Nojavanan.html';
         } else {
-            alert('❌ شما دسترسی به سرور نوجوانان ندارید.');
+            alert('❌ شما دسترسی به سرور نوجوانان ندارید. سن شما باید زیر ۱۸ سال باشد.');
         }
         closeServerMenu();
     });
