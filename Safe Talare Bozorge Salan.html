@@ -1579,6 +1579,286 @@
         }
 
         // ============================================================
+        // ===== اطلاعات کامل مقام‌داران =====
+        // ============================================================
+
+        const RANK_DB = [
+            // ===== سازنده =====
+            { 
+                phone: '09904844031', 
+                age: 30, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'سازنده', 
+                serverAccess: 'both',
+                tick: 'سازنده',
+                lobbyName: 'پشتیبانی مافیاسان',
+                groupName: 'مافیا سان',
+                coins: 999,
+                gems: 999
+            },
+            
+            // ===== پشتیبانی 1 =====
+            { 
+                phone: '09904845012', 
+                age: 25, 
+                password: 'Support@16172', 
+                rank: 'پشتیبانی', 
+                serverAccess: 'both',
+                tick: 'پشتیبانی',
+                lobbyName: 'پشتیبانی مافیا',
+                groupName: 'مافیا',
+                coins: 500,
+                gems: 50
+            },
+            
+            // ===== پشتیبانی 2 =====
+            { 
+                phone: '09190882182', 
+                age: 28, 
+                password: 'Support@16172', 
+                rank: 'پشتیبانی', 
+                serverAccess: 'both',
+                tick: 'پشتیبانی',
+                lobbyName: 'پشتیبانی مافیا',
+                groupName: 'مافیا',
+                coins: 500,
+                gems: 50
+            },
+            
+            // ===== گرداننده =====
+            { 
+                phone: '09123456788', 
+                age: 30, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'گرداننده', 
+                serverAccess: 'both',
+                tick: 'گرداننده',
+                lobbyName: 'تالار گرداننده',
+                groupName: 'مافیا',
+                coins: 800,
+                gems: 80
+            },
+            
+            // ===== ادمین ارشد بزرگسالان =====
+            { 
+                phone: '09123456789', 
+                age: 30, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'ادمین ارشد', 
+                serverAccess: 'adults',
+                tick: 'ادمین ارشد',
+                lobbyName: 'تالار ادمین ارشد',
+                groupName: 'مافیا',
+                coins: 700,
+                gems: 70
+            },
+            
+            // ===== ادمین ارشد نوجوانان =====
+            { 
+                phone: '09305075756', 
+                age: 17, 
+                password: 'Farzam1380', 
+                rank: 'ادمین ارشد', 
+                serverAccess: 'teens',
+                tick: 'ادمین ارشد',
+                lobbyName: 'تالار ادمین ارشد',
+                groupName: 'مافیا',
+                coins: 700,
+                gems: 800
+            },
+            
+            // ===== ناظر ارشد بزرگسالان =====
+            { 
+                phone: '09123456781', 
+                age: 30, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'ناظر ارشد', 
+                serverAccess: 'adults',
+                tick: 'ناظر ارشد',
+                lobbyName: 'تالار ناظر ارشد',
+                groupName: 'مافیا',
+                coins: 600,
+                gems: 60
+            },
+            
+            // ===== ناظر ارشد نوجوانان =====
+            { 
+                phone: '09123456782', 
+                age: 16, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'ناظر ارشد', 
+                serverAccess: 'teens',
+                tick: 'ناظر ارشد',
+                lobbyName: 'تالار ناظر ارشد',
+                groupName: 'مافیا',
+                coins: 600,
+                gems: 60
+            },
+            
+            // ===== ادمین بزرگسالان =====
+            { 
+                phone: '09123456783', 
+                age: 30, 
+                password: 'Admin16172-matin-1000', 
+                rank: 'ادمین', 
+                serverAccess: 'adults',
+                tick: 'ادمین',
+                lobbyName: 'تالار ادمین',
+                groupName: 'مافیا',
+                coins: 400,
+                gems: 40
+            },
+            
+            // ===== ادمین نوجوانان =====
+            { 
+                phone: '09936161483', 
+                age: 16, 
+                password: 'Abdollahi17', 
+                rank: 'ادمین', 
+                serverAccess: 'teens',
+                tick: 'ادمین',
+                lobbyName: 'تالار ادمین',
+                groupName: 'مافیا',
+                coins: 400,
+                gems: 300
+            },
+            
+            // ===== ناظر بزرگسالان =====
+            { 
+                phone: '09942785343', 
+                age: 30, 
+                password: 'mmmmmm', 
+                rank: 'ناظر', 
+                serverAccess: 'adults',
+                tick: 'ناظر',
+                lobbyName: 'تالار ناظر',
+                groupName: 'مافیا',
+                coins: 3000,
+                gems: 2000
+            },
+            
+            // ===== ناظر نوجوانان =====
+            { 
+                phone: '09937119945', 
+                age: 16, 
+                password: 'ALI MASIH', 
+                rank: 'ناظر', 
+                serverAccess: 'teens',
+                tick: 'ناظر',
+                lobbyName: 'تالار ناظر',
+                groupName: 'مافیا',
+                coins: 300,
+                gems: 400
+            }
+        ];
+
+        // ============================================================
+        // ===== اطلاعات تیک‌های لابی =====
+        // ============================================================
+
+        const LOBBY_TICKS = [
+            { id: 'pink', name: 'صورتی', image: 'InShot_20260618_223034988.png', pointsNeeded: 100 },
+            { id: 'purple', name: 'بنفش', image: 'InShot_20260618_223001651.png', pointsNeeded: 200 },
+            { id: 'orange', name: 'نارنجی', image: 'InShot_20260618_223059887.png', pointsNeeded: 300 },
+            { id: 'green', name: 'سبز', image: 'InShot_20260618_222940843.png', pointsNeeded: 400 }
+        ];
+
+        // ============================================================
+        // ===== اطلاعات کاربرانی که تیک لابی دارند =====
+        // ============================================================
+
+        const TICK_MANAGER = {
+            enabledTicks: [
+                // ===== سازنده (شماره 09904844031 با تیک سبز) =====
+                { 
+                    phone: '09904844031', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'green', 
+                    lobbyName: 'پشتیبانی مافیاسان',
+                    groupName: 'مافیا سان'
+                },
+                
+                // ===== پشتیبانی 1 (فقط صورتی) =====
+                { 
+                    phone: '09904845012', 
+                    password: 'Support@16172', 
+                    tickId: 'pink', 
+                    lobbyName: 'لابی صورتی پشتیبانی',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== پشتیبانی 2 (فقط صورتی) =====
+                { 
+                    phone: '09190882182', 
+                    password: 'Support@16172', 
+                    tickId: 'pink', 
+                    lobbyName: 'لابی صورتی پشتیبانی',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== گرداننده (صورتی و سبز) =====
+                { 
+                    phone: '09123456788', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'pink', 
+                    lobbyName: 'لابی صورتی گرداننده',
+                    groupName: 'مافیا'
+                },
+                { 
+                    phone: '09123456788', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'green', 
+                    lobbyName: 'تالار گرداننده',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== ادمین ارشد (بنفش و سبز) =====
+                { 
+                    phone: '09123456789', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'purple', 
+                    lobbyName: 'لابی بنفش ادمین ارشد',
+                    groupName: 'مافیا'
+                },
+                { 
+                    phone: '09123456789', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'green', 
+                    lobbyName: 'تالار ادمین ارشد',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== ادمین (نارنجی) =====
+                { 
+                    phone: '09123456783', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'orange', 
+                    lobbyName: 'تالار ادمین',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== ناظر ارشد (بنفش) =====
+                { 
+                    phone: '09123456781', 
+                    password: 'Admin16172-matin-1000', 
+                    tickId: 'purple', 
+                    lobbyName: 'تالار ناظر ارشد',
+                    groupName: 'مافیا'
+                },
+                
+                // ===== ناظر (نارنجی) =====
+                { 
+                    phone: '09942785343', 
+                    password: 'mmmmmm', 
+                    tickId: 'orange', 
+                    lobbyName: 'تالار ناظر',
+                    groupName: 'مافیا'
+                }
+            ],
+            disabledTicks: []
+        };
+
+        // ============================================================
         // ===== متغیرهای اصلی =====
         // ============================================================
         let users = {};
@@ -1594,13 +1874,6 @@
         let localStream = null;
         let connections = {};
         let peerId = null;
-
-        const LOBBY_TICKS = [
-            { id: 'pink', name: 'صورتی', image: 'InShot_20260618_223034988.png', pointsNeeded: 100 },
-            { id: 'purple', name: 'بنفش', image: 'InShot_20260618_223001651.png', pointsNeeded: 200 },
-            { id: 'orange', name: 'نارنجی', image: 'InShot_20260618_223059887.png', pointsNeeded: 300 },
-            { id: 'green', name: 'سبز', image: 'InShot_20260618_222940843.png', pointsNeeded: 400 }
-        ];
 
         // ============================================================
         // ===== توابع API =====
@@ -1718,6 +1991,15 @@
         function isRankUser(rank) {
             const ranks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین', 'ناظر', 'ناظر ارشد', 'کاربر ویژه'];
             return ranks.includes(rank);
+        }
+
+        function findUserRank(phone, age, password) {
+            for (let entry of RANK_DB) {
+                if (entry.phone === phone && entry.age === age && entry.password === password) {
+                    return entry;
+                }
+            }
+            return null;
         }
 
         function canApproveLobby() {
@@ -2454,11 +2736,35 @@
                     player.points = currentUser.points;
                     player.totalPoints = currentUser.totalPoints;
 
+                    // بررسی فعال شدن تیک جدید
+                    checkLobbyTickUpgrade(currentUser);
+
                     saveAllData();
                     populateChairs(lobby.players);
                     updateTickMenu();
                 }
             }, 3600000);
+        }
+
+        function checkLobbyTickUpgrade(user) {
+            const currentPoints = user.points || 0;
+            let currentTickIndex = -1;
+
+            if (user.lobbyTicks && user.lobbyTicks.length > 0) {
+                const lastTick = user.lobbyTicks[user.lobbyTicks.length - 1];
+                currentTickIndex = LOBBY_TICKS.findIndex(t => t.id === lastTick);
+            }
+
+            for (let i = currentTickIndex + 1; i < LOBBY_TICKS.length; i++) {
+                if (currentPoints >= LOBBY_TICKS[i].pointsNeeded) {
+                    if (!user.lobbyTicks) user.lobbyTicks = [];
+                    if (!user.lobbyTicks.includes(LOBBY_TICKS[i].id)) {
+                        user.lobbyTicks.push(LOBBY_TICKS[i].id);
+                        showToast(`🎉 تیک ${LOBBY_TICKS[i].name} برای شما فعال شد!`);
+                        updateTickMenu();
+                    }
+                }
+            }
         }
 
         // ============================================================
