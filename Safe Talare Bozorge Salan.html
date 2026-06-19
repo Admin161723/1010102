@@ -32,63 +32,9 @@
             z-index: 0;
         }
 
-        .header {
-            position: fixed;
-            top: 10px;
-            left: 0;
-            right: 0;
-            z-index: 20;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 15px;
-            height: 50px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-        }
-        .header-title {
-            color: #ffd700;
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255,215,0,0.3);
-        }
-        .header-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            font-size: 13px;
-        }
-        .header-user img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: 2px solid #ffd700;
-            object-fit: cover;
-        }
-        .header-user .name {
-            font-weight: bold;
-        }
-        .header-user .rank {
-            font-size: 11px;
-            color: #aaa;
-        }
-        .rank-tick-header {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 14px;
-            font-size: 10px;
-            font-weight: bold;
-            color: #fff;
-            margin-right: 3px;
-        }
-
         .lobbies-container {
             position: fixed;
-            top: 70px;
+            top: 20px;
             left: 20px;
             right: 20px;
             bottom: 120px;
@@ -109,7 +55,7 @@
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             border: 2px solid rgba(255,215,0,0.4);
-            transition: transform 0.3s;
+            transition: transform 0.05s;
             cursor: pointer;
         }
         .lobby-card:active { transform: scale(0.97); }
@@ -182,7 +128,7 @@
             color: #fff;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.05s;
         }
         .lobby-actions button:active { transform: scale(0.95); }
         .lobby-actions .approve { background: rgba(0,200,0,0.8); }
@@ -204,6 +150,7 @@
             height: 90px;
             object-fit: contain;
             filter: drop-shadow(0 0 15px rgba(255,215,0,0.7));
+            transition: transform 0.05s;
         }
         .join-btn:active img { transform: scale(0.95); }
         .join-btn.full { opacity: 0.5; cursor: not-allowed; }
@@ -291,14 +238,16 @@
             background: none;
             cursor: pointer;
             padding: 0;
+            transition: transform 0.05s;
         }
         .btn:active { transform: scale(0.95); }
         .btn img {
             width: 80px;
             height: 80px;
             object-fit: contain;
+            transition: transform 0.05s;
         }
-        .btn-rfa img { transition: transform 0.3s; }
+        .btn-rfa img { transition: transform 0.05s; }
         .btn-rfa.spinning img {
             animation: spin 0.5s linear;
         }
@@ -323,7 +272,7 @@
             color: #fff;
             font-size: 28px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.05s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         .back-btn:active { transform: scale(0.9); }
@@ -389,6 +338,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.05s;
         }
         .close-btn:active { transform: rotate(90deg) scale(0.95); }
         .menu-title {
@@ -417,7 +367,7 @@
             border-radius: 10px;
             color: #fff;
             font-size: 15px;
-            transition: all 0.3s;
+            transition: all 0.05s;
             -webkit-appearance: none;
             appearance: none;
         }
@@ -484,7 +434,7 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.05s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
@@ -588,7 +538,7 @@
             left: 50%;
             transform: translate(-50%, -60%);
             z-index: 25;
-            transition: all 0.3s;
+            transition: all 0.05s;
             cursor: pointer;
         }
         .chair-avatar img {
@@ -690,7 +640,7 @@
 
         .menu-icon {
             position: fixed;
-            top: 70px;
+            top: 15px;
             right: 15px;
             z-index: 60;
             background: rgba(0,0,0,0.6);
@@ -706,12 +656,12 @@
             font-size: 26px;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s;
+            transition: transform 0.05s;
         }
         .menu-icon:active { transform: scale(0.9); }
         .dropdown-menu {
             position: fixed;
-            top: 130px;
+            top: 75px;
             right: 15px;
             z-index: 61;
             background: rgba(0,0,0,0.85);
@@ -731,7 +681,7 @@
             font-size: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.05s;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -760,14 +710,14 @@
             border: none;
             width: 80px;
             height: 80px;
-            transition: all 0.3s;
+            transition: transform 0.05s;
         }
         .mic-btn img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));
-            transition: all 0.3s;
+            transition: all 0.05s;
         }
         .mic-btn:active img { transform: scale(0.9); }
         .mic-btn.active img {
@@ -855,7 +805,7 @@
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.05s;
             color: #fff;
         }
         .profile-actions button:active { transform: scale(0.95); }
@@ -936,7 +886,7 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.05s;
         }
         .report-content .report-btn:active { transform: scale(0.98); }
         .report-content .close-report {
@@ -1240,7 +1190,6 @@
             cursor: pointer;
         }
 
-        /* استایل مودال تیک */
         .tick-modal {
             position: fixed;
             top: 0;
@@ -1286,7 +1235,7 @@
             border-radius: 12px;
             background: rgba(0,0,0,0.4);
             border: 2px solid transparent;
-            transition: all 0.3s;
+            transition: all 0.05s;
         }
         .tick-option.active {
             border-color: #ffd700;
@@ -1350,12 +1299,12 @@
             .join-btn { bottom: 10px; left: 10px; }
             .buttons { bottom: 15px; right: 15px; gap: 8px; }
             .btn img { width: 65px; height: 65px; }
-            .lobbies-container { top: 60px; left: 10px; right: 10px; bottom: 100px; padding: 5px; gap: 15px; }
+            .lobbies-container { top: 10px; left: 10px; right: 10px; bottom: 100px; padding: 5px; gap: 15px; }
             .toast { font-size: 14px; padding: 12px 20px; bottom: 80px; width: 90%; }
             .chair { width: 110px; height: 110px; }
             .chair-avatar { width: 55px; height: 55px; }
             .chair-name { font-size: 11px; max-width: 90px; top: 72%; }
-            .menu-icon { width: 38px; height: 38px; font-size: 20px; top: 60px; }
+            .menu-icon { width: 38px; height: 38px; font-size: 20px; }
             .mic-btn { width: 60px; height: 60px; bottom: 20px; left: 20px; }
             .lobby-tick-badge img { width: 55px; height: 55px; }
             .rank-tick { width: 20px; height: 20px; font-size: 12px; }
@@ -1363,12 +1312,9 @@
             .profile-content { padding: 20px; }
             .panel-content { padding: 20px; }
             .panel-stats { grid-template-columns: repeat(2, 1fr); }
-            .dropdown-menu { min-width: 160px; right: 10px; top: 115px; }
+            .dropdown-menu { min-width: 160px; right: 10px; top: 65px; }
             .dropdown-item { font-size: 13px; padding: 10px 15px; }
             .back-btn { width: 50px; height: 50px; font-size: 22px; bottom: 15px; left: 15px; }
-            .header-title { font-size: 14px; }
-            .header-user .name { font-size: 12px; }
-            .header-user img { width: 30px; height: 30px; }
         }
         input, select, textarea, button { font-size: 16px !important; }
 
@@ -1389,18 +1335,6 @@
 <body>
 
     <div class="background"></div>
-
-    <!-- ===== هدر ===== -->
-    <div class="header" id="header">
-        <div class="header-title">🏛️ تالار بزرگسالان</div>
-        <div class="header-user" id="headerUser">
-            <img id="headerAvatar" src="InShot_20260403_213254941.png" alt="">
-            <div>
-                <div class="name" id="headerName">کاربر</div>
-                <div class="rank" id="headerRank">مقام</div>
-            </div>
-        </div>
-    </div>
 
     <!-- ===== لیست لابی‌ها ===== -->
     <div class="lobbies-container" id="lobbiesContainer"></div>
@@ -1610,37 +1544,44 @@
         const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
 
         // ============================================================
-        // ===== توابع API =====
+        // ===== تنظیمات WebRTC =====
         // ============================================================
-        async function loadDataFromServer() {
-            try {
-                const response = await fetch(BIN_URL, {
-                    headers: { 'X-Master-Key': JSONBIN_KEY }
-                });
-                const data = await response.json();
-                return data.record || {};
-            } catch (error) {
-                console.log('خطا در بارگذاری از سرور:', error);
-                return {};
-            }
-        }
+        const iceServers = [
+            { urls: "stun:stun.relay.metered.ca:80" },
+            {
+                urls: "turn:global.relay.metered.ca:80",
+                username: "c0043e641a838e7f6c2a948a",
+                credential: "WXOE0gZ6BnE+yxxl"
+            },
+            {
+                urls: "turn:global.relay.metered.ca:80?transport=tcp",
+                username: "c0043e641a838e7f6c2a948a",
+                credential: "WXOE0gZ6BnE+yxxl"
+            },
+            {
+                urls: "turn:global.relay.metered.ca:443",
+                username: "c0043e641a838e7f6c2a948a",
+                credential: "WXOE0gZ6BnE+yxxl"
+            },
+            {
+                urls: "turns:global.relay.metered.ca:443?transport=tcp",
+                username: "c0043e641a838e7f6c2a948a",
+                credential: "WXOE0gZ6BnE+yxxl"
+            },
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' },
+            { urls: 'stun:stun3.l.google.com:19302' },
+            { urls: 'stun:stun4.l.google.com:19302' }
+        ];
 
-        async function saveDataToServer(data) {
-            try {
-                await fetch(BIN_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_KEY
-                    },
-                    body: JSON.stringify(data)
-                });
-                return true;
-            } catch (error) {
-                console.log('خطا در ذخیره در سرور:', error);
-                return false;
-            }
-        }
+        const peerConfig = {
+            host: '0.peerjs.com',
+            port: 443,
+            path: '/',
+            secure: true,
+            config: { iceServers: iceServers }
+        };
 
         // ============================================================
         // ===== اطلاعات کاربر از sessionStorage =====
@@ -1651,9 +1592,6 @@
         let currentUserAvatar = sessionStorage.getItem('currentUserAvatar') || 'InShot_20260225_191621541.png';
         let currentUserAge = parseInt(sessionStorage.getItem('currentUserAge')) || 0;
 
-        // ============================================================
-        // ===== بررسی وجود کاربر =====
-        // ============================================================
         if (!currentUserPhone) {
             alert('❌ لطفاً ابتدا وارد شوید!');
             window.location.href = 'index.html';
@@ -1671,6 +1609,40 @@
         let currentLobby = null;
         let pointTimer = null;
         let selectedUserPhone = null;
+        let peer = null;
+
+        // ============================================================
+        // ===== توابع API =====
+        // ============================================================
+        async function loadDataFromServer() {
+            try {
+                const response = await fetch(BIN_URL, {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const data = await response.json();
+                return data.record || {};
+            } catch (error) {
+                console.log('خطا در بارگذاری:', error);
+                return {};
+            }
+        }
+
+        async function saveDataToServer(data) {
+            try {
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify(data)
+                });
+                return true;
+            } catch (error) {
+                console.log('خطا در ذخیره:', error);
+                return false;
+            }
+        }
 
         // ============================================================
         // ===== توابع بارگذاری =====
@@ -1682,26 +1654,22 @@
             reports = serverData.reports || [];
             bannedUsers = serverData.bannedUsers || [];
 
-            // فیلتر کردن لابی‌های قدیمی
             const now = Date.now();
             lobbies = lobbies.filter(l => {
                 const created = new Date(l.createdAt).getTime();
                 return (now - created) < 86400000;
             });
 
-            // فیلتر کردن بن‌های منقضی شده
             bannedUsers = bannedUsers.filter(b => {
                 const banTime = new Date(b.bannedAt).getTime();
                 const days = b.days || 1;
                 return (now - banTime) < (days * 86400000);
             });
 
-            // تنظیم کاربر فعلی
             if (users[currentUserPhone]) {
                 currentUser = users[currentUserPhone];
                 currentUser.phone = currentUserPhone;
             } else {
-                // ایجاد کاربر جدید در صورت وجود نداشتن
                 users[currentUserPhone] = {
                     phone: currentUserPhone,
                     name: currentUserName,
@@ -1718,18 +1686,15 @@
                 await saveAllData();
             }
 
-            // بررسی بن بودن
             const isBanned = bannedUsers.some(b => b.phone === currentUserPhone && b.active !== false);
             if (isBanned) {
                 const ban = bannedUsers.find(b => b.phone === currentUserPhone);
                 alert(`⛔ شما به دلیل "${ban.reason}" بن شده اید!`);
                 sessionStorage.clear();
-                localStorage.removeItem('currentLoggedInUser');
                 window.location.href = 'index.html';
                 return;
             }
 
-            updateHeader();
             displayLobbies();
         }
 
@@ -1745,15 +1710,8 @@
         }
 
         // ============================================================
-        // ===== توابع UI =====
+        // ===== توابع کمکی =====
         // ============================================================
-        function updateHeader() {
-            if (!currentUser) return;
-            document.getElementById('headerName').textContent = currentUser.name || 'کاربر';
-            document.getElementById('headerAvatar').src = currentUser.avatar || 'InShot_20260403_213254941.png';
-            document.getElementById('headerRank').textContent = currentUser.rank || 'کاربر عادی';
-        }
-
         function getRankColor(rank) {
             const colors = {
                 'سازنده': '#0066ff',
@@ -1770,38 +1728,27 @@
 
         function canApproveLobby() {
             if (!currentUser) return false;
-            const approverRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
-            return approverRanks.includes(currentUser.rank);
+            return ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'].includes(currentUser.rank);
         }
 
         function canDeleteLobby() {
             if (!currentUser) return false;
-            const deleteRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
-            return deleteRanks.includes(currentUser.rank);
+            return ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'].includes(currentUser.rank);
         }
 
         function canBanUser() {
             if (!currentUser) return false;
-            const banRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
-            return banRanks.includes(currentUser.rank);
+            return ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'].includes(currentUser.rank);
         }
 
         function canKickUser() {
             if (!currentUser) return false;
-            const kickRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
-            return kickRanks.includes(currentUser.rank);
-        }
-
-        function canTransferLobby() {
-            if (!currentUser) return false;
-            const transferRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
-            return transferRanks.includes(currentUser.rank);
+            return ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'].includes(currentUser.rank);
         }
 
         function canViewPanel() {
             if (!currentUser) return false;
-            const panelRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
-            return panelRanks.includes(currentUser.rank);
+            return ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'].includes(currentUser.rank);
         }
 
         function getMaxBanDays() {
@@ -1811,7 +1758,6 @@
                 case 'پشتیبانی': return 180;
                 case 'ادمین ارشد': return 60;
                 case 'ادمین': return 7;
-                case 'ناظر ارشد': return 1;
                 default: return 0;
             }
         }
@@ -1819,6 +1765,14 @@
         function isLobbyAdmin() {
             if (!currentLobby) return false;
             return currentLobby.creatorId === currentUser?.phone;
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate(10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         // ============================================================
@@ -1970,14 +1924,6 @@
                 actions.appendChild(btn);
             }
 
-            if (currentLobby && isLobbyAdmin() && user.phone !== currentUser.phone && canTransferLobby()) {
-                const btn = document.createElement('button');
-                btn.className = 'transfer-btn';
-                btn.textContent = '🔄 انتقال مالکیت لابی';
-                btn.onclick = function() { transferOwnership(user.phone); };
-                actions.appendChild(btn);
-            }
-
             if (user.phone !== currentUser.phone) {
                 const btn = document.createElement('button');
                 btn.className = 'report-btn';
@@ -2044,42 +1990,7 @@
             await saveAllData();
             populateChairs(currentLobby.players);
             document.getElementById('profileModal').classList.remove('active');
-            showToast(`🚫 ${user.name} از لابی اخراج شد! دلیل: ${reason || 'نامشخص'}`);
-        }
-
-        // ============================================================
-        // ===== انتقال مالکیت =====
-        // ============================================================
-        async function transferOwnership(newOwnerPhone) {
-            if (!currentLobby) return;
-            if (!isLobbyAdmin()) {
-                alert('❌ شما ادمین این لابی نیستید!');
-                return;
-            }
-            if (!users[newOwnerPhone]) {
-                alert('❌ کاربر مورد نظر پیدا نشد!');
-                return;
-            }
-
-            const newOwner = currentLobby.players.find(p => p.id === newOwnerPhone);
-            if (!newOwner) {
-                alert('❌ کاربر مورد نظر در این لابی نیست!');
-                return;
-            }
-
-            const confirmTransfer = confirm(`آیا مطمئن هستید می‌خواهید مالکیت لابی "${currentLobby.name}" را به ${users[newOwnerPhone].name} انتقال دهید؟`);
-            if (!confirmTransfer) return;
-
-            currentLobby.creatorId = newOwnerPhone;
-            currentLobby.players.forEach(p => {
-                p.isCreator = (p.id === newOwnerPhone);
-            });
-
-            await saveAllData();
-            displayLobbies();
-            populateChairs(currentLobby.players);
-            document.getElementById('profileModal').classList.remove('active');
-            showToast(`✅ مالکیت لابی به ${users[newOwnerPhone].name} منتقل شد!`);
+            showToast(`🚫 ${user.name} از لابی اخراج شد!`);
         }
 
         // ============================================================
@@ -2614,7 +2525,7 @@
         };
 
         // ============================================================
-        // ===== خروج از لابی (دکمه) =====
+        // ===== خروج از لابی =====
         // ============================================================
         window.exitLobby = async function() {
             if (!currentLobbyId || !currentLobby) return;
@@ -2743,16 +2654,8 @@
         });
 
         // ============================================================
-        // ===== توابع کمکی =====
+        // ===== به‌روزرسانی منوی تیک =====
         // ============================================================
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            if (navigator.vibrate) navigator.vibrate(10);
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
         function updateTickMenu() {
             const progressSpan = document.getElementById('tickProgress');
             if (!currentUser) {
@@ -2795,6 +2698,80 @@
             } else {
                 progressSpan.textContent = '0%';
             }
+        }
+
+        // ============================================================
+        // ===== سیستم صوتی WebRTC =====
+        // ============================================================
+        let peerId = null;
+        let connections = {};
+        let localStream = null;
+
+        async function initAudio() {
+            try {
+                // درخواست دسترسی به میکروفون
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+
+                // ایجاد Peer
+                peer = new Peer(undefined, peerConfig);
+
+                peer.on('open', (id) => {
+                    peerId = id;
+                    console.log('Peer ID:', id);
+                    // ذخیره peerId در سرور
+                    if (currentUser) {
+                        currentUser.peerId = id;
+                        saveAllData();
+                    }
+                });
+
+                peer.on('call', (call) => {
+                    call.answer(localStream);
+                    call.on('stream', (remoteStream) => {
+                        // پخش صدای دریافتی
+                        const audio = new Audio();
+                        audio.srcObject = remoteStream;
+                        audio.play().catch(e => console.log('خطا در پخش صدا:', e));
+                    });
+                    connections[call.peer] = call;
+                });
+
+                peer.on('error', (err) => {
+                    console.log('خطای Peer:', err);
+                });
+
+                return true;
+            } catch (error) {
+                console.log('خطا در دسترسی به میکروفون:', error);
+                return false;
+            }
+        }
+
+        function callUser(targetPeerId) {
+            if (!localStream || !peer) {
+                alert('❌ سیستم صوتی آماده نیست!');
+                return;
+            }
+
+            if (connections[targetPeerId]) {
+                alert('✅ تماس قبلاً برقرار شده است');
+                return;
+            }
+
+            const call = peer.call(targetPeerId, localStream);
+            call.on('stream', (remoteStream) => {
+                const audio = new Audio();
+                audio.srcObject = remoteStream;
+                audio.play().catch(e => console.log('خطا در پخش صدا:', e));
+            });
+            connections[targetPeerId] = call;
+            showToast('🔊 تماس صوتی برقرار شد!');
         }
 
         // ============================================================
@@ -2984,21 +2961,45 @@
         });
 
         // ===== دکمه مایک =====
-        document.getElementById('micBtn').addEventListener('click', function() {
-            if (!currentLobbyId) return;
+        document.getElementById('micBtn').addEventListener('click', async function() {
+            if (!currentLobbyId) {
+                alert('❌ ابتدا وارد یک لابی شوید!');
+                return;
+            }
+
+            // اگر سیستم صوتی فعال نیست، فعال کن
+            if (!localStream || !peer) {
+                const init = await initAudio();
+                if (!init) {
+                    alert('❌ دسترسی به میکروفون امکان‌پذیر نیست!');
+                    return;
+                }
+                showToast('🎤 سیستم صوتی فعال شد!');
+                this.classList.add('active');
+                return;
+            }
+
+            // قطع/وصل صدا
             const lobby = lobbies.find(l => l.id === currentLobbyId);
             if (!lobby) return;
             const player = lobby.players.find(p => p.id === currentUser?.phone);
             if (!player) return;
 
             player.isMuted = !player.isMuted;
-            saveAllData();
-
-            if (player.isMuted === false) {
-                this.classList.add('active');
-            } else {
+            if (player.isMuted) {
+                if (localStream) {
+                    localStream.getAudioTracks().forEach(t => t.enabled = false);
+                }
                 this.classList.remove('active');
+                showToast('🔇 میکروفون قطع شد');
+            } else {
+                if (localStream) {
+                    localStream.getAudioTracks().forEach(t => t.enabled = true);
+                }
+                this.classList.add('active');
+                showToast('🎤 میکروفون وصل شد');
             }
+            await saveAllData();
             populateChairs(lobby.players);
         });
 
@@ -3008,6 +3009,13 @@
         window.onload = async function() {
             await loadAllData();
             updateTickMenu();
+
+            // فعال‌سازی خودکار سیستم صوتی
+            try {
+                await initAudio();
+            } catch (e) {
+                console.log('سیستم صوتی در حال انتظار برای کلیک کاربر');
+            }
         };
 
         document.addEventListener('touchmove', function(e) {
