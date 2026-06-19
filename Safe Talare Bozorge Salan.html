@@ -1351,10 +1351,7 @@
     <!-- ===== منوی داخل لابی ===== -->
     <div class="menu-icon" id="menuIcon">☰</div>
     <div class="dropdown-menu" id="dropdownMenu">
-        <div class="dropdown-item" id="tickMenuItem">
-            🏅 تیک‌های من
-            <span class="tick-progress" id="tickProgress">0%</span>
-        </div>
+        <div class="dropdown-item" id="tickMenuItem">🏅 تیک‌های من <span class="tick-progress" id="tickProgress">0%</span></div>
         <div class="dropdown-item" id="panelMenuItem">📊 پنل مدیریت</div>
         <div class="dropdown-item" id="unbanMenuItem">🔓 رفع بن</div>
         <div class="dropdown-item danger" id="exitLobbyItem">🚪 خروج از لابی</div>
@@ -1415,7 +1412,7 @@
     <!-- ===== مودال‌ها ===== -->
     <div class="profile-modal" id="profileModal">
         <div class="profile-content">
-            <h3>👤 پروفایل کاربر</h3>
+            <h3>پروفایل کاربر</h3>
             <div class="profile-avatar"><img src="InShot_20260403_213254941.png" alt="آواتار" id="profileAvatar"></div>
             <div class="profile-info">
                 <div class="name" id="profileName">نام کاربر</div>
@@ -1428,7 +1425,7 @@
 
     <div class="report-modal" id="reportModal">
         <div class="report-content">
-            <h3>🚨 گزارش تخلف</h3>
+            <h3>گزارش تخلف</h3>
             <div class="form-group">
                 <label>نوع تخلف</label>
                 <select id="reportType">
@@ -1450,7 +1447,7 @@
 
     <div class="ban-modal" id="banModal">
         <div class="ban-content">
-            <h3>🔨 بن کردن کاربر</h3>
+            <h3>بن کردن کاربر</h3>
             <div class="form-group">
                 <label>دلیل بن</label>
                 <input type="text" id="banReason" placeholder="دلیل بن را وارد کنید">
@@ -1466,7 +1463,7 @@
 
     <div class="unban-modal" id="unbanModal">
         <div class="unban-content">
-            <h3>🔓 رفع بن کاربر</h3>
+            <h3>رفع بن کاربر</h3>
             <div class="form-group">
                 <label>کاربر بن شده</label>
                 <select id="unbanSelect"><option value="">انتخاب کنید...</option></select>
@@ -1478,16 +1475,16 @@
 
     <div class="panel-modal" id="panelModal">
         <div class="panel-content">
-            <h3>📊 پنل مدیریت</h3>
+            <h3>پنل مدیریت</h3>
             <div class="panel-stats" id="panelStats">
                 <div class="stat"><div class="num" id="statLobbies">0</div><div class="label">کل لابی‌ها</div></div>
                 <div class="stat"><div class="num" id="statPlayers">0</div><div class="label">پلیرهای فعال</div></div>
                 <div class="stat"><div class="num" id="statReports">0</div><div class="label">گزارش‌ها</div></div>
                 <div class="stat"><div class="num" id="statBanned">0</div><div class="label">کاربران بن شده</div></div>
             </div>
-            <div class="panel-section"><h4>📋 گزارش‌های دریافتی</h4><div id="panelReports"></div></div>
-            <div class="panel-section"><h4>🏠 لیست لابی‌ها</h4><div id="panelLobbies"></div><button class="panel-delete-all" id="deleteAllLobbies">🗑️ حذف تمام لابی‌ها</button></div>
-            <div class="panel-section"><h4>🔓 رفع بن کاربران</h4><button class="panel-delete-all" id="openUnbanPanel" style="background:rgba(0,200,0,0.6);">رفع بن</button></div>
+            <div class="panel-section"><h4>گزارش‌های دریافتی</h4><div id="panelReports"></div></div>
+            <div class="panel-section"><h4>لیست لابی‌ها</h4><div id="panelLobbies"></div><button class="panel-delete-all" id="deleteAllLobbies">حذف تمام لابی‌ها</button></div>
+            <div class="panel-section"><h4>رفع بن کاربران</h4><button class="panel-delete-all" id="openUnbanPanel" style="background:rgba(0,200,0,0.6);">رفع بن</button></div>
             <button class="panel-close" id="closePanel">بستن</button>
         </div>
     </div>
@@ -1495,8 +1492,8 @@
     <!-- ===== منوی ساخت لابی ===== -->
     <div class="menu" id="createLobbyMenu">
         <div class="menu-content">
-            <button class="close-btn" id="closeMenu">&times;</button>
-            <h2 class="menu-title">✨ ساخت لابی جدید ✨</h2>
+            <button class="close-btn" id="closeMenu">✕</button>
+            <h2 class="menu-title">ساخت لابی جدید</h2>
             <div class="menu-form">
                 <div class="form-group">
                     <label>نوع لابی</label>
@@ -1513,10 +1510,10 @@
                 <div class="form-group">
                     <label>تعداد بازیکنان</label>
                     <select id="playerCount">
-                        <option value="6">۶ نفره</option>
-                        <option value="8">۸ نفره</option>
-                        <option value="10" selected>۱۰ نفره</option>
-                        <option value="12">۱۲ نفره</option>
+                        <option value="6">6 نفره</option>
+                        <option value="8">8 نفره</option>
+                        <option value="10" selected>10 نفره</option>
+                        <option value="12">12 نفره</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1548,26 +1545,10 @@
         // ============================================================
         const iceServers = [
             { urls: "stun:stun.relay.metered.ca:80" },
-            {
-                urls: "turn:global.relay.metered.ca:80",
-                username: "c0043e641a838e7f6c2a948a",
-                credential: "WXOE0gZ6BnE+yxxl"
-            },
-            {
-                urls: "turn:global.relay.metered.ca:80?transport=tcp",
-                username: "c0043e641a838e7f6c2a948a",
-                credential: "WXOE0gZ6BnE+yxxl"
-            },
-            {
-                urls: "turn:global.relay.metered.ca:443",
-                username: "c0043e641a838e7f6c2a948a",
-                credential: "WXOE0gZ6BnE+yxxl"
-            },
-            {
-                urls: "turns:global.relay.metered.ca:443?transport=tcp",
-                username: "c0043e641a838e7f6c2a948a",
-                credential: "WXOE0gZ6BnE+yxxl"
-            },
+            { urls: "turn:global.relay.metered.ca:80", username: "c0043e641a838e7f6c2a948a", credential: "WXOE0gZ6BnE+yxxl" },
+            { urls: "turn:global.relay.metered.ca:80?transport=tcp", username: "c0043e641a838e7f6c2a948a", credential: "WXOE0gZ6BnE+yxxl" },
+            { urls: "turn:global.relay.metered.ca:443", username: "c0043e641a838e7f6c2a948a", credential: "WXOE0gZ6BnE+yxxl" },
+            { urls: "turns:global.relay.metered.ca:443?transport=tcp", username: "c0043e641a838e7f6c2a948a", credential: "WXOE0gZ6BnE+yxxl" },
             { urls: 'stun:stun.l.google.com:19302' },
             { urls: 'stun:stun1.l.google.com:19302' },
             { urls: 'stun:stun2.l.google.com:19302' },
@@ -1593,7 +1574,7 @@
         let currentUserAge = parseInt(sessionStorage.getItem('currentUserAge')) || 0;
 
         if (!currentUserPhone) {
-            alert('❌ لطفاً ابتدا وارد شوید!');
+            alert('لطفاً ابتدا وارد شوید!');
             window.location.href = 'index.html';
         }
 
@@ -1610,6 +1591,16 @@
         let pointTimer = null;
         let selectedUserPhone = null;
         let peer = null;
+        let localStream = null;
+        let connections = {};
+        let peerId = null;
+
+        const LOBBY_TICKS = [
+            { id: 'pink', name: 'صورتی', image: 'InShot_20260618_223034988.png', pointsNeeded: 100 },
+            { id: 'purple', name: 'بنفش', image: 'InShot_20260618_223001651.png', pointsNeeded: 200 },
+            { id: 'orange', name: 'نارنجی', image: 'InShot_20260618_223059887.png', pointsNeeded: 300 },
+            { id: 'green', name: 'سبز', image: 'InShot_20260618_222940843.png', pointsNeeded: 400 }
+        ];
 
         // ============================================================
         // ===== توابع API =====
@@ -1622,7 +1613,6 @@
                 const data = await response.json();
                 return data.record || {};
             } catch (error) {
-                console.log('خطا در بارگذاری:', error);
                 return {};
             }
         }
@@ -1639,7 +1629,6 @@
                 });
                 return true;
             } catch (error) {
-                console.log('خطا در ذخیره:', error);
                 return false;
             }
         }
@@ -1689,7 +1678,7 @@
             const isBanned = bannedUsers.some(b => b.phone === currentUserPhone && b.active !== false);
             if (isBanned) {
                 const ban = bannedUsers.find(b => b.phone === currentUserPhone);
-                alert(`⛔ شما به دلیل "${ban.reason}" بن شده اید!`);
+                alert(`شما به دلیل "${ban.reason}" بن شده اید!`);
                 sessionStorage.clear();
                 window.location.href = 'index.html';
                 return;
@@ -1724,6 +1713,11 @@
                 'کاربر ویژه': '#ffffff'
             };
             return colors[rank] || '#888888';
+        }
+
+        function isRankUser(rank) {
+            const ranks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین', 'ناظر', 'ناظر ارشد', 'کاربر ویژه'];
+            return ranks.includes(rank);
         }
 
         function canApproveLobby() {
@@ -1826,7 +1820,8 @@
                 }
 
                 const rankColor = getRankColor(creator.rank || 'کاربر عادی');
-                const rankTickHtml = creator.rank && creator.rank !== 'کاربر عادی' ? 
+                const hasRank = isRankUser(creator.rank);
+                const rankTickHtml = hasRank ? 
                     `<span class="rank-tick" style="background:${rankColor}; border-color:${rankColor};">✓</span>` : '';
 
                 card.innerHTML = `
@@ -1857,7 +1852,7 @@
         // ============================================================
         window.approveLobby = async function(lobbyId) {
             if (!canApproveLobby()) {
-                alert('⛔ شما دسترسی تایید لابی را ندارید!');
+                alert('شما دسترسی تایید لابی را ندارید!');
                 return;
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
@@ -1870,7 +1865,7 @@
 
         window.rejectLobby = async function(lobbyId) {
             if (!canApproveLobby()) {
-                alert('⛔ شما دسترسی رد لابی را ندارید!');
+                alert('شما دسترسی رد لابی را ندارید!');
                 return;
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
@@ -1883,13 +1878,13 @@
 
         window.deleteLobby = async function(lobbyId) {
             if (!canDeleteLobby()) {
-                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                alert('شما دسترسی حذف لابی را ندارید!');
                 return;
             }
             const reason = prompt('دلیل حذف لابی را وارد کنید:');
             if (reason === null) return;
             if (!reason.trim()) {
-                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                alert('لطفاً دلیل حذف را وارد کنید!');
                 return;
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
@@ -1966,17 +1961,17 @@
         async function kickFromLobby(phone) {
             if (!currentLobby) return;
             if (!isLobbyAdmin()) {
-                alert('❌ فقط ادمین لابی می‌تواند اخراج کند!');
+                alert('فقط ادمین لابی می‌تواند اخراج کند!');
                 return;
             }
             if (phone === currentUser.phone) {
-                alert('❌ نمی‌توانید خودتان را اخراج کنید!');
+                alert('نمی‌توانید خودتان را اخراج کنید!');
                 return;
             }
 
             const user = users[phone];
             if (!user) {
-                alert('❌ کاربر پیدا نشد!');
+                alert('کاربر پیدا نشد!');
                 return;
             }
 
@@ -2011,7 +2006,7 @@
             const desc = document.getElementById('reportDesc').value.trim();
 
             if (!desc) {
-                alert('❌ لطفاً توضیحات تخلف را وارد کنید!');
+                alert('لطفاً توضیحات تخلف را وارد کنید!');
                 return;
             }
 
@@ -2060,22 +2055,22 @@
             const maxDays = getMaxBanDays();
 
             if (!reason) {
-                alert('❌ لطفاً دلیل بن را وارد کنید!');
+                alert('لطفاً دلیل بن را وارد کنید!');
                 return;
             }
 
             if (days > maxDays) {
-                alert(`❌ شما فقط می‌توانید تا ${maxDays} روز بن کنید!`);
+                alert(`شما فقط می‌توانید تا ${maxDays} روز بن کنید!`);
                 return;
             }
 
             if (banTargetPhone === currentUser.phone) {
-                alert('❌ نمی‌توانید خودتان را بن کنید!');
+                alert('نمی‌توانید خودتان را بن کنید!');
                 return;
             }
 
             if (bannedUsers.some(b => b.phone === banTargetPhone && b.active !== false)) {
-                alert('⚠️ این کاربر قبلاً بن شده است!');
+                alert('این کاربر قبلاً بن شده است!');
                 document.getElementById('banModal').classList.remove('active');
                 banTargetPhone = null;
                 return;
@@ -2127,7 +2122,7 @@
         document.getElementById('submitUnban').addEventListener('click', async function() {
             const phone = document.getElementById('unbanSelect').value;
             if (!phone) {
-                alert('❌ لطفاً یک کاربر را انتخاب کنید!');
+                alert('لطفاً یک کاربر را انتخاب کنید!');
                 return;
             }
 
@@ -2158,7 +2153,7 @@
         // ============================================================
         function openPanel() {
             if (!canViewPanel()) {
-                alert('⛔ شما دسترسی به پنل مدیریت را ندارید!');
+                alert('شما دسترسی به پنل مدیریت را ندارید!');
                 return;
             }
 
@@ -2212,13 +2207,13 @@
 
         async function deleteLobbyFromPanel(lobbyId) {
             if (!canDeleteLobby()) {
-                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                alert('شما دسترسی حذف لابی را ندارید!');
                 return;
             }
             const reason = prompt('دلیل حذف لابی را وارد کنید:');
             if (reason === null) return;
             if (!reason.trim()) {
-                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                alert('لطفاً دلیل حذف را وارد کنید!');
                 return;
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
@@ -2232,12 +2227,12 @@
         async function banFromReport(phone) {
             const user = users[phone];
             if (!user) {
-                alert('❌ کاربر پیدا نشد!');
+                alert('کاربر پیدا نشد!');
                 return;
             }
             const maxDays = getMaxBanDays();
             if (maxDays === 0) {
-                alert('❌ شما دسترسی بن کردن ندارید!');
+                alert('شما دسترسی بن کردن ندارید!');
                 return;
             }
             openBanModal(phone);
@@ -2253,7 +2248,7 @@
 
         document.getElementById('deleteAllLobbies').addEventListener('click', async function() {
             if (!canDeleteLobby()) {
-                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                alert('شما دسترسی حذف لابی را ندارید!');
                 return;
             }
             if (lobbies.length === 0) {
@@ -2265,7 +2260,7 @@
             const reason = prompt('دلیل حذف تمام لابی‌ها را وارد کنید:');
             if (reason === null) return;
             if (!reason.trim()) {
-                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                alert('لطفاً دلیل حذف را وارد کنید!');
                 return;
             }
             lobbies = [];
@@ -2311,7 +2306,8 @@
                 const micIconClass = isMuted ? 'mic-icon' : 'mic-icon speaking';
 
                 const rankColor = getRankColor(player.rank || 'کاربر عادی');
-                const rankTickHtml = player.rank && player.rank !== 'کاربر عادی' ? 
+                const hasRank = isRankUser(player.rank);
+                const rankTickHtml = hasRank ? 
                     `<span class="rank-tick-mini" style="background:${rankColor}; border-color:${rankColor};">✓</span>` : '';
 
                 const isCreator = player.id === currentLobby?.creatorId;
@@ -2339,17 +2335,17 @@
             if (!lobby) return;
 
             if (lobby.status !== 'approved') {
-                alert('⛔ این لابی هنوز تایید نشده است!');
+                alert('این لابی هنوز تایید نشده است!');
                 return;
             }
 
             if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
-                alert('⛔ شما بن هستید و نمی‌توانید وارد لابی شوید!');
+                alert('شما بن هستید و نمی‌توانید وارد لابی شوید!');
                 return;
             }
 
             if (!autoJoin && !lobby.players.some(p => p.id === currentUser?.phone)) {
-                alert('❌ شما در این لابی نیستید!');
+                alert('شما در این لابی نیستید!');
                 return;
             }
 
@@ -2428,7 +2424,7 @@
                             currentLobby.players.forEach(p => {
                                 p.isCreator = (p.id === newAdmin.id);
                             });
-                            showToast(`👑 مدیریت لابی به ${newAdmin.name} منتقل شد!`);
+                            showToast(`مدیریت لابی به ${newAdmin.name} منتقل شد!`);
                         }
                     }
                 }
@@ -2475,11 +2471,11 @@
                 return;
             }
             if (lobby.status !== 'approved') {
-                alert('⛔ این لابی هنوز تایید نشده است!');
+                alert('این لابی هنوز تایید نشده است!');
                 return;
             }
             if (lobby.players.length >= lobby.maxPlayers) {
-                alert('❌ لابی پر است!');
+                alert('لابی پر است!');
                 return;
             }
             if (lobby.players.some(p => p.id === currentUser?.phone)) {
@@ -2488,7 +2484,7 @@
             }
 
             if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
-                alert('⛔ شما بن هستید و نمی‌توانید وارد لابی شوید!');
+                alert('شما بن هستید و نمی‌توانید وارد لابی شوید!');
                 return;
             }
 
@@ -2496,7 +2492,7 @@
                 const entered = prompt('لطفاً رمز عبور لابی را وارد کنید:');
                 if (entered === null) return;
                 if (entered !== lobby.password) {
-                    alert('❌ رمز عبور اشتباه است!');
+                    alert('رمز عبور اشتباه است!');
                     return;
                 }
             }
@@ -2552,7 +2548,7 @@
                     currentLobby.players.forEach(p => {
                         p.isCreator = (p.id === newAdmin.id);
                     });
-                    showToast(`👑 مدیریت لابی به ${newAdmin.name} منتقل شد!`);
+                    showToast(`مدیریت لابی به ${newAdmin.name} منتقل شد!`);
                 }
             }
 
@@ -2571,7 +2567,7 @@
             const password = document.getElementById('lobbyPassword').value.trim();
 
             if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
-                alert('⛔ شما بن هستید و نمی‌توانید لابی بسازید!');
+                alert('شما بن هستید و نمی‌توانید لابی بسازید!');
                 return;
             }
 
@@ -2581,13 +2577,13 @@
 
             if (type === 'tick') {
                 if (!currentUser || !currentUser.lobbyTicks || currentUser.lobbyTicks.length === 0) {
-                    alert('❌ شما هیچ تیکی ندارید!');
+                    alert('شما هیچ تیکی ندارید!');
                     return;
                 }
                 const lastTickId = currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1];
                 const tickData = LOBBY_TICKS.find(t => t.id === lastTickId);
                 if (!tickData) {
-                    alert('❌ تیک نامعتبر است!');
+                    alert('تیک نامعتبر است!');
                     return;
                 }
                 const tickIndex = currentUser.lobbyTicks.indexOf(lastTickId);
@@ -2600,14 +2596,14 @@
                 status = 'approved';
             } else if (type === 'approved') {
                 if (!name) {
-                    alert('❌ لطفاً نام لابی را وارد کنید!');
+                    alert('لطفاً نام لابی را وارد کنید!');
                     return;
                 }
                 status = 'pending';
                 lobbyTick = null;
             } else {
                 if (!name) {
-                    alert('❌ لطفاً نام لابی را وارد کنید!');
+                    alert('لطفاً نام لابی را وارد کنید!');
                     return;
                 }
                 lobbyTick = null;
@@ -2649,6 +2645,7 @@
             document.getElementById('passwordToggle').checked = false;
             document.getElementById('passwordField').classList.remove('active');
 
+            // ورود مستقیم به لابی ساخته شده
             showLobby(newLobby.id, true);
             showToast(`✅ لابی "${finalName}" ساخته شد!`);
         });
@@ -2703,13 +2700,8 @@
         // ============================================================
         // ===== سیستم صوتی WebRTC =====
         // ============================================================
-        let peerId = null;
-        let connections = {};
-        let localStream = null;
-
         async function initAudio() {
             try {
-                // درخواست دسترسی به میکروفون
                 localStream = await navigator.mediaDevices.getUserMedia({
                     audio: {
                         echoCancellation: true,
@@ -2718,13 +2710,11 @@
                     }
                 });
 
-                // ایجاد Peer
                 peer = new Peer(undefined, peerConfig);
 
                 peer.on('open', (id) => {
                     peerId = id;
                     console.log('Peer ID:', id);
-                    // ذخیره peerId در سرور
                     if (currentUser) {
                         currentUser.peerId = id;
                         saveAllData();
@@ -2734,7 +2724,6 @@
                 peer.on('call', (call) => {
                     call.answer(localStream);
                     call.on('stream', (remoteStream) => {
-                        // پخش صدای دریافتی
                         const audio = new Audio();
                         audio.srcObject = remoteStream;
                         audio.play().catch(e => console.log('خطا در پخش صدا:', e));
@@ -2755,12 +2744,11 @@
 
         function callUser(targetPeerId) {
             if (!localStream || !peer) {
-                alert('❌ سیستم صوتی آماده نیست!');
+                alert('سیستم صوتی آماده نیست!');
                 return;
             }
 
             if (connections[targetPeerId]) {
-                alert('✅ تماس قبلاً برقرار شده است');
                 return;
             }
 
@@ -2800,7 +2788,7 @@
             const type = document.getElementById('lobbyType').value;
 
             if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
-                alert('⛔ شما بن هستید و نمی‌توانید لابی بسازید!');
+                alert('شما بن هستید و نمی‌توانید لابی بسازید!');
                 return;
             }
 
@@ -2869,7 +2857,7 @@
             document.getElementById('dropdownMenu').classList.remove('active');
 
             if (!currentUser) {
-                alert('❌ ابتدا وارد شوید!');
+                alert('ابتدا وارد شوید!');
                 return;
             }
 
@@ -2880,7 +2868,7 @@
                 const modalHTML = `
                     <div class="tick-modal" id="tickModal">
                         <div class="tick-modal-content">
-                            <h3>🏅 تیک‌های لابی من</h3>
+                            <h3>تیک‌های لابی من</h3>
                             <div class="tick-options" id="tickOptions"></div>
                             <div class="tick-info-bottom" id="tickInfo">
                                 امتیاز کل: <span id="totalPoints">0</span> | تیک فعلی: <span id="currentTickLabel">ندارد</span>
@@ -2963,15 +2951,14 @@
         // ===== دکمه مایک =====
         document.getElementById('micBtn').addEventListener('click', async function() {
             if (!currentLobbyId) {
-                alert('❌ ابتدا وارد یک لابی شوید!');
+                alert('ابتدا وارد یک لابی شوید!');
                 return;
             }
 
-            // اگر سیستم صوتی فعال نیست، فعال کن
             if (!localStream || !peer) {
                 const init = await initAudio();
                 if (!init) {
-                    alert('❌ دسترسی به میکروفون امکان‌پذیر نیست!');
+                    alert('دسترسی به میکروفون امکان‌پذیر نیست!');
                     return;
                 }
                 showToast('🎤 سیستم صوتی فعال شد!');
@@ -2979,7 +2966,6 @@
                 return;
             }
 
-            // قطع/وصل صدا
             const lobby = lobbies.find(l => l.id === currentLobbyId);
             if (!lobby) return;
             const player = lobby.players.find(p => p.id === currentUser?.phone);
@@ -3010,7 +2996,6 @@
             await loadAllData();
             updateTickMenu();
 
-            // فعال‌سازی خودکار سیستم صوتی
             try {
                 await initAudio();
             } catch (e) {
