@@ -1,0 +1,3028 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تالار بزرگسالان</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Tahoma', 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('IMG_20260617_132728_657.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            height: 50px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+        .header-title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .header-user img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #ffd700;
+            object-fit: cover;
+        }
+        .header-user .name {
+            font-weight: bold;
+        }
+        .header-user .rank {
+            font-size: 11px;
+            color: #aaa;
+        }
+        .rank-tick-header {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 14px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            margin-right: 3px;
+        }
+
+        .lobbies-container {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            bottom: 120px;
+            overflow-y: auto;
+            z-index: 5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-content: flex-start;
+            padding: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .lobby-card {
+            position: relative;
+            width: 420px;
+            height: 240px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,215,0,0.4);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .lobby-card:active { transform: scale(0.97); }
+        .lobby-card img.lobby-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .lobby-name-top {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
+            text-align: center;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            z-index: 3;
+        }
+        .lobby-tick-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 5;
+        }
+        .lobby-tick-badge img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,215,0,0.6);
+            background: rgba(0,0,0,0.5);
+            padding: 3px;
+            box-shadow: 0 0 30px rgba(255,215,0,0.3);
+        }
+        .lobby-status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .lobby-status-badge.pending { background: rgba(255,165,0,0.8); }
+        .lobby-status-badge.approved { background: rgba(0,200,0,0.8); }
+        .lobby-status-badge.rejected { background: rgba(255,0,0,0.8); }
+
+        .lobby-actions {
+            position: absolute;
+            bottom: 70px;
+            left: 15px;
+            z-index: 5;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .lobby-actions button {
+            border: none;
+            border-radius: 8px;
+            padding: 5px 12px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lobby-actions button:active { transform: scale(0.95); }
+        .lobby-actions .approve { background: rgba(0,200,0,0.8); }
+        .lobby-actions .reject { background: rgba(255,0,0,0.8); }
+        .lobby-actions .delete { background: rgba(200,0,0,0.8); }
+
+        .join-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 3;
+        }
+        .join-btn img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255,215,0,0.7));
+        }
+        .join-btn:active img { transform: scale(0.95); }
+        .join-btn.full { opacity: 0.5; cursor: not-allowed; }
+        .join-btn.full img { filter: drop-shadow(0 0 5px rgba(255,0,0,0.5)); }
+
+        .avatar-wrapper {
+            position: absolute;
+            bottom: 30px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 3;
+            cursor: pointer;
+        }
+        .avatar-wrapper:active { transform: scale(0.95); }
+        .avatar-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 7px solid #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            overflow: hidden;
+            position: relative;
+        }
+        .avatar-circle img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .avatar-name {
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            white-space: nowrap;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .rank-tick {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.6);
+            flex-shrink: 0;
+            font-size: 14px;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .avatar-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .player-count {
+            color: #ffd700;
+            font-size: 13px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+        }
+        .player-count.full { color: #ff4444; }
+
+        .buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .btn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .btn-rfa img { transition: transform 0.3s; }
+        .btn-rfa.spinning img {
+            animation: spin 0.5s linear;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,215,0,0.4);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .back-btn:active { transform: scale(0.9); }
+
+        .menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+        .menu.active {
+            display: flex;
+            pointer-events: auto;
+        }
+        .menu-content {
+            position: relative;
+            background-image: url('IMG_20260617_220358_548.jpg');
+            background-size: cover;
+            background-position: center;
+            border: 3px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(255,215,0,0.3), inset 0 0 50px rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+        }
+        .menu-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.2);
+            border-radius: 17px;
+            z-index: 0;
+        }
+        .menu-content > * { position: relative; z-index: 1; }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.8), rgba(255,140,0,0.8));
+            border: 2px solid #fff;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .close-btn:active { transform: rotate(90deg) scale(0.95); }
+        .menu-title {
+            color: #ffd700;
+            text-align: center;
+            padding: 10px 0 30px;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.5);
+        }
+        .menu-form { padding: 0 10px; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255,215,0,0.5);
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+        }
+        .form-group input:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.3);
+        }
+        .password-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        .password-toggle input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #ffd700;
+        }
+        .password-toggle label {
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        .password-field {
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        .password-field.active { display: block; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .password-field input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255,215,0,0.5);
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .password-field input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.8), rgba(255,140,0,0.8));
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .submit-btn:active { transform: scale(0.98); }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,255,136,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 15px 30px;
+            color: #00ff88;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 200;
+            display: none;
+            animation: toastAnim 0.5s ease;
+            text-shadow: 0 0 20px rgba(0,255,136,0.5);
+            box-shadow: 0 0 50px rgba(0,255,136,0.2);
+            text-align: center;
+            max-width: 90%;
+        }
+        .toast.show { display: block; }
+        @keyframes toastAnim {
+            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        #lobby-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('IMG_20260317_185439_948.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 50;
+            display: none;
+            overflow: hidden;
+        }
+        .table-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(1400px, 98vw);
+            height: min(1100px, 92vh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .table-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .table {
+            width: min(650px, 65vw);
+            height: min(650px, 65vw);
+            background: url('https://s8.uupload.ir/files/inshot_20260213_024704366_un99.png') no-repeat center center;
+            background-size: contain;
+            position: absolute;
+            z-index: 10;
+            filter: drop-shadow(0 20px 35px rgba(0,0,0,0.7));
+        }
+        .chair {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+            border: none;
+            outline: none;
+            background-color: transparent;
+            transform: translate(-50%, -50%) !important;
+        }
+        .chair-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.8);
+            background: #1a1e24;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            z-index: 25;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .chair-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .chair-avatar.speaking {
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            from { box-shadow: 0 0 10px #00ff88; }
+            to { box-shadow: 0 0 30px #00ff88; }
+        }
+        .chair-name {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            padding: 2px 6px;
+            white-space: nowrap;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 0 2px 8px #000;
+            z-index: 30;
+        }
+        .chair-name .rank-tick-mini {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.5);
+            flex-shrink: 0;
+            font-size: 11px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .crown-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M12 2L15 8L21 9L17 14L18 21L12 17.5L6 21L7 14L3 9L9 8L12 2Z"/></svg>') no-repeat center center;
+            background-size: contain;
+            filter: drop-shadow(0 0 5px gold);
+        }
+        .mic-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e6d5a8"><path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z"/><path d="M17 11C17 13.76 14.76 16 12 16C9.24 16 7 13.76 7 11H5C5 14.53 7.61 17.43 11 17.92V21H13V17.92C16.39 17.43 19 14.53 19 11H17Z"/></svg>') no-repeat center center;
+            background-size: contain;
+            filter: drop-shadow(0 0 3px #e6d5a8);
+        }
+        .mic-icon.speaking {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ff88"><path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z"/><path d="M17 11C17 13.76 14.76 16 12 16C9.24 16 7 13.76 7 11H5C5 14.53 7.61 17.43 11 17.92V21H13V17.92C16.39 17.43 19 14.53 19 11H17Z"/></svg>') no-repeat center center;
+            background-size: contain;
+            filter: drop-shadow(0 0 8px #00ff88);
+            animation: micPulse 0.8s infinite alternate;
+        }
+        @keyframes micPulse {
+            from { opacity: 0.6; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.2); }
+        }
+        .empty-chair .chair-avatar {
+            opacity: 0.8;
+            border: 2px dashed rgba(255,255,255,0.8);
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .empty-chair .chair-avatar::after {
+            content: "+";
+            font-size: 38px;
+            color: #fff;
+            font-weight: 300;
+            text-shadow: 0 2px 10px #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .empty-chair .chair-name {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .menu-icon {
+            position: fixed;
+            top: 70px;
+            right: 15px;
+            z-index: 60;
+            background: rgba(0,0,0,0.6);
+            border-radius: 8px;
+            width: 45px;
+            height: 45px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid rgba(255,215,0,0.5);
+            color: #fff;
+            font-size: 26px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+        }
+        .menu-icon:active { transform: scale(0.9); }
+        .dropdown-menu {
+            position: fixed;
+            top: 130px;
+            right: 15px;
+            z-index: 61;
+            background: rgba(0,0,0,0.85);
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.3);
+            padding: 10px 0;
+            min-width: 200px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+        }
+        .dropdown-menu.active { display: flex; }
+        .dropdown-item {
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-item:last-child { border-bottom: none; }
+        .dropdown-item:hover { background: rgba(255,255,255,0.05); }
+        .dropdown-item.danger { color: #ff6b6b; }
+        .dropdown-item.danger:hover { background: rgba(255,0,0,0.1); }
+        .dropdown-item .tick-progress {
+            font-size: 12px;
+            color: #aaa;
+            margin-right: auto;
+        }
+
+        .mic-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 60;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+            border: none;
+            width: 80px;
+            height: 80px;
+            transition: all 0.3s;
+        }
+        .mic-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));
+            transition: all 0.3s;
+        }
+        .mic-btn:active img { transform: scale(0.9); }
+        .mic-btn.active img {
+            filter: drop-shadow(0 0 25px #00ff88);
+        }
+
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 700;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .profile-modal.active { display: flex; }
+        .profile-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .profile-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            border: 3px solid #ffd700;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.5);
+        }
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-info {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .profile-info .name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .profile-info .rank {
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        .profile-info .phone {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .profile-actions button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+        }
+        .profile-actions button:active { transform: scale(0.95); }
+        .profile-actions .transfer-btn { background: rgba(255,165,0,0.8); }
+        .profile-actions .report-btn { background: rgba(255,0,0,0.6); }
+        .profile-actions .ban-btn { background: rgba(200,0,0,0.8); }
+        .profile-actions .kick-btn { background: rgba(255,100,0,0.8); }
+        .profile-actions .close-profile { background: rgba(255,255,255,0.2); }
+        .profile-actions button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .report-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 750;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .report-modal.active { display: flex; }
+        .report-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+        }
+        .report-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .report-content .form-group {
+            margin-bottom: 15px;
+        }
+        .report-content .form-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .report-content .form-group select,
+        .report-content .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,215,0,0.3);
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .report-content .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .report-content .form-group select:focus,
+        .report-content .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .report-content .report-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.8), rgba(255,140,0,0.8));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .report-content .report-btn:active { transform: scale(0.98); }
+        .report-content .close-report {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .panel-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 800;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .panel-modal.active { display: flex; }
+        .panel-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 95%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+        }
+        .panel-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .panel-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .panel-stats .stat {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            color: #fff;
+        }
+        .panel-stats .stat .num {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .panel-stats .stat .label {
+            font-size: 12px;
+            color: #aaa;
+        }
+        .panel-section {
+            margin-bottom: 20px;
+        }
+        .panel-section h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .panel-report-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #fff;
+            font-size: 13px;
+            border-right: 3px solid #ff6b6b;
+        }
+        .panel-report-item .reporter { color: #ffd700; }
+        .panel-report-item .reported { color: #ff6b6b; }
+        .panel-report-item .reason { color: #aaa; }
+        .panel-report-item .actions {
+            margin-top: 5px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .panel-report-item .actions button {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .panel-report-item .actions .ban-btn { background: rgba(200,0,0,0.8); }
+        .panel-report-item .actions .ignore-btn { background: rgba(255,255,255,0.2); }
+
+        .panel-lobby-item {
+            background: rgba(0,0,0,0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            color: #fff;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-lobby-item .lobby-name { color: #ffd700; }
+        .panel-lobby-item .lobby-players { color: #aaa; }
+        .panel-lobby-item .delete-btn {
+            background: rgba(255,0,0,0.6);
+            border: none;
+            border-radius: 6px;
+            padding: 3px 10px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .panel-delete-all {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,0,0,0.7);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .panel-delete-all:active { transform: scale(0.95); }
+        .panel-close {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .ban-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 780;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .ban-modal.active { display: flex; }
+        .ban-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+        }
+        .ban-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .ban-content .form-group {
+            margin-bottom: 15px;
+        }
+        .ban-content .form-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .ban-content .form-group input,
+        .ban-content .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,215,0,0.3);
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .ban-content .form-group input:focus,
+        .ban-content .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .ban-content .ban-submit {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,0,0,0.7);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ban-content .ban-submit:active { transform: scale(0.98); }
+        .ban-content .close-ban {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .unban-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 790;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .unban-modal.active { display: flex; }
+        .unban-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+        }
+        .unban-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .unban-content .form-group {
+            margin-bottom: 15px;
+        }
+        .unban-content .form-group label {
+            display: block;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .unban-content .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,215,0,0.3);
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+        }
+        .unban-content .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .unban-content .unban-submit {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,200,0,0.7);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .unban-content .unban-submit:active { transform: scale(0.98); }
+        .unban-content .close-unban {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* استایل مودال تیک */
+        .tick-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 900;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .tick-modal.active { display: flex; }
+        .tick-modal-content {
+            background: rgba(20,20,60,0.95);
+            border: 2px solid rgba(255,215,0,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(255,215,0,0.2);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .tick-modal-content h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        .tick-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .tick-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .tick-option.active {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        .tick-option.locked { opacity: 0.4; }
+        .tick-option img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+        .tick-option .tick-info { flex: 1; color: #fff; }
+        .tick-option .tick-info .tick-name { font-size: 14px; font-weight: bold; color: #ffd700; }
+        .tick-option .tick-info .tick-progress { font-size: 12px; color: #aaa; }
+        .tick-option .tick-status {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .tick-option .tick-status.unlocked { color: #00ff88; background: rgba(0,255,136,0.1); }
+        .tick-option .tick-status.locked { color: #ff4444; background: rgba(255,0,0,0.1); }
+        .tick-option .tick-status.active { color: #ffd700; background: rgba(255,215,0,0.1); }
+        .tick-info-bottom {
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+        .tick-info-bottom span { color: #ffd700; font-weight: bold; }
+        .tick-modal-close {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,0,0,0.3);
+            border: 1px solid rgba(255,0,0,0.5);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .tick-modal-close:active { transform: scale(0.98); }
+        .tick-modal-content::-webkit-scrollbar { width: 6px; }
+        .tick-modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .tick-modal-content::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 10px; }
+
+        @media (max-width: 480px) {
+            .lobby-card { width: 100%; height: 200px; }
+            .lobby-name-top { font-size: 20px; top: 10px; max-width: 80%; }
+            .avatar-circle { width: 80px; height: 80px; border-width: 5px; }
+            .avatar-circle img { width: 60px; height: 60px; }
+            .avatar-name { font-size: 12px; max-width: 55px; }
+            .player-count { font-size: 11px; }
+            .join-btn img { width: 70px; height: 70px; }
+            .avatar-wrapper { bottom: 15px; right: 10px; gap: 8px; }
+            .join-btn { bottom: 10px; left: 10px; }
+            .buttons { bottom: 15px; right: 15px; gap: 8px; }
+            .btn img { width: 65px; height: 65px; }
+            .lobbies-container { top: 60px; left: 10px; right: 10px; bottom: 100px; padding: 5px; gap: 15px; }
+            .toast { font-size: 14px; padding: 12px 20px; bottom: 80px; width: 90%; }
+            .chair { width: 110px; height: 110px; }
+            .chair-avatar { width: 55px; height: 55px; }
+            .chair-name { font-size: 11px; max-width: 90px; top: 72%; }
+            .menu-icon { width: 38px; height: 38px; font-size: 20px; top: 60px; }
+            .mic-btn { width: 60px; height: 60px; bottom: 20px; left: 20px; }
+            .lobby-tick-badge img { width: 55px; height: 55px; }
+            .rank-tick { width: 20px; height: 20px; font-size: 12px; }
+            .lobby-status-badge { font-size: 10px; padding: 3px 8px; }
+            .profile-content { padding: 20px; }
+            .panel-content { padding: 20px; }
+            .panel-stats { grid-template-columns: repeat(2, 1fr); }
+            .dropdown-menu { min-width: 160px; right: 10px; top: 115px; }
+            .dropdown-item { font-size: 13px; padding: 10px 15px; }
+            .back-btn { width: 50px; height: 50px; font-size: 22px; bottom: 15px; left: 15px; }
+            .header-title { font-size: 14px; }
+            .header-user .name { font-size: 12px; }
+            .header-user img { width: 30px; height: 30px; }
+        }
+        input, select, textarea, button { font-size: 16px !important; }
+
+        .lobbies-container::-webkit-scrollbar { width: 8px; }
+        .lobbies-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
+        .lobbies-container::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.5); border-radius: 10px; }
+        .menu-content::-webkit-scrollbar { width: 6px; }
+        .menu-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .menu-content::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 10px; }
+        .panel-content::-webkit-scrollbar { width: 6px; }
+        .panel-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .panel-content::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 10px; }
+        .profile-content::-webkit-scrollbar { width: 6px; }
+        .profile-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .profile-content::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <!-- ===== هدر ===== -->
+    <div class="header" id="header">
+        <div class="header-title">🏛️ تالار بزرگسالان</div>
+        <div class="header-user" id="headerUser">
+            <img id="headerAvatar" src="InShot_20260403_213254941.png" alt="">
+            <div>
+                <div class="name" id="headerName">کاربر</div>
+                <div class="rank" id="headerRank">مقام</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== لیست لابی‌ها ===== -->
+    <div class="lobbies-container" id="lobbiesContainer"></div>
+
+    <!-- ===== دکمه برگشت ===== -->
+    <div class="back-btn" id="backBtn">←</div>
+
+    <!-- ===== دکمه‌های پایین ===== -->
+    <div class="buttons" id="mainButtons">
+        <button class="btn" id="createLobby"><img src="InShot_20260617_133837408.png" alt="ساخت لابی"></button>
+        <button class="btn btn-rfa" id="rfaBtn"><img src="InShot_20260617_134155725.png" alt="Rfa"></button>
+    </div>
+
+    <!-- ===== منوی داخل لابی ===== -->
+    <div class="menu-icon" id="menuIcon">☰</div>
+    <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-item" id="tickMenuItem">
+            🏅 تیک‌های من
+            <span class="tick-progress" id="tickProgress">0%</span>
+        </div>
+        <div class="dropdown-item" id="panelMenuItem">📊 پنل مدیریت</div>
+        <div class="dropdown-item" id="unbanMenuItem">🔓 رفع بن</div>
+        <div class="dropdown-item danger" id="exitLobbyItem">🚪 خروج از لابی</div>
+    </div>
+
+    <!-- ===== صفحه لابی ===== -->
+    <div id="lobby-page">
+        <div class="table-container">
+            <div class="table-wrapper">
+                <div class="table"></div>
+                <div id="chair-1" class="chair empty-chair" style="top:20%; left:20%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-2" class="chair empty-chair" style="top:40%; left:20%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-3" class="chair empty-chair" style="top:60%; left:20%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-4" class="chair empty-chair" style="top:80%; left:20%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101652511_taae.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-6" class="chair empty-chair" style="top:80%; left:80%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-7" class="chair empty-chair" style="top:60%; left:80%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-8" class="chair empty-chair" style="top:40%; left:80%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-9" class="chair empty-chair" style="top:20%; left:80%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101625661_1tgd.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-5" class="chair empty-chair" style="top:92%; left:50%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_101720411_53m5.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+                <div id="chair-10" class="chair empty-chair" style="top:8%; left:50%; background-image: url('https://s8.uupload.ir/files/inshot_20260213_024911666_6b.png');">
+                    <div class="chair-avatar"></div>
+                    <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                </div>
+            </div>
+        </div>
+        <div class="mic-btn" id="micBtn">
+            <img src="InShot_20260618_110335423.png" alt="میکروفون">
+        </div>
+    </div>
+
+    <!-- ===== مودال‌ها ===== -->
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-content">
+            <h3>👤 پروفایل کاربر</h3>
+            <div class="profile-avatar"><img src="InShot_20260403_213254941.png" alt="آواتار" id="profileAvatar"></div>
+            <div class="profile-info">
+                <div class="name" id="profileName">نام کاربر</div>
+                <div class="rank" id="profileRank">مقام</div>
+                <div class="phone" id="profilePhone">شماره</div>
+            </div>
+            <div class="profile-actions" id="profileActions"></div>
+        </div>
+    </div>
+
+    <div class="report-modal" id="reportModal">
+        <div class="report-content">
+            <h3>🚨 گزارش تخلف</h3>
+            <div class="form-group">
+                <label>نوع تخلف</label>
+                <select id="reportType">
+                    <option value="بی احترامی">بی احترامی</option>
+                    <option value="فش دادن به مقام دار">فش دادن به مقام دار</option>
+                    <option value="بحث سیاسی">بحث سیاسی</option>
+                    <option value="کلاهبرداری">کلاهبرداری</option>
+                    <option value="سایر">سایر</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea id="reportDesc" placeholder="توضیحات تخلف را وارد کنید..."></textarea>
+            </div>
+            <button class="report-btn" id="submitReport">ارسال گزارش</button>
+            <button class="close-report" id="closeReport">بستن</button>
+        </div>
+    </div>
+
+    <div class="ban-modal" id="banModal">
+        <div class="ban-content">
+            <h3>🔨 بن کردن کاربر</h3>
+            <div class="form-group">
+                <label>دلیل بن</label>
+                <input type="text" id="banReason" placeholder="دلیل بن را وارد کنید">
+            </div>
+            <div class="form-group">
+                <label>مدت زمان بن (روز)</label>
+                <input type="number" id="banDays" placeholder="تعداد روز" value="1">
+            </div>
+            <button class="ban-submit" id="submitBan">بن کردن</button>
+            <button class="close-ban" id="closeBan">بستن</button>
+        </div>
+    </div>
+
+    <div class="unban-modal" id="unbanModal">
+        <div class="unban-content">
+            <h3>🔓 رفع بن کاربر</h3>
+            <div class="form-group">
+                <label>کاربر بن شده</label>
+                <select id="unbanSelect"><option value="">انتخاب کنید...</option></select>
+            </div>
+            <button class="unban-submit" id="submitUnban">رفع بن</button>
+            <button class="close-unban" id="closeUnban">بستن</button>
+        </div>
+    </div>
+
+    <div class="panel-modal" id="panelModal">
+        <div class="panel-content">
+            <h3>📊 پنل مدیریت</h3>
+            <div class="panel-stats" id="panelStats">
+                <div class="stat"><div class="num" id="statLobbies">0</div><div class="label">کل لابی‌ها</div></div>
+                <div class="stat"><div class="num" id="statPlayers">0</div><div class="label">پلیرهای فعال</div></div>
+                <div class="stat"><div class="num" id="statReports">0</div><div class="label">گزارش‌ها</div></div>
+                <div class="stat"><div class="num" id="statBanned">0</div><div class="label">کاربران بن شده</div></div>
+            </div>
+            <div class="panel-section"><h4>📋 گزارش‌های دریافتی</h4><div id="panelReports"></div></div>
+            <div class="panel-section"><h4>🏠 لیست لابی‌ها</h4><div id="panelLobbies"></div><button class="panel-delete-all" id="deleteAllLobbies">🗑️ حذف تمام لابی‌ها</button></div>
+            <div class="panel-section"><h4>🔓 رفع بن کاربران</h4><button class="panel-delete-all" id="openUnbanPanel" style="background:rgba(0,200,0,0.6);">رفع بن</button></div>
+            <button class="panel-close" id="closePanel">بستن</button>
+        </div>
+    </div>
+
+    <!-- ===== منوی ساخت لابی ===== -->
+    <div class="menu" id="createLobbyMenu">
+        <div class="menu-content">
+            <button class="close-btn" id="closeMenu">&times;</button>
+            <h2 class="menu-title">✨ ساخت لابی جدید ✨</h2>
+            <div class="menu-form">
+                <div class="form-group">
+                    <label>نوع لابی</label>
+                    <select id="lobbyType">
+                        <option value="normal">لابی عادی</option>
+                        <option value="tick">لابی با تیک</option>
+                        <option value="approved">لابی نیاز به تایید</option>
+                    </select>
+                </div>
+                <div class="form-group" id="nameGroup">
+                    <label id="nameLabel">نام لابی</label>
+                    <input type="text" id="lobbyName" placeholder="نام لابی را وارد کنید">
+                </div>
+                <div class="form-group">
+                    <label>تعداد بازیکنان</label>
+                    <select id="playerCount">
+                        <option value="6">۶ نفره</option>
+                        <option value="8">۸ نفره</option>
+                        <option value="10" selected>۱۰ نفره</option>
+                        <option value="12">۱۲ نفره</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="password-toggle">
+                        <input type="checkbox" id="passwordToggle">
+                        <label for="passwordToggle">تنظیم رمز عبور</label>
+                    </div>
+                    <div class="password-field" id="passwordField">
+                        <input type="password" id="lobbyPassword" placeholder="رمز عبور را وارد کنید">
+                    </div>
+                </div>
+                <button class="submit-btn" id="submitLobby">ایجاد لابی</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✅ شما به لابی پیوستید!</div>
+
+    <script>
+        // ============================================================
+        // ===== تنظیمات JSONBin API =====
+        // ============================================================
+        const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
+        const JSONBIN_ID = '6a310a04da38895dfec86661';
+        const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
+
+        // ============================================================
+        // ===== توابع API =====
+        // ============================================================
+        async function loadDataFromServer() {
+            try {
+                const response = await fetch(BIN_URL, {
+                    headers: { 'X-Master-Key': JSONBIN_KEY }
+                });
+                const data = await response.json();
+                return data.record || {};
+            } catch (error) {
+                console.log('خطا در بارگذاری از سرور:', error);
+                return {};
+            }
+        }
+
+        async function saveDataToServer(data) {
+            try {
+                await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_KEY
+                    },
+                    body: JSON.stringify(data)
+                });
+                return true;
+            } catch (error) {
+                console.log('خطا در ذخیره در سرور:', error);
+                return false;
+            }
+        }
+
+        // ============================================================
+        // ===== اطلاعات کاربر از sessionStorage =====
+        // ============================================================
+        let currentUserPhone = sessionStorage.getItem('currentUserPhone');
+        let currentUserRank = sessionStorage.getItem('currentUserRank') || 'کاربر';
+        let currentUserName = sessionStorage.getItem('currentUserName') || 'کاربر';
+        let currentUserAvatar = sessionStorage.getItem('currentUserAvatar') || 'InShot_20260225_191621541.png';
+        let currentUserAge = parseInt(sessionStorage.getItem('currentUserAge')) || 0;
+
+        // ============================================================
+        // ===== بررسی وجود کاربر =====
+        // ============================================================
+        if (!currentUserPhone) {
+            alert('❌ لطفاً ابتدا وارد شوید!');
+            window.location.href = 'index.html';
+        }
+
+        // ============================================================
+        // ===== متغیرهای اصلی =====
+        // ============================================================
+        let users = {};
+        let lobbies = [];
+        let reports = [];
+        let bannedUsers = [];
+        let currentUser = null;
+        let currentLobbyId = null;
+        let currentLobby = null;
+        let pointTimer = null;
+        let selectedUserPhone = null;
+
+        // ============================================================
+        // ===== توابع بارگذاری =====
+        // ============================================================
+        async function loadAllData() {
+            const serverData = await loadDataFromServer();
+            users = serverData.users || {};
+            lobbies = serverData.lobbies || [];
+            reports = serverData.reports || [];
+            bannedUsers = serverData.bannedUsers || [];
+
+            // فیلتر کردن لابی‌های قدیمی
+            const now = Date.now();
+            lobbies = lobbies.filter(l => {
+                const created = new Date(l.createdAt).getTime();
+                return (now - created) < 86400000;
+            });
+
+            // فیلتر کردن بن‌های منقضی شده
+            bannedUsers = bannedUsers.filter(b => {
+                const banTime = new Date(b.bannedAt).getTime();
+                const days = b.days || 1;
+                return (now - banTime) < (days * 86400000);
+            });
+
+            // تنظیم کاربر فعلی
+            if (users[currentUserPhone]) {
+                currentUser = users[currentUserPhone];
+                currentUser.phone = currentUserPhone;
+            } else {
+                // ایجاد کاربر جدید در صورت وجود نداشتن
+                users[currentUserPhone] = {
+                    phone: currentUserPhone,
+                    name: currentUserName,
+                    avatar: currentUserAvatar,
+                    rank: currentUserRank,
+                    age: currentUserAge,
+                    serverAccess: 'adults',
+                    lobbyTicks: [],
+                    groupNames: [],
+                    points: 0,
+                    totalPoints: 0
+                };
+                currentUser = users[currentUserPhone];
+                await saveAllData();
+            }
+
+            // بررسی بن بودن
+            const isBanned = bannedUsers.some(b => b.phone === currentUserPhone && b.active !== false);
+            if (isBanned) {
+                const ban = bannedUsers.find(b => b.phone === currentUserPhone);
+                alert(`⛔ شما به دلیل "${ban.reason}" بن شده اید!`);
+                sessionStorage.clear();
+                localStorage.removeItem('currentLoggedInUser');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            updateHeader();
+            displayLobbies();
+        }
+
+        async function saveAllData() {
+            const data = {
+                users: users,
+                lobbies: lobbies,
+                reports: reports,
+                bannedUsers: bannedUsers,
+                lastUpdated: new Date().toISOString()
+            };
+            await saveDataToServer(data);
+        }
+
+        // ============================================================
+        // ===== توابع UI =====
+        // ============================================================
+        function updateHeader() {
+            if (!currentUser) return;
+            document.getElementById('headerName').textContent = currentUser.name || 'کاربر';
+            document.getElementById('headerAvatar').src = currentUser.avatar || 'InShot_20260403_213254941.png';
+            document.getElementById('headerRank').textContent = currentUser.rank || 'کاربر عادی';
+        }
+
+        function getRankColor(rank) {
+            const colors = {
+                'سازنده': '#0066ff',
+                'پشتیبانی': '#66b3ff',
+                'گرداننده': '#ff0000',
+                'ادمین ارشد': '#000000',
+                'ادمین': '#8B4513',
+                'ناظر': '#FF8C00',
+                'ناظر ارشد': '#800080',
+                'کاربر ویژه': '#ffffff'
+            };
+            return colors[rank] || '#888888';
+        }
+
+        function canApproveLobby() {
+            if (!currentUser) return false;
+            const approverRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
+            return approverRanks.includes(currentUser.rank);
+        }
+
+        function canDeleteLobby() {
+            if (!currentUser) return false;
+            const deleteRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
+            return deleteRanks.includes(currentUser.rank);
+        }
+
+        function canBanUser() {
+            if (!currentUser) return false;
+            const banRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
+            return banRanks.includes(currentUser.rank);
+        }
+
+        function canKickUser() {
+            if (!currentUser) return false;
+            const kickRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
+            return kickRanks.includes(currentUser.rank);
+        }
+
+        function canTransferLobby() {
+            if (!currentUser) return false;
+            const transferRanks = ['سازنده', 'پشتیبانی', 'ادمین ارشد', 'ادمین'];
+            return transferRanks.includes(currentUser.rank);
+        }
+
+        function canViewPanel() {
+            if (!currentUser) return false;
+            const panelRanks = ['سازنده', 'پشتیبانی', 'گرداننده', 'ادمین ارشد', 'ادمین'];
+            return panelRanks.includes(currentUser.rank);
+        }
+
+        function getMaxBanDays() {
+            if (!currentUser) return 0;
+            switch(currentUser.rank) {
+                case 'سازنده': return 365;
+                case 'پشتیبانی': return 180;
+                case 'ادمین ارشد': return 60;
+                case 'ادمین': return 7;
+                case 'ناظر ارشد': return 1;
+                default: return 0;
+            }
+        }
+
+        function isLobbyAdmin() {
+            if (!currentLobby) return false;
+            return currentLobby.creatorId === currentUser?.phone;
+        }
+
+        // ============================================================
+        // ===== نمایش لابی‌ها =====
+        // ============================================================
+        function displayLobbies() {
+            const container = document.getElementById('lobbiesContainer');
+            container.innerHTML = '';
+
+            lobbies.forEach(lobby => {
+                const isFull = lobby.players.length >= lobby.maxPlayers;
+                const creator = lobby.players.find(p => p.id === lobby.creatorId) || { name: 'ناشناس' };
+                const present = lobby.players.length;
+                const total = lobby.maxPlayers;
+                const card = document.createElement('div');
+                card.className = 'lobby-card';
+
+                let tickHtml = '';
+                if (lobby.tick) {
+                    const tickData = LOBBY_TICKS.find(t => t.name === lobby.tick);
+                    if (tickData) {
+                        tickHtml = `<div class="lobby-tick-badge"><img src="${tickData.image}" alt="${tickData.name}"></div>`;
+                    }
+                }
+
+                let statusHtml = '';
+                if (lobby.status === 'pending') {
+                    statusHtml = `<div class="lobby-status-badge pending">⏳ در انتظار تایید</div>`;
+                } else if (lobby.status === 'approved') {
+                    statusHtml = `<div class="lobby-status-badge approved">✅ تایید شده</div>`;
+                } else if (lobby.status === 'rejected') {
+                    statusHtml = `<div class="lobby-status-badge rejected">❌ رد شده</div>`;
+                }
+
+                let actionsHtml = '';
+                if (lobby.status === 'pending' && canApproveLobby() && currentUser && currentUser.phone !== lobby.creatorId) {
+                    actionsHtml = `
+                        <div class="lobby-actions">
+                            <button class="approve" onclick="event.stopPropagation();approveLobby(${lobby.id})">✅ تایید</button>
+                            <button class="reject" onclick="event.stopPropagation();rejectLobby(${lobby.id})">❌ رد</button>
+                        </div>
+                    `;
+                }
+
+                if (canDeleteLobby() && currentUser && currentUser.phone !== lobby.creatorId) {
+                    actionsHtml += `
+                        <div class="lobby-actions" style="bottom:110px;">
+                            <button class="delete" onclick="event.stopPropagation();deleteLobby(${lobby.id})">🗑️ حذف</button>
+                        </div>
+                    `;
+                }
+
+                const rankColor = getRankColor(creator.rank || 'کاربر عادی');
+                const rankTickHtml = creator.rank && creator.rank !== 'کاربر عادی' ? 
+                    `<span class="rank-tick" style="background:${rankColor}; border-color:${rankColor};">✓</span>` : '';
+
+                card.innerHTML = `
+                    <img src="InShot_20260616_223548506.jpg" class="lobby-bg" alt="قالب لابی">
+                    <div class="lobby-name-top">${lobby.name}</div>
+                    ${tickHtml}
+                    ${statusHtml}
+                    ${actionsHtml}
+                    <div class="avatar-wrapper" onclick="event.stopPropagation();showProfile('${lobby.creatorId}')">
+                        <div class="avatar-circle">
+                            <img src="InShot_20260403_213254941.png" alt="آواتار">
+                        </div>
+                        <div class="avatar-status">
+                            <span class="avatar-name">${rankTickHtml} ${creator.name}</span>
+                            <span class="player-count ${isFull ? 'full' : ''}">${present}/${total}</span>
+                        </div>
+                    </div>
+                    <button class="join-btn ${isFull || lobby.status !== 'approved' ? 'full' : ''}" onclick="event.stopPropagation();joinLobby(${lobby.id})" ${isFull || lobby.status !== 'approved' ? 'disabled' : ''}>
+                        <img src="InShot_20260617_222810274.png" alt="پیوستن">
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // ===== توابع مدیریت لابی =====
+        // ============================================================
+        window.approveLobby = async function(lobbyId) {
+            if (!canApproveLobby()) {
+                alert('⛔ شما دسترسی تایید لابی را ندارید!');
+                return;
+            }
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) return;
+            lobby.status = 'approved';
+            await saveAllData();
+            displayLobbies();
+            showToast('✅ لابی تایید شد!');
+        };
+
+        window.rejectLobby = async function(lobbyId) {
+            if (!canApproveLobby()) {
+                alert('⛔ شما دسترسی رد لابی را ندارید!');
+                return;
+            }
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) return;
+            lobby.status = 'rejected';
+            await saveAllData();
+            displayLobbies();
+            showToast('❌ لابی رد شد!');
+        };
+
+        window.deleteLobby = async function(lobbyId) {
+            if (!canDeleteLobby()) {
+                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                return;
+            }
+            const reason = prompt('دلیل حذف لابی را وارد کنید:');
+            if (reason === null) return;
+            if (!reason.trim()) {
+                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                return;
+            }
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) return;
+            lobbies = lobbies.filter(l => l.id !== lobbyId);
+            await saveAllData();
+            displayLobbies();
+            showToast(`🗑️ لابی "${lobby.name}" با دلیل "${reason}" حذف شد!`);
+        };
+
+        // ============================================================
+        // ===== پروفایل کاربر =====
+        // ============================================================
+        function showProfile(phone) {
+            if (!currentUser) return;
+            const user = users[phone];
+            if (!user) return;
+            selectedUserPhone = phone;
+
+            document.getElementById('profileName').textContent = user.name || 'کاربر';
+            document.getElementById('profileRank').textContent = user.rank || 'کاربر عادی';
+            document.getElementById('profilePhone').textContent = user.phone || '';
+
+            const actions = document.getElementById('profileActions');
+            actions.innerHTML = '';
+
+            if (currentLobby && isLobbyAdmin() && user.phone !== currentUser.phone && canKickUser()) {
+                const btn = document.createElement('button');
+                btn.className = 'kick-btn';
+                btn.textContent = '🚫 اخراج از لابی';
+                btn.onclick = function() { kickFromLobby(user.phone); };
+                actions.appendChild(btn);
+            }
+
+            if (currentLobby && isLobbyAdmin() && user.phone !== currentUser.phone && canTransferLobby()) {
+                const btn = document.createElement('button');
+                btn.className = 'transfer-btn';
+                btn.textContent = '🔄 انتقال مالکیت لابی';
+                btn.onclick = function() { transferOwnership(user.phone); };
+                actions.appendChild(btn);
+            }
+
+            if (user.phone !== currentUser.phone) {
+                const btn = document.createElement('button');
+                btn.className = 'report-btn';
+                btn.textContent = '🚨 گزارش تخلف';
+                btn.onclick = function() {
+                    document.getElementById('profileModal').classList.remove('active');
+                    openReportModal(user.phone);
+                };
+                actions.appendChild(btn);
+            }
+
+            if (user.phone !== currentUser.phone && canBanUser()) {
+                const maxDays = getMaxBanDays();
+                if (maxDays > 0) {
+                    const btn = document.createElement('button');
+                    btn.className = 'ban-btn';
+                    btn.textContent = `🔨 بن کردن (حداکثر ${maxDays} روز)`;
+                    btn.onclick = function() {
+                        document.getElementById('profileModal').classList.remove('active');
+                        openBanModal(user.phone);
+                    };
+                    actions.appendChild(btn);
+                }
+            }
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-profile';
+            closeBtn.textContent = 'بستن';
+            closeBtn.onclick = function() {
+                document.getElementById('profileModal').classList.remove('active');
+            };
+            actions.appendChild(closeBtn);
+
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        // ============================================================
+        // ===== اخراج از لابی =====
+        // ============================================================
+        async function kickFromLobby(phone) {
+            if (!currentLobby) return;
+            if (!isLobbyAdmin()) {
+                alert('❌ فقط ادمین لابی می‌تواند اخراج کند!');
+                return;
+            }
+            if (phone === currentUser.phone) {
+                alert('❌ نمی‌توانید خودتان را اخراج کنید!');
+                return;
+            }
+
+            const user = users[phone];
+            if (!user) {
+                alert('❌ کاربر پیدا نشد!');
+                return;
+            }
+
+            const confirmKick = confirm(`آیا مطمئن هستید می‌خواهید ${user.name} را از لابی اخراج کنید؟`);
+            if (!confirmKick) return;
+
+            const reason = prompt('دلیل اخراج را وارد کنید:');
+            if (reason === null) return;
+
+            currentLobby.players = currentLobby.players.filter(p => p.id !== phone);
+            await saveAllData();
+            populateChairs(currentLobby.players);
+            document.getElementById('profileModal').classList.remove('active');
+            showToast(`🚫 ${user.name} از لابی اخراج شد! دلیل: ${reason || 'نامشخص'}`);
+        }
+
+        // ============================================================
+        // ===== انتقال مالکیت =====
+        // ============================================================
+        async function transferOwnership(newOwnerPhone) {
+            if (!currentLobby) return;
+            if (!isLobbyAdmin()) {
+                alert('❌ شما ادمین این لابی نیستید!');
+                return;
+            }
+            if (!users[newOwnerPhone]) {
+                alert('❌ کاربر مورد نظر پیدا نشد!');
+                return;
+            }
+
+            const newOwner = currentLobby.players.find(p => p.id === newOwnerPhone);
+            if (!newOwner) {
+                alert('❌ کاربر مورد نظر در این لابی نیست!');
+                return;
+            }
+
+            const confirmTransfer = confirm(`آیا مطمئن هستید می‌خواهید مالکیت لابی "${currentLobby.name}" را به ${users[newOwnerPhone].name} انتقال دهید؟`);
+            if (!confirmTransfer) return;
+
+            currentLobby.creatorId = newOwnerPhone;
+            currentLobby.players.forEach(p => {
+                p.isCreator = (p.id === newOwnerPhone);
+            });
+
+            await saveAllData();
+            displayLobbies();
+            populateChairs(currentLobby.players);
+            document.getElementById('profileModal').classList.remove('active');
+            showToast(`✅ مالکیت لابی به ${users[newOwnerPhone].name} منتقل شد!`);
+        }
+
+        // ============================================================
+        // ===== گزارش تخلف =====
+        // ============================================================
+        let reportTargetPhone = null;
+
+        function openReportModal(phone) {
+            reportTargetPhone = phone;
+            document.getElementById('reportType').value = 'بی احترامی';
+            document.getElementById('reportDesc').value = '';
+            document.getElementById('reportModal').classList.add('active');
+        }
+
+        document.getElementById('submitReport').addEventListener('click', async function() {
+            if (!reportTargetPhone) return;
+            const type = document.getElementById('reportType').value;
+            const desc = document.getElementById('reportDesc').value.trim();
+
+            if (!desc) {
+                alert('❌ لطفاً توضیحات تخلف را وارد کنید!');
+                return;
+            }
+
+            const report = {
+                id: Date.now(),
+                reporter: currentUser.phone,
+                reporterName: currentUser.name,
+                reported: reportTargetPhone,
+                reportedName: users[reportTargetPhone]?.name || 'نامشخص',
+                type: type,
+                desc: desc,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            reports.push(report);
+            await saveAllData();
+            document.getElementById('reportModal').classList.remove('active');
+            showToast('✅ گزارش شما با موفقیت ارسال شد!');
+            reportTargetPhone = null;
+        });
+
+        document.getElementById('closeReport').addEventListener('click', function() {
+            document.getElementById('reportModal').classList.remove('active');
+            reportTargetPhone = null;
+        });
+
+        // ============================================================
+        // ===== بن کردن =====
+        // ============================================================
+        let banTargetPhone = null;
+
+        function openBanModal(phone) {
+            banTargetPhone = phone;
+            const maxDays = getMaxBanDays();
+            document.getElementById('banReason').value = '';
+            document.getElementById('banDays').value = Math.min(1, maxDays);
+            document.getElementById('banDays').max = maxDays;
+            document.getElementById('banModal').classList.add('active');
+        }
+
+        document.getElementById('submitBan').addEventListener('click', async function() {
+            if (!banTargetPhone) return;
+            const reason = document.getElementById('banReason').value.trim();
+            const days = parseInt(document.getElementById('banDays').value) || 1;
+            const maxDays = getMaxBanDays();
+
+            if (!reason) {
+                alert('❌ لطفاً دلیل بن را وارد کنید!');
+                return;
+            }
+
+            if (days > maxDays) {
+                alert(`❌ شما فقط می‌توانید تا ${maxDays} روز بن کنید!`);
+                return;
+            }
+
+            if (banTargetPhone === currentUser.phone) {
+                alert('❌ نمی‌توانید خودتان را بن کنید!');
+                return;
+            }
+
+            if (bannedUsers.some(b => b.phone === banTargetPhone && b.active !== false)) {
+                alert('⚠️ این کاربر قبلاً بن شده است!');
+                document.getElementById('banModal').classList.remove('active');
+                banTargetPhone = null;
+                return;
+            }
+
+            if (currentLobby) {
+                currentLobby.players = currentLobby.players.filter(p => p.id !== banTargetPhone);
+            }
+
+            bannedUsers.push({
+                phone: banTargetPhone,
+                reason: reason,
+                days: days,
+                bannedBy: currentUser.phone,
+                bannedByName: currentUser.name,
+                bannedAt: new Date().toISOString(),
+                active: true
+            });
+
+            await saveAllData();
+            document.getElementById('banModal').classList.remove('active');
+            if (currentLobby) populateChairs(currentLobby.players);
+            displayLobbies();
+            showToast(`🔨 کاربر ${users[banTargetPhone]?.name || banTargetPhone} به مدت ${days} روز بن شد!`);
+            banTargetPhone = null;
+        });
+
+        document.getElementById('closeBan').addEventListener('click', function() {
+            document.getElementById('banModal').classList.remove('active');
+            banTargetPhone = null;
+        });
+
+        // ============================================================
+        // ===== رفع بن =====
+        // ============================================================
+        function updateUnbanList() {
+            const select = document.getElementById('unbanSelect');
+            select.innerHTML = '<option value="">انتخاب کنید...</option>';
+            const activeBans = bannedUsers.filter(b => b.active !== false);
+            activeBans.forEach(b => {
+                const user = users[b.phone];
+                const option = document.createElement('option');
+                option.value = b.phone;
+                option.textContent = `${user?.name || b.phone} - دلیل: ${b.reason}`;
+                select.appendChild(option);
+            });
+        }
+
+        document.getElementById('submitUnban').addEventListener('click', async function() {
+            const phone = document.getElementById('unbanSelect').value;
+            if (!phone) {
+                alert('❌ لطفاً یک کاربر را انتخاب کنید!');
+                return;
+            }
+
+            const confirmUnban = confirm(`آیا مطمئن هستید می‌خواهید بن کاربر ${users[phone]?.name || phone} را رفع کنید؟`);
+            if (!confirmUnban) return;
+
+            const banIndex = bannedUsers.findIndex(b => b.phone === phone && b.active !== false);
+            if (banIndex !== -1) {
+                bannedUsers[banIndex].active = false;
+            }
+            await saveAllData();
+            updateUnbanList();
+            document.getElementById('unbanModal').classList.remove('active');
+            showToast(`✅ بن کاربر ${users[phone]?.name || phone} رفع شد!`);
+        });
+
+        document.getElementById('closeUnban').addEventListener('click', function() {
+            document.getElementById('unbanModal').classList.remove('active');
+        });
+
+        document.getElementById('openUnbanPanel').addEventListener('click', function() {
+            updateUnbanList();
+            document.getElementById('unbanModal').classList.add('active');
+        });
+
+        // ============================================================
+        // ===== پنل مدیریت =====
+        // ============================================================
+        function openPanel() {
+            if (!canViewPanel()) {
+                alert('⛔ شما دسترسی به پنل مدیریت را ندارید!');
+                return;
+            }
+
+            const totalPlayers = lobbies.reduce((sum, l) => sum + l.players.length, 0);
+            document.getElementById('statLobbies').textContent = lobbies.length;
+            document.getElementById('statPlayers').textContent = totalPlayers;
+            document.getElementById('statReports').textContent = reports.length;
+            document.getElementById('statBanned').textContent = bannedUsers.filter(b => b.active !== false).length;
+
+            const reportsDiv = document.getElementById('panelReports');
+            reportsDiv.innerHTML = '';
+            if (reports.length === 0) {
+                reportsDiv.innerHTML = '<div style="color:#aaa;text-align:center;padding:10px;">هیچ گزارشی وجود ندارد</div>';
+            } else {
+                reports.forEach((r, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'panel-report-item';
+                    div.innerHTML = `
+                        <div><span class="reporter">${r.reporterName || r.reporter}</span> گزارش داد: <span class="reported">${r.reportedName || r.reported}</span></div>
+                        <div>نوع: ${r.type}</div>
+                        <div class="reason">${r.desc}</div>
+                        <div style="font-size:11px;color:#666;">${new Date(r.date).toLocaleString('fa-IR')}</div>
+                        <div class="actions">
+                            <button class="ban-btn" onclick="banFromReport('${r.reported}')">🔨 بن</button>
+                            <button class="ignore-btn" onclick="ignoreReport(${index})">✅ بی‌توجهی</button>
+                        </div>
+                    `;
+                    reportsDiv.appendChild(div);
+                });
+            }
+
+            const lobbiesDiv = document.getElementById('panelLobbies');
+            lobbiesDiv.innerHTML = '';
+            if (lobbies.length === 0) {
+                lobbiesDiv.innerHTML = '<div style="color:#aaa;text-align:center;padding:10px;">هیچ لابی وجود ندارد</div>';
+            } else {
+                lobbies.forEach(l => {
+                    const div = document.createElement('div');
+                    div.className = 'panel-lobby-item';
+                    div.innerHTML = `
+                        <span class="lobby-name">${l.name}</span>
+                        <span class="lobby-players">${l.players.length}/${l.maxPlayers} بازیکن</span>
+                        <button class="delete-btn" onclick="deleteLobbyFromPanel(${l.id})">🗑️</button>
+                    `;
+                    lobbiesDiv.appendChild(div);
+                });
+            }
+
+            document.getElementById('panelModal').classList.add('active');
+        }
+
+        async function deleteLobbyFromPanel(lobbyId) {
+            if (!canDeleteLobby()) {
+                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                return;
+            }
+            const reason = prompt('دلیل حذف لابی را وارد کنید:');
+            if (reason === null) return;
+            if (!reason.trim()) {
+                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                return;
+            }
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) return;
+            lobbies = lobbies.filter(l => l.id !== lobbyId);
+            await saveAllData();
+            openPanel();
+            showToast(`🗑️ لابی "${lobby.name}" با دلیل "${reason}" حذف شد!`);
+        }
+
+        async function banFromReport(phone) {
+            const user = users[phone];
+            if (!user) {
+                alert('❌ کاربر پیدا نشد!');
+                return;
+            }
+            const maxDays = getMaxBanDays();
+            if (maxDays === 0) {
+                alert('❌ شما دسترسی بن کردن ندارید!');
+                return;
+            }
+            openBanModal(phone);
+            document.getElementById('panelModal').classList.remove('active');
+        }
+
+        async function ignoreReport(index) {
+            reports.splice(index, 1);
+            await saveAllData();
+            openPanel();
+            showToast('✅ گزارش بی‌توجهی شد!');
+        }
+
+        document.getElementById('deleteAllLobbies').addEventListener('click', async function() {
+            if (!canDeleteLobby()) {
+                alert('⛔ شما دسترسی حذف لابی را ندارید!');
+                return;
+            }
+            if (lobbies.length === 0) {
+                alert('هیچ لابی برای حذف وجود ندارد!');
+                return;
+            }
+            const confirmDelete = confirm('آیا مطمئن هستید می‌خواهید تمام لابی‌ها را حذف کنید؟');
+            if (!confirmDelete) return;
+            const reason = prompt('دلیل حذف تمام لابی‌ها را وارد کنید:');
+            if (reason === null) return;
+            if (!reason.trim()) {
+                alert('❌ لطفاً دلیل حذف را وارد کنید!');
+                return;
+            }
+            lobbies = [];
+            await saveAllData();
+            openPanel();
+            showToast(`🗑️ تمام لابی‌ها با دلیل "${reason}" حذف شدند!`);
+        });
+
+        document.getElementById('closePanel').addEventListener('click', function() {
+            document.getElementById('panelModal').classList.remove('active');
+        });
+
+        // ============================================================
+        // ===== پر کردن صندلی‌ها =====
+        // ============================================================
+        function populateChairs(players) {
+            for (let i = 1; i <= 10; i++) {
+                const chair = document.getElementById('chair-' + i);
+                if (chair) {
+                    chair.classList.add('empty-chair');
+                    chair.innerHTML = `
+                        <div class="chair-avatar"></div>
+                        <div class="chair-name"><span class="mic-icon"></span>خالی</div>
+                    `;
+                    delete chair.dataset.playerId;
+                }
+            }
+
+            players.forEach((player, index) => {
+                const chairNum = index + 1;
+                if (chairNum > 10) return;
+                const chair = document.getElementById('chair-' + chairNum);
+                if (!chair) return;
+                chair.classList.remove('empty-chair');
+
+                let avatarImg = 'https://s8.uupload.ir/files/inshot_20260208_214035107_wkwk.png';
+                if (player.avatar === 'avatar2') avatarImg = 'https://s8.uupload.ir/files/inshot_20260208_214116629_6joe.png';
+                else if (player.avatar === 'ninja') avatarImg = 'https://s8.uupload.ir/files/inshot_20260212_151231364_umrq.png';
+                else if (player.avatar === 'samurai') avatarImg = 'https://s8.uupload.ir/files/inshot_20260212_151120584_7df6.png';
+
+                const isMuted = player.isMuted !== undefined ? player.isMuted : true;
+                const speakingClass = isMuted ? '' : 'speaking';
+                const micIconClass = isMuted ? 'mic-icon' : 'mic-icon speaking';
+
+                const rankColor = getRankColor(player.rank || 'کاربر عادی');
+                const rankTickHtml = player.rank && player.rank !== 'کاربر عادی' ? 
+                    `<span class="rank-tick-mini" style="background:${rankColor}; border-color:${rankColor};">✓</span>` : '';
+
+                const isCreator = player.id === currentLobby?.creatorId;
+
+                chair.innerHTML = `
+                    <div class="chair-avatar ${speakingClass}" onclick="showProfile('${player.id}')">
+                        <img src="${avatarImg}">
+                    </div>
+                    <div class="chair-name">
+                        ${isCreator ? '<span class="crown-icon"></span>' : ''}
+                        ${rankTickHtml}
+                        <span>${player.name}</span>
+                        <span class="${micIconClass}"></span>
+                    </div>
+                `;
+                chair.dataset.playerId = player.id;
+            });
+        }
+
+        // ============================================================
+        // ===== نمایش و مخفی کردن لابی =====
+        // ============================================================
+        function showLobby(lobbyId, autoJoin = false) {
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) return;
+
+            if (lobby.status !== 'approved') {
+                alert('⛔ این لابی هنوز تایید نشده است!');
+                return;
+            }
+
+            if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
+                alert('⛔ شما بن هستید و نمی‌توانید وارد لابی شوید!');
+                return;
+            }
+
+            if (!autoJoin && !lobby.players.some(p => p.id === currentUser?.phone)) {
+                alert('❌ شما در این لابی نیستید!');
+                return;
+            }
+
+            if (autoJoin && !lobby.players.some(p => p.id === currentUser?.phone)) {
+                let userTick = null;
+                if (currentUser && currentUser.lobbyTicks && currentUser.lobbyTicks.length > 0) {
+                    userTick = currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1];
+                }
+
+                lobby.players.push({
+                    id: currentUser.phone,
+                    name: currentUser.name || 'کاربر',
+                    avatar: 'avatar1',
+                    isCreator: false,
+                    isMuted: true,
+                    phone: currentUser.phone,
+                    rank: currentUser.rank || 'کاربر عادی',
+                    points: currentUser.points || 0,
+                    totalPoints: currentUser.totalPoints || 0,
+                    lobbyTick: userTick
+                });
+                saveAllData();
+            }
+
+            currentLobbyId = lobbyId;
+            currentLobby = lobby;
+            document.getElementById('lobbiesContainer').style.display = 'none';
+            document.getElementById('mainButtons').style.display = 'none';
+            document.getElementById('lobby-page').style.display = 'block';
+            document.getElementById('menuIcon').style.display = 'flex';
+            document.getElementById('micBtn').style.display = 'flex';
+
+            const panelItem = document.getElementById('panelMenuItem');
+            const unbanItem = document.getElementById('unbanMenuItem');
+            if (canViewPanel()) {
+                panelItem.style.display = 'flex';
+                unbanItem.style.display = 'flex';
+            } else {
+                panelItem.style.display = 'none';
+                unbanItem.style.display = 'none';
+            }
+
+            populateChairs(lobby.players);
+            const currentPlayer = lobby.players.find(p => p.id === currentUser?.phone);
+            if (currentPlayer) {
+                const micBtn = document.getElementById('micBtn');
+                if (currentPlayer.isMuted === false) {
+                    micBtn.classList.add('active');
+                } else {
+                    micBtn.classList.remove('active');
+                }
+            }
+
+            startPointTimer(lobbyId);
+        }
+
+        async function hideLobby() {
+            if (pointTimer) clearInterval(pointTimer);
+            document.getElementById('lobby-page').style.display = 'none';
+            document.getElementById('menuIcon').style.display = 'none';
+            document.getElementById('micBtn').style.display = 'none';
+            document.getElementById('dropdownMenu').classList.remove('active');
+            document.getElementById('lobbiesContainer').style.display = 'flex';
+            document.getElementById('mainButtons').style.display = 'flex';
+
+            if (currentLobby && currentUser) {
+                currentLobby.players = currentLobby.players.filter(p => p.id !== currentUser.phone);
+
+                if (currentLobby.players.length === 0) {
+                    lobbies = lobbies.filter(l => l.id !== currentLobby.id);
+                } else {
+                    if (currentLobby.creatorId === currentUser.phone) {
+                        const newAdmin = currentLobby.players[0];
+                        if (newAdmin) {
+                            currentLobby.creatorId = newAdmin.id;
+                            currentLobby.players.forEach(p => {
+                                p.isCreator = (p.id === newAdmin.id);
+                            });
+                            showToast(`👑 مدیریت لابی به ${newAdmin.name} منتقل شد!`);
+                        }
+                    }
+                }
+                await saveAllData();
+            }
+
+            currentLobbyId = null;
+            currentLobby = null;
+            displayLobbies();
+        }
+
+        // ============================================================
+        // ===== تایمر امتیاز =====
+        // ============================================================
+        function startPointTimer(lobbyId) {
+            if (pointTimer) clearInterval(pointTimer);
+            pointTimer = setInterval(() => {
+                const lobby = lobbies.find(l => l.id === lobbyId);
+                if (!lobby) return;
+
+                const player = lobby.players.find(p => p.id === currentUser?.phone);
+                if (!player) return;
+
+                if (currentUser) {
+                    currentUser.points = (currentUser.points || 0) + 10;
+                    currentUser.totalPoints = (currentUser.totalPoints || 0) + 10;
+                    player.points = currentUser.points;
+                    player.totalPoints = currentUser.totalPoints;
+
+                    saveAllData();
+                    populateChairs(lobby.players);
+                    updateTickMenu();
+                }
+            }, 3600000);
+        }
+
+        // ============================================================
+        // ===== پیوستن به لابی =====
+        // ============================================================
+        window.joinLobby = async function(lobbyId) {
+            const lobby = lobbies.find(l => l.id === lobbyId);
+            if (!lobby) {
+                alert('لابی پیدا نشد');
+                return;
+            }
+            if (lobby.status !== 'approved') {
+                alert('⛔ این لابی هنوز تایید نشده است!');
+                return;
+            }
+            if (lobby.players.length >= lobby.maxPlayers) {
+                alert('❌ لابی پر است!');
+                return;
+            }
+            if (lobby.players.some(p => p.id === currentUser?.phone)) {
+                alert('شما قبلاً در این لابی هستید');
+                return;
+            }
+
+            if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
+                alert('⛔ شما بن هستید و نمی‌توانید وارد لابی شوید!');
+                return;
+            }
+
+            if (lobby.hasPassword && lobby.password) {
+                const entered = prompt('لطفاً رمز عبور لابی را وارد کنید:');
+                if (entered === null) return;
+                if (entered !== lobby.password) {
+                    alert('❌ رمز عبور اشتباه است!');
+                    return;
+                }
+            }
+
+            let userTick = null;
+            if (currentUser && currentUser.lobbyTicks && currentUser.lobbyTicks.length > 0) {
+                userTick = currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1];
+            }
+
+            lobby.players.push({
+                id: currentUser.phone,
+                name: currentUser.name || 'کاربر',
+                avatar: 'avatar1',
+                isCreator: false,
+                isMuted: true,
+                phone: currentUser.phone,
+                rank: currentUser.rank || 'کاربر عادی',
+                points: currentUser.points || 0,
+                totalPoints: currentUser.totalPoints || 0,
+                lobbyTick: userTick
+            });
+            await saveAllData();
+
+            showLobby(lobby.id, true);
+            showToast(`✅ شما به لابی "${lobby.name}" پیوستید!`);
+        };
+
+        // ============================================================
+        // ===== خروج از لابی (دکمه) =====
+        // ============================================================
+        window.exitLobby = async function() {
+            if (!currentLobbyId || !currentLobby) return;
+
+            if (!currentLobby.players.some(p => p.id === currentUser?.phone)) {
+                hideLobby();
+                return;
+            }
+
+            if (currentLobby.players.length === 1) {
+                lobbies = lobbies.filter(l => l.id !== currentLobby.id);
+                await saveAllData();
+                hideLobby();
+                showToast('🗑️ لابی به دلیل خالی شدن حذف شد!');
+                return;
+            }
+
+            currentLobby.players = currentLobby.players.filter(p => p.id !== currentUser.phone);
+
+            if (currentLobby.creatorId === currentUser.phone) {
+                const newAdmin = currentLobby.players[0];
+                if (newAdmin) {
+                    currentLobby.creatorId = newAdmin.id;
+                    currentLobby.players.forEach(p => {
+                        p.isCreator = (p.id === newAdmin.id);
+                    });
+                    showToast(`👑 مدیریت لابی به ${newAdmin.name} منتقل شد!`);
+                }
+            }
+
+            await saveAllData();
+            hideLobby();
+            showToast('🚪 شما از لابی خارج شدید!');
+        };
+
+        // ============================================================
+        // ===== ساخت لابی =====
+        // ============================================================
+        document.getElementById('submitLobby').addEventListener('click', async function() {
+            const type = document.getElementById('lobbyType').value;
+            const name = document.getElementById('lobbyName').value.trim();
+            const max = parseInt(document.getElementById('playerCount').value);
+            const password = document.getElementById('lobbyPassword').value.trim();
+
+            if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
+                alert('⛔ شما بن هستید و نمی‌توانید لابی بسازید!');
+                return;
+            }
+
+            let finalName = name;
+            let lobbyTick = null;
+            let status = 'approved';
+
+            if (type === 'tick') {
+                if (!currentUser || !currentUser.lobbyTicks || currentUser.lobbyTicks.length === 0) {
+                    alert('❌ شما هیچ تیکی ندارید!');
+                    return;
+                }
+                const lastTickId = currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1];
+                const tickData = LOBBY_TICKS.find(t => t.id === lastTickId);
+                if (!tickData) {
+                    alert('❌ تیک نامعتبر است!');
+                    return;
+                }
+                const tickIndex = currentUser.lobbyTicks.indexOf(lastTickId);
+                if (tickIndex !== -1 && currentUser.groupNames && currentUser.groupNames[tickIndex]) {
+                    finalName = currentUser.groupNames[tickIndex];
+                } else {
+                    finalName = `لابی ${tickData.name}`;
+                }
+                lobbyTick = tickData.name;
+                status = 'approved';
+            } else if (type === 'approved') {
+                if (!name) {
+                    alert('❌ لطفاً نام لابی را وارد کنید!');
+                    return;
+                }
+                status = 'pending';
+                lobbyTick = null;
+            } else {
+                if (!name) {
+                    alert('❌ لطفاً نام لابی را وارد کنید!');
+                    return;
+                }
+                lobbyTick = null;
+                status = 'approved';
+            }
+
+            const newLobby = {
+                id: Date.now(),
+                name: finalName,
+                creatorId: currentUser?.phone || 'unknown',
+                creatorName: currentUser?.name || 'کاربر',
+                maxPlayers: max,
+                players: [{
+                    id: currentUser?.phone || 'unknown',
+                    name: currentUser?.name || 'کاربر',
+                    avatar: 'avatar1',
+                    isCreator: true,
+                    isMuted: true,
+                    phone: currentUser?.phone || 'unknown',
+                    rank: currentUser?.rank || 'کاربر عادی',
+                    points: currentUser?.points || 0,
+                    totalPoints: currentUser?.totalPoints || 0,
+                    lobbyTick: currentUser?.lobbyTicks?.length > 0 ? currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1] : null
+                }],
+                password: password,
+                hasPassword: password.length > 0,
+                createdAt: new Date().toISOString(),
+                serverType: 'adults',
+                tick: lobbyTick,
+                status: status
+            };
+
+            lobbies.push(newLobby);
+            await saveAllData();
+
+            document.getElementById('createLobbyMenu').classList.remove('active');
+            document.getElementById('lobbyName').value = '';
+            document.getElementById('lobbyPassword').value = '';
+            document.getElementById('passwordToggle').checked = false;
+            document.getElementById('passwordField').classList.remove('active');
+
+            showLobby(newLobby.id, true);
+            showToast(`✅ لابی "${finalName}" ساخته شد!`);
+        });
+
+        // ============================================================
+        // ===== توابع کمکی =====
+        // ============================================================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            if (navigator.vibrate) navigator.vibrate(10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function updateTickMenu() {
+            const progressSpan = document.getElementById('tickProgress');
+            if (!currentUser) {
+                progressSpan.textContent = '0%';
+                return;
+            }
+            const currentPoints = currentUser.points || 0;
+            let currentTickIndex = -1;
+            let nextTickIndex = -1;
+
+            if (currentUser.lobbyTicks && currentUser.lobbyTicks.length > 0) {
+                const lastTick = currentUser.lobbyTicks[currentUser.lobbyTicks.length - 1];
+                currentTickIndex = LOBBY_TICKS.findIndex(t => t.id === lastTick);
+            }
+
+            for (let i = currentTickIndex + 1; i < LOBBY_TICKS.length; i++) {
+                if (currentPoints >= LOBBY_TICKS[i].pointsNeeded) {
+                    continue;
+                } else {
+                    nextTickIndex = i;
+                    break;
+                }
+            }
+
+            if (nextTickIndex === -1 && currentTickIndex >= 0 && currentTickIndex === LOBBY_TICKS.length - 1) {
+                progressSpan.textContent = '✅ کامل';
+                progressSpan.style.color = '#00ff88';
+                return;
+            }
+
+            if (currentTickIndex === -1 && nextTickIndex === -1) {
+                nextTickIndex = 0;
+            }
+
+            if (nextTickIndex !== -1) {
+                const nextTick = LOBBY_TICKS[nextTickIndex];
+                const progress = Math.min(100, Math.round((currentPoints / nextTick.pointsNeeded) * 100));
+                progressSpan.textContent = `${progress}%`;
+                progressSpan.style.color = '#ffd700';
+            } else {
+                progressSpan.textContent = '0%';
+            }
+        }
+
+        // ============================================================
+        // ===== رویدادهای UI =====
+        // ============================================================
+        document.getElementById('lobbyType').addEventListener('change', function() {
+            const type = this.value;
+            const nameInput = document.getElementById('lobbyName');
+            const nameLabel = document.getElementById('nameLabel');
+
+            if (type === 'tick') {
+                nameInput.disabled = true;
+                nameInput.placeholder = 'اسم از کد تنظیم می‌شود';
+                nameInput.value = '';
+                nameLabel.textContent = 'نام لابی (از کد)';
+            } else {
+                nameInput.disabled = false;
+                nameInput.placeholder = 'نام لابی را وارد کنید';
+                nameInput.value = '';
+                nameLabel.textContent = 'نام لابی';
+            }
+        });
+
+        document.getElementById('createLobby').addEventListener('click', function() {
+            const nameInput = document.getElementById('lobbyName');
+            const type = document.getElementById('lobbyType').value;
+
+            if (bannedUsers.some(b => b.phone === currentUser?.phone && b.active !== false)) {
+                alert('⛔ شما بن هستید و نمی‌توانید لابی بسازید!');
+                return;
+            }
+
+            if (type === 'tick') {
+                nameInput.disabled = true;
+                nameInput.placeholder = 'اسم از کد تنظیم می‌شود';
+                nameInput.value = '';
+                document.getElementById('nameLabel').textContent = 'نام لابی (از کد)';
+            } else {
+                nameInput.disabled = false;
+                nameInput.placeholder = 'نام لابی را وارد کنید';
+                nameInput.value = '';
+                document.getElementById('nameLabel').textContent = 'نام لابی';
+            }
+
+            document.getElementById('createLobbyMenu').classList.add('active');
+        });
+
+        document.getElementById('closeMenu').addEventListener('click', () => {
+            document.getElementById('createLobbyMenu').classList.remove('active');
+        });
+
+        document.getElementById('createLobbyMenu').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('createLobbyMenu').classList.remove('active');
+        });
+
+        document.getElementById('passwordToggle').addEventListener('change', function() {
+            document.getElementById('passwordField').classList.toggle('active');
+        });
+
+        document.getElementById('rfaBtn').addEventListener('click', function() {
+            this.classList.add('spinning');
+            if (navigator.vibrate) navigator.vibrate(20);
+            setTimeout(() => this.classList.remove('spinning'), 500);
+        });
+
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.location.href = 'Safe Asli Bazi.html';
+        });
+
+        // ===== منو =====
+        document.getElementById('menuIcon').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('dropdownMenu').classList.toggle('active');
+        });
+
+        document.getElementById('panelMenuItem').addEventListener('click', function() {
+            document.getElementById('dropdownMenu').classList.remove('active');
+            openPanel();
+        });
+
+        document.getElementById('unbanMenuItem').addEventListener('click', function() {
+            document.getElementById('dropdownMenu').classList.remove('active');
+            updateUnbanList();
+            document.getElementById('unbanModal').classList.add('active');
+        });
+
+        document.getElementById('exitLobbyItem').addEventListener('click', function() {
+            if (confirm('آیا می‌خواهید از لابی خارج شوید؟')) {
+                window.exitLobby();
+            }
+        });
+
+        document.getElementById('tickMenuItem').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('dropdownMenu').classList.remove('active');
+
+            if (!currentUser) {
+                alert('❌ ابتدا وارد شوید!');
+                return;
+            }
+
+            const modal = document.getElementById('tickModal');
+            const container = document.getElementById('tickOptions');
+
+            if (!modal) {
+                const modalHTML = `
+                    <div class="tick-modal" id="tickModal">
+                        <div class="tick-modal-content">
+                            <h3>🏅 تیک‌های لابی من</h3>
+                            <div class="tick-options" id="tickOptions"></div>
+                            <div class="tick-info-bottom" id="tickInfo">
+                                امتیاز کل: <span id="totalPoints">0</span> | تیک فعلی: <span id="currentTickLabel">ندارد</span>
+                            </div>
+                            <button class="tick-modal-close" id="tickModalClose">بستن</button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+                document.getElementById('tickModalClose').addEventListener('click', function() {
+                    document.getElementById('tickModal').classList.remove('active');
+                });
+
+                document.getElementById('tickModal').addEventListener('click', function(e) {
+                    if (e.target === this) this.classList.remove('active');
+                });
+            }
+
+            const container2 = document.getElementById('tickOptions');
+            const userTicks = currentUser.lobbyTicks || [];
+            const currentPoints = currentUser.points || 0;
+
+            container2.innerHTML = '';
+            if (userTicks.length === 0 && currentPoints === 0) {
+                container2.innerHTML = `
+                    <div style="text-align:center;color:#aaa;padding:20px;">
+                        شما هیچ تیکی ندارید.<br>
+                        با حضور در لابی و کسب امتیاز، تیک دریافت کنید!
+                    </div>
+                `;
+            } else {
+                LOBBY_TICKS.forEach(tick => {
+                    const isUnlocked = currentPoints >= tick.pointsNeeded || userTicks.includes(tick.id);
+                    const isActive = userTicks.includes(tick.id);
+                    const div = document.createElement('div');
+                    div.className = `tick-option ${isActive ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}`;
+                    div.innerHTML = `
+                        <img src="${tick.image}" alt="${tick.name}">
+                        <div class="tick-info">
+                            <div class="tick-name">${tick.name}</div>
+                            <div class="tick-progress">${Math.min(currentPoints, tick.pointsNeeded)}/${tick.pointsNeeded} امتیاز</div>
+                        </div>
+                        <span class="tick-status ${isActive ? 'active' : isUnlocked ? 'unlocked' : 'locked'}">
+                            ${isActive ? '✓ فعال' : isUnlocked ? '✓ باز شده' : '🔒 قفل'}
+                        </span>
+                    `;
+                    container2.appendChild(div);
+                });
+            }
+
+            document.getElementById('totalPoints').textContent = currentUser.totalPoints || 0;
+            const tickName = userTicks.length > 0 ? LOBBY_TICKS.find(t => t.id === userTicks[userTicks.length - 1])?.name : 'ندارد';
+            document.getElementById('currentTickLabel').textContent = tickName || 'ندارد';
+
+            document.getElementById('tickModal').classList.add('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.menu-icon') && !e.target.closest('.dropdown-menu')) {
+                document.getElementById('dropdownMenu').classList.remove('active');
+            }
+            if (e.target === document.getElementById('profileModal')) {
+                document.getElementById('profileModal').classList.remove('active');
+            }
+            if (e.target === document.getElementById('reportModal')) {
+                document.getElementById('reportModal').classList.remove('active');
+            }
+            if (e.target === document.getElementById('banModal')) {
+                document.getElementById('banModal').classList.remove('active');
+            }
+            if (e.target === document.getElementById('unbanModal')) {
+                document.getElementById('unbanModal').classList.remove('active');
+            }
+            if (e.target === document.getElementById('panelModal')) {
+                document.getElementById('panelModal').classList.remove('active');
+            }
+        });
+
+        // ===== دکمه مایک =====
+        document.getElementById('micBtn').addEventListener('click', function() {
+            if (!currentLobbyId) return;
+            const lobby = lobbies.find(l => l.id === currentLobbyId);
+            if (!lobby) return;
+            const player = lobby.players.find(p => p.id === currentUser?.phone);
+            if (!player) return;
+
+            player.isMuted = !player.isMuted;
+            saveAllData();
+
+            if (player.isMuted === false) {
+                this.classList.add('active');
+            } else {
+                this.classList.remove('active');
+            }
+            populateChairs(lobby.players);
+        });
+
+        // ============================================================
+        // ===== بارگذاری اولیه =====
+        // ============================================================
+        window.onload = async function() {
+            await loadAllData();
+            updateTickMenu();
+        };
+
+        document.addEventListener('touchmove', function(e) {
+            if (!e.target.closest('.lobbies-container') &&
+                !e.target.closest('.menu-content') &&
+                !e.target.closest('#lobby-page') &&
+                !e.target.closest('.profile-modal') &&
+                !e.target.closest('.report-modal') &&
+                !e.target.closest('.ban-modal') &&
+                !e.target.closest('.unban-modal') &&
+                !e.target.closest('.panel-modal') &&
+                !e.target.closest('.tick-modal')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
