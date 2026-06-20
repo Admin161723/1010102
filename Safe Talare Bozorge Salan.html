@@ -2640,7 +2640,7 @@
                 lobby.players.push({
                     id: currentUser.phone,
                     name: currentUser.name || 'کاربر',
-                    avatar: 'avatar1',
+                    avatar: currentUser.avatar || 'avatar1',
                     isCreator: false,
                     isMuted: true,
                     phone: currentUser.phone,
@@ -2811,7 +2811,7 @@
             lobby.players.push({
                 id: currentUser.phone,
                 name: currentUser.name || 'کاربر',
-                avatar: 'avatar1',
+                avatar: currentUser.avatar || 'avatar1',
                 isCreator: false,
                 isMuted: true,
                 phone: currentUser.phone,
@@ -2925,7 +2925,7 @@
                 players: [{
                     id: currentUser?.phone || 'unknown',
                     name: currentUser?.name || 'کاربر',
-                    avatar: 'avatar1',
+                    avatar: currentUser.avatar || 'avatar1',
                     isCreator: true,
                     isMuted: true,
                     phone: currentUser?.phone || 'unknown',
@@ -3129,6 +3129,8 @@
             this.classList.add('spinning');
             if (navigator.vibrate) navigator.vibrate(20);
             setTimeout(() => this.classList.remove('spinning'), 500);
+            // بارگذاری مجدد لابی‌ها
+            loadAllData();
         });
 
         document.getElementById('backBtn').addEventListener('click', function() {
