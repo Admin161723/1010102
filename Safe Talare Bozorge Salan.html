@@ -1931,6 +1931,11 @@
             if (users[currentUserPhone]) {
                 currentUser = users[currentUserPhone];
                 currentUser.phone = currentUserPhone;
+                // به‌روزرسانی آواتار از sessionStorage
+                if (currentUserAvatar && currentUser.avatar !== currentUserAvatar) {
+                    currentUser.avatar = currentUserAvatar;
+                    await saveAllData();
+                }
             } else {
                 users[currentUserPhone] = {
                     phone: currentUserPhone,
@@ -1942,7 +1947,8 @@
                     lobbyTicks: [],
                     groupNames: [],
                     points: 0,
-                    totalPoints: 0
+                    totalPoints: 0,
+                    peerId: null
                 };
                 currentUser = users[currentUserPhone];
                 await saveAllData();
@@ -2106,6 +2112,8 @@
                 const rankTickHtml = hasRank ? 
                     `<span class="rank-tick" style="background:${rankColor}; border-color:${rankColor};">✓</span>` : '';
 
+                const creatorAvatar = lobby.creatorAvatar || 'InShot_20260403_213254941.png';
+
                 card.innerHTML = `
                     <img src="InShot_20260616_223548506.jpg" class="lobby-bg" alt="قالب لابی">
                     <div class="lobby-name-top">${lobby.name}</div>
@@ -2114,7 +2122,7 @@
                     ${actionsHtml}
                     <div class="avatar-wrapper" onclick="event.stopPropagation();showProfile('${lobby.creatorId}')">
                         <div class="avatar-circle">
-                            <img src="InShot_20260403_213254941.png" alt="آواتار">
+                            <img src="${creatorAvatar}" alt="آواتار">
                         </div>
                         <div class="avatar-status">
                             <span class="avatar-name">${rankTickHtml} ${creator.name}</span>
@@ -2171,7 +2179,20 @@
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
             if (!lobby) return;
+            
             lobbies = lobbies.filter(l => l.id !== lobbyId);
+            
+            if (currentLobbyId === lobbyId) {
+                currentLobbyId = null;
+                currentLobby = null;
+                document.getElementById('lobby-page').style.display = 'none';
+                document.getElementById('menuIcon').style.display = 'none';
+                document.getElementById('micBtn').style.display = 'none';
+                document.getElementById('lobbiesContainer').style.display = 'flex';
+                document.getElementById('mainButtons').style.display = 'flex';
+                showToast(`🗑️ لابی "${lobby.name}" با دلیل "${reason}" حذف شد!`);
+            }
+            
             await saveAllData();
             displayLobbies();
             showToast(`🗑️ لابی "${lobby.name}" با دلیل "${reason}" حذف شد!`);
@@ -2500,9 +2521,22 @@
             }
             const lobby = lobbies.find(l => l.id === lobbyId);
             if (!lobby) return;
+            
             lobbies = lobbies.filter(l => l.id !== lobbyId);
+            
+            if (currentLobbyId === lobbyId) {
+                currentLobbyId = null;
+                currentLobby = null;
+                document.getElementById('lobby-page').style.display = 'none';
+                document.getElementById('menuIcon').style.display = 'none';
+                document.getElementById('micBtn').style.display = 'none';
+                document.getElementById('lobbiesContainer').style.display = 'flex';
+                document.getElementById('mainButtons').style.display = 'flex';
+            }
+            
             await saveAllData();
             openPanel();
+            displayLobbies();
             showToast(`🗑️ لابی "${lobby.name}" با دلیل "${reason}" حذف شد!`);
         }
 
@@ -2546,8 +2580,20 @@
                 return;
             }
             lobbies = [];
+            
+            if (currentLobbyId) {
+                currentLobbyId = null;
+                currentLobby = null;
+                document.getElementById('lobby-page').style.display = 'none';
+                document.getElementById('menuIcon').style.display = 'none';
+                document.getElementById('micBtn').style.display = 'none';
+                document.getElementById('lobbiesContainer').style.display = 'flex';
+                document.getElementById('mainButtons').style.display = 'flex';
+            }
+            
             await saveAllData();
             openPanel();
+            displayLobbies();
             showToast(`🗑️ تمام لابی‌ها با دلیل "${reason}" حذف شدند!`);
         });
 
@@ -2578,10 +2624,11 @@
                 if (!chair) return;
                 chair.classList.remove('empty-chair');
 
-                let avatarImg = 'https://s8.uupload.ir/files/inshot_20260208_214035107_wkwk.png';
+                let avatarImg = player.avatar || 'https://s8.uupload.ir/files/inshot_20260208_214035107_wkwk.png';
                 if (player.avatar === 'avatar2') avatarImg = 'https://s8.uupload.ir/files/inshot_20260208_214116629_6joe.png';
                 else if (player.avatar === 'ninja') avatarImg = 'https://s8.uupload.ir/files/inshot_20260212_151231364_umrq.png';
                 else if (player.avatar === 'samurai') avatarImg = 'https://s8.uupload.ir/files/inshot_20260212_151120584_7df6.png';
+                else if (player.avatar && player.avatar.includes('InShot')) avatarImg = player.avatar;
 
                 const isMuted = player.isMuted !== undefined ? player.isMuted : true;
                 const speakingClass = isMuted ? '' : 'speaking';
@@ -2736,7 +2783,6 @@
                     player.points = currentUser.points;
                     player.totalPoints = currentUser.totalPoints;
 
-                    // بررسی فعال شدن تیک جدید
                     checkLobbyTickUpgrade(currentUser);
 
                     saveAllData();
@@ -2921,11 +2967,12 @@
                 name: finalName,
                 creatorId: currentUser?.phone || 'unknown',
                 creatorName: currentUser?.name || 'کاربر',
+                creatorAvatar: currentUser?.avatar || 'InShot_20260403_213254941.png',
                 maxPlayers: max,
                 players: [{
                     id: currentUser?.phone || 'unknown',
                     name: currentUser?.name || 'کاربر',
-                    avatar: currentUser.avatar || 'avatar1',
+                    avatar: currentUser?.avatar || 'avatar1',
                     isCreator: true,
                     isMuted: true,
                     phone: currentUser?.phone || 'unknown',
@@ -2951,7 +2998,6 @@
             document.getElementById('passwordToggle').checked = false;
             document.getElementById('passwordField').classList.remove('active');
 
-            // ورود مستقیم به لابی ساخته شده
             showLobby(newLobby.id, true);
             showToast(`✅ لابی "${finalName}" ساخته شد!`);
         });
@@ -3129,7 +3175,6 @@
             this.classList.add('spinning');
             if (navigator.vibrate) navigator.vibrate(20);
             setTimeout(() => this.classList.remove('spinning'), 500);
-            // بارگذاری مجدد لابی‌ها
             loadAllData();
         });
 
